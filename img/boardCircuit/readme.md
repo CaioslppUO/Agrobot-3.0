@@ -1,4 +1,4 @@
-# Pinagem da placa do Hover Board:
+# Pinagem da placa do Hover Board
 
    * Existem vários modelos de placa de Hover Boards.
    * Prestar atenção nos pinos utilizados para dar flash na placa. As posições variam de modelo para modelo.

@@ -1,4 +1,4 @@
-# Esta é a roda retirada dos Hover Boards:
+# Roda retirada do HoverBoard
 
 ![wheel](https://github.com/CaioslppUO/Agrobot-3.0/blob/hover-stable/img/wheels/whell.jpeg)
  
