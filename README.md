@@ -10,14 +10,18 @@
 ## Organização do repositório
 
 <p align="center">
-  <a href="https://github.com/arcanjolevi/robot_control_app/commits/master">
+  <a href="https://github.com/CaioslppUO/Agrobot-3.0/commits/master">
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/CaioslppUO/Agrobot-3.0">
   </a>
   
   <img alt="Size" src="https://img.shields.io/github/repo-size/CaioslppUO/Agrobot-3.0">
   
-  <a href="https://github.com/arcanjolevi/robot_control_app/issues">
+  <a href="https://github.com/CaioslppUO/Agrobot-3.0/issues">
     <img alt="Issues" src="https://img.shields.io/github/issues/CaioslppUO/Agrobot-3.0">
+  </a>
+
+  <a href="https://github.com/CaioslppUO/Agrobot-3.0/branchs">
+    <img alt="Branchs" src="https://img.shields.io/github/branchs/CaioslppUO/Agrobot-3.0">
   </a>
 </p>
 
