@@ -10,6 +10,8 @@
 
 ### - img
   - Arquivos de imagem.
+  
+---
 
 ## Resetar Placa do HoverBoard
 ---
