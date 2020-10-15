@@ -1,6 +1,3 @@
-<p align="center"> 
-  <img alt="Arduino-Stable Size" src="https://img.shields.io/github/size/CaioslppUO/Agrobot-3.0/arduino-stable/src/main.ino">
-</p>
 # Arduino
 
   * O Arduino recebe informações por UART com o Raspberry(TTL) e as evia para a placa do HoverBoard através de I2C.
