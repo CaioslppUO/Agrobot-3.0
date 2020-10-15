@@ -23,10 +23,10 @@
 
 ### > Master
 
-    * Instruções e imagens.
+    - Instruções e imagens.
 
 ### > Branchs
 
-    * Cada parte do projeto será dividido em uma ou duas branchs.
-    * Uma branch será stable e a outra unstable.
-    * Branchs atuais: arduino, hover, ros, app, stacrobot.
+    - Cada parte do projeto será dividido em uma ou duas branchs.
+    - Uma branch será stable e a outra unstable.
+    - Branchs atuais: arduino, hover, ros, app, stacrobot.
