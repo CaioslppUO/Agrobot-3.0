@@ -4,10 +4,7 @@
 
 ### - src
   - Código fonte da placa do hoverboard.
-
-### - doc
-  - Documentação.
-
+  
 ### - img
   - Arquivos de imagem.
 
@@ -22,7 +19,7 @@
 
  * 2 - Destravar e dar flash na placa: (Linux)
  
-    * 2.1 - Abra um terminal e entre na pasta mainBoard.
+    * 2.1 - Abra um terminal e entre na pasta src.
  
     * 2.2 - Se for a primeira vez que está dando flash na placa, utilize o seguinte comando para destrava-la:
     
