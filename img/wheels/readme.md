@@ -1,6 +1,6 @@
 # Esta é a roda retirada dos Hover Boards:
 
-![wheel](https://github.com/CaioslppUO/Agrobot/blob/master/pictures/circuits/whells/whell.jpeg)
+![wheel](https://github.com/CaioslppUO/Agrobot-3.0/blob/hover-stable/img/wheels/whell.jpeg)
  
  * Para conectar à placa do Hover Board:
  

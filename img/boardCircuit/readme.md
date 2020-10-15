@@ -8,11 +8,11 @@
 
 # Modelo Vermelho:
 
-![mainBoard1](https://github.com/CaioslppUO/Agrobot/blob/master/pictures/circuits/mainBoard/MainBoardCircuit1.png)
+![mainBoard1](https://github.com/CaioslppUO/Agrobot-3.0/blob/hover-stable/img/boardCircuit/MainBoardCircuit1.png)
 
 ---
 
 # Modelo Verde:
 
-![mainBoard2](https://github.com/CaioslppUO/Agrobot/blob/master/pictures/circuits/mainBoard/MainBoardCircuit2.png)
+![mainBoard2](https://github.com/CaioslppUO/Agrobot-3.0/blob/hover-stable/img/boardCircuit/MainBoardCircuit2.png)
 
