@@ -1,57 +1,54 @@
-# HoverBoard
+# Arduino
+
+  * O Arduino recebe informações por UART com o Raspberry(TTL) e as evia para a placa do HoverBoard através de I2C.
 
 ## Organização
 
-### - img
-  - Arquivos de imagem.
-
 ### - src
-  - Código fonte da placa do hoverboard.
+  - Código fonte da placa do arduino.
 
 ---
 
-## Resetar Placa do HoverBoard
- * 1 - Downloads:
- 
-    * 1.1 - (Linux) Para destravar ou dar flash na placa, é necessários instalar o St - Link v2 e a biblioteca libusb no seu computador.
-    * 1.2 - (Windows) Baixe a ferramenta ST - Link utility
----
+# Protocolo utilizado para a comunicação do Raspberry com o Arduino através do UART:
 
- * 2 - Destravar e dar flash na placa: (Linux)
- 
-    * 2.1 - Abra um terminal e entre na pasta src.
- 
-    * 2.2 - Se for a primeira vez que está dando flash na placa, utilize o seguinte comando para destrava-la:
-    
-         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c init -c "reset halt" -c "stm32f1x unlock 0"
+ * É necessário enviar para o Arduino através do UART quatro variáveis, seguindo o padrão: speed;steer;limit;relay;
+       * OBS: O formato é exatamente o descrito acima, com as três variáveis e três ponto e vírgulas separando-as
 
-         Se este comando não funcionar, utilize este:
-
-         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c init -c "reset halt" -c "mww 0x40022004 0x45670123" -c "mww 0x40022004 0xCDEF89AB" -c "mww 0x40022008 0x45670123" -c "mww 0x40022008 0xCDEF89AB" -c "mww 0x40022010 0x220" -c "mww 0x40022010 0x260" -c "sleep 100" -c "mww 0x40022010 0x230" -c "mwh 0x1ffff800 0x5AA5" -c "sleep 1000" -c "mww 0x40022010 0x2220" -c "sleep 100" -c "mdw 0x40022010" -c "mdw 0x4002201c" -c "mdw 0x1ffff800" -c targets -c "halt" -c "stm32f1x unlock 0"
-
-         Se este comando também não funcionar, utilize este:
-
-         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c init -c "reset halt" -c "mww 0x40022004 0x45670123" -c "mww 0x40022004 0xCDEF89AB" -c "mww 0x40022008 0x45670123" -c "mww 0x40022008 0xCDEF89AB" -c targets -c "halt" -c "stm32f1x unlock 0"
-
-    * 2.3 - Dar flash na placa:
-         
-         Comando: st-flash --reset write build/hover.bin 0x8000000
-
-         Se este comando não funcionar, utilize este:
-
-         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c flash "write_image erase build/hover.bin 0x8000000"
-
----
-
-# Observações
- 
- * Para configurar o tipo de entrada(Para controlar os motores) que a placa irá receber, altere o arquivo inv/config.h. Apenas comente o input atual (CONTROL_NUNCHUCK) e descomente o input que você irá utilizar.
-
-   * Exemplo: 
-     * Se quiser utilizar UART, é necessário descomentar a seguinte linha:
+ * São necessárias quatro variáveis para controlar o robô:
+       * Speed.
+       * Steer.
+       * Limit.
+       * Relay.
      
-       //#define CONTROL_SERIAL_USART2       // left sensor board cable, disable if ADC or PPM is used!
-       
-     * E comentar a seguinte linha:
+  * Speed aceita valores entre -100 e +100.
+     *  0 significa parado.
+     *  +100 significa potência total para frente.
+     *  -100 significa potência total para trás.
+  
+   * Steer aceita valores entre -100 e +100.
+     *  0 significa ir para frente.
+     *  +100 significa ir para a direita.
+     *  -100 significa ir para a esquerda.
      
-       #define CONTROL_NUNCHUCK            // use nunchuck as input. disable DEBUG_SERIAL_USART3!
+   * Limit aceita valores entre 0 e +100.
+     * 0 significa sem potência para as rodas.
+     * +100 Significa potência total para as rodas.
+
+  * Relay aceita os valores 0 ou 1.
+    * É utilizado para ligar/desligar a placa do hoverboard.
+    * 0 significa desligado.
+    * 1 significa ligado.
+    * para ligar a placa do hoverboard,é necessário enviar 1 e logo em seguida 0 para o relé(Dar curto na placa).
+ 
+ ---
+ 
+ # Recebendo os valores por UART:
+  
+  * O protocolo implementado é: ABCD;ABCD;ABCD;N; onde ABCD e N são números com os seguintes significados:
+  
+       * O número A é o sinal, com duas opções possíveis. 1 significa que o número é positivo(+). 0 significa que o númeor é negativo(-). BCD são números que definem a velocidade, a direção e o limite. É necessário que todas as letras(ABCD) sejam preenchidas, mesmo que com o valor 0.
+       * N pode ser 0 ou 1.
+
+
+  * Exêmplo de uso:
+       * Para enviar 80% de velocidade, virando 100% para a esquerda, com 50% da potência máxima e relé desligado, é necessário enviar o seguinte comando: 1080;0100;1050;0;
