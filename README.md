@@ -1,32 +1,60 @@
-# Agrobot-3.0
+# HoverBoard
 
-<p align="middle" float="left">
-  <img title="uv" src="https://github.com/CaioslppUO/Agrobot-3.0/blob/main/img/uv.gif" width="40%" height="300px" />
-  <img title="agrobot" src="https://github.com/CaioslppUO/Agrobot-3.0/blob/main/img/agrobot.gif" width="60%" height="400px" /> 
-</p>
+## Organização
 
+### src
+- Código fonte da placa do hoverboard.
 
+### doc
+-Documentação.
 
-## Organização do repositório
+### img
+- Arquivos de imagem.
 
-<p align="center">
-  <a href="https://github.com/CaioslppUO/Agrobot-3.0/commits/master">
-    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/CaioslppUO/Agrobot-3.0">
-  </a>
-  
-  <img alt="Size" src="https://img.shields.io/github/repo-size/CaioslppUO/Agrobot-3.0">
-  
-  <a href="https://github.com/CaioslppUO/Agrobot-3.0/issues">
-    <img alt="Issues" src="https://img.shields.io/github/issues/CaioslppUO/Agrobot-3.0">
-  </a>
-</p>
+## Resetar Placa do HoverBoard
 
-### # Master
+---
+ * 1 - Downloads:
+ 
+    * 1.1 - (Linux) Para destravar ou dar flash na placa, é necessários instalar o St - Link v2 e a biblioteca libusb no seu computador.
+    * 1.2 - (Windows) Baixe a ferramenta ST - Link utility
+---
 
-    - Instruções e imagens.
+ * 2 - Destravar e dar flash na placa: (Linux)
+ 
+    * 2.1 - Abra um terminal e entre na pasta mainBoard.
+ 
+    * 2.2 - Se for a primeira vez que está dando flash na placa, utilize o seguinte comando para destrava-la:
+    
+         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c init -c "reset halt" -c "stm32f1x unlock 0"
 
-### # Branchs
+         Se este comando não funcionar, utilize este:
 
-    - Cada parte do projeto será dividido em uma ou duas branchs.
-    - Uma branch será stable e a outra unstable.
-    - Branchs atuais: arduino, hover, ros, app, stacrobot.
+         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c init -c "reset halt" -c "mww 0x40022004 0x45670123" -c "mww 0x40022004 0xCDEF89AB" -c "mww 0x40022008 0x45670123" -c "mww 0x40022008 0xCDEF89AB" -c "mww 0x40022010 0x220" -c "mww 0x40022010 0x260" -c "sleep 100" -c "mww 0x40022010 0x230" -c "mwh 0x1ffff800 0x5AA5" -c "sleep 1000" -c "mww 0x40022010 0x2220" -c "sleep 100" -c "mdw 0x40022010" -c "mdw 0x4002201c" -c "mdw 0x1ffff800" -c targets -c "halt" -c "stm32f1x unlock 0"
+
+         Se este comando também não funcionar, utilize este:
+
+         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c init -c "reset halt" -c "mww 0x40022004 0x45670123" -c "mww 0x40022004 0xCDEF89AB" -c "mww 0x40022008 0x45670123" -c "mww 0x40022008 0xCDEF89AB" -c targets -c "halt" -c "stm32f1x unlock 0"
+
+    * 2.3 - Dar flash na placa:
+         
+         Comando: st-flash --reset write build/hover.bin 0x8000000
+
+         Se este comando não funcionar, utilize este:
+
+         Comando: openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c flash "write_image erase build/hover.bin 0x8000000"
+
+---
+
+# Observações
+ 
+ * Para configurar o tipo de entrada(Para controlar os motores) que a placa irá receber, altere o arquivo inv/config.h. Apenas comente o input atual (CONTROL_NUNCHUCK) e descomente o input que você irá utilizar.
+
+   * Exemplo: 
+     * Se quiser utilizar UART, é necessário descomentar a seguinte linha:
+     
+       //#define CONTROL_SERIAL_USART2       // left sensor board cable, disable if ADC or PPM is used!
+       
+     * E comentar a seguinte linha:
+     
+       #define CONTROL_NUNCHUCK            // use nunchuck as input. disable DEBUG_SERIAL_USART3!
