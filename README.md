@@ -1,4 +1,7 @@
 # Agrobot-3.0
 
+<p float="left">
+  <img src="https://github.com/CaioslppUO/Agrobot-3.0/blob/main/img/uv.gif" width="400px" />
+  <img src="https://github.com/CaioslppUO/Agrobot-3.0/blob/main/img/agrobot.gif" width="500px" /> 
+</p>
 
-![](https://github.com/CaioslppUO/Agrobot-3.0/blob/main/img/uv.gif) | ![](https://github.com/CaioslppUO/Agrobot-3.0/blob/main/img/agrobot.gif)
