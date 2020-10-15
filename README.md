@@ -12,7 +12,7 @@
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/CaioslppUO/Agrobot-3.0">
   </a>
   
-  <img alt="Size" src="https://img.shields.io/github/repo-size/CaioslppUO/Agrobot-3.0">
+  <img alt="Main Size" src="https://img.shields.io/github/repo-size/CaioslppUO/Agrobot-3.0">
   
   <a href="https://github.com/CaioslppUO/Agrobot-3.0/issues">
     <img alt="Issues" src="https://img.shields.io/github/issues/CaioslppUO/Agrobot-3.0">
