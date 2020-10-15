@@ -1,5 +1,5 @@
 <p align="center"> 
-  <img alt="Arduino-Stable Size" src="https://img.shields.io/github/repo-size/CaioslppUO/Agrobot-3.0">
+  <img alt="Arduino-Stable Size" src="https://img.shields.io/github/size/CaioslppUO/Agrobot-3.0/tree/arduino-stable">
 </p>
 # Arduino
 
