@@ -10,11 +10,10 @@
 
 ### - img
   - Arquivos de imagem.
-  
+
 ---
 
 ## Resetar Placa do HoverBoard
----
  * 1 - Downloads:
  
     * 1.1 - (Linux) Para destravar ou dar flash na placa, é necessários instalar o St - Link v2 e a biblioteca libusb no seu computador.
