@@ -1,5 +1,5 @@
 <p align="center"> 
-  <img alt="Arduino-Stable Size" src="https://img.shields.io/github/repo-size/CaioslppUO/Agrobot-3.0/tree/arduino-stable">
+  <img alt="Arduino-Stable Size" src="https://img.shields.io/github/repo-size/CaioslppUO/Agrobot-3.0">
 </p>
 # Arduino
 
@@ -49,7 +49,7 @@
   
   * O protocolo implementado é: ABCD;ABCD;ABCD;N; onde ABCD e N são números com os seguintes significados:
   
-       * O número A é o sinal, com duas opções possíveis. 1 significa que o número é positivo(+). 0 significa que o númeor é negativo(-). BCD são números que definem a velocidade, a direção e o limite. É necessário que todas as letras(ABCDN) sejam preenchidas, mesmo que com o valor 0.
+       * O número A é o sinal, com duas opções possíveis. 1 significa que o número é positivo(+). 0 significa que o númeor é negativo(-). BCD são números que definem a velocidade, a direção e o limite. É necessário que todas as letras(ABCD) sejam preenchidas, mesmo que com o valor 0.
        * N pode ser 0 ou 1.
 
 
