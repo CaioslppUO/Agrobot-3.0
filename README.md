@@ -20,8 +20,8 @@
     <img alt="Issues" src="https://img.shields.io/github/issues/CaioslppUO/Agrobot-3.0">
   </a>
 
-  <a href="https://github.com/CaioslppUO/Agrobot-3.0/branchs">
-    <img alt="Branchs" src="https://img.shields.io/github/branchs/CaioslppUO/Agrobot-3.0">
+  <a href="https://github.com/CaioslppUO/Agrobot-3.0/branches">
+    <img alt="Branchs" src="https://img.shields.io/github/branches/CaioslppUO/Agrobot-3.0">
   </a>
 </p>
 
