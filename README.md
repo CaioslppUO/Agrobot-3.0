@@ -2,11 +2,11 @@
 
 ## Organização
 
-### - src
-  - Código fonte da placa do hoverboard.
-  
 ### - img
   - Arquivos de imagem.
+
+### - src
+  - Código fonte da placa do hoverboard.
 
 ---
 
