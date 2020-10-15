@@ -33,10 +33,10 @@
 
 ### # Referências
 
-    *Hover Board Hack: https://github.com/NiklasFauth/hoverboard-firmware-hack.
+	Hover Board Hack: https://github.com/NiklasFauth/hoverboard-firmware-hack.
 
-    *ROS: https://www.ros.org/
+	ROS: https://www.ros.org/
 
-    *ST-LinkV2: https://github.com/texane/stlink (Linux)
+	ST-LinkV2: https://github.com/texane/stlink (Linux)
 
-    *ST-LinkV2: https://www.st.com/en/development-tools/stsw-link004.html (Windows)
+	ST-LinkV2: https://www.st.com/en/development-tools/stsw-link004.html (Windows)
