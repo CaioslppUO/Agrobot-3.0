@@ -19,10 +19,6 @@
   <a href="https://github.com/CaioslppUO/Agrobot-3.0/issues">
     <img alt="Issues" src="https://img.shields.io/github/issues/CaioslppUO/Agrobot-3.0">
   </a>
-
-  <a href="https://github.com/CaioslppUO/Agrobot-3.0/branches">
-    <img alt="Branchs" src="https://img.shields.io/github/branches/CaioslppUO/Agrobot-3.0">
-  </a>
 </p>
 
 ### > Master
