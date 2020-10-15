@@ -3,13 +3,13 @@
 ## Organização
 
 ### - src
-- Código fonte da placa do hoverboard.
+  - Código fonte da placa do hoverboard.
 
 ### - doc
-- Documentação.
+  - Documentação.
 
 ### - img
-- Arquivos de imagem.
+  - Arquivos de imagem.
 
 ## Resetar Placa do HoverBoard
 ---
