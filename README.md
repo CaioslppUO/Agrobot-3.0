@@ -21,12 +21,22 @@
   </a>
 </p>
 
-### # Master
+### # Main
 
     - Instruções e imagens.
 
 ### # Branchs
 
-    - Cada parte do projeto será dividido em uma ou duas branchs.
+    - Cada parte do projeto será dividido em uma ou duas branches.
     - Uma branch será stable e a outra unstable.
     - Branchs atuais: arduino, hover, ros, app, stacrobot.
+
+### # Referências
+
+    - Hover Board Hack: https://github.com/NiklasFauth/hoverboard-firmware-hack.
+
+    - ROS: https://www.ros.org/
+
+    - ST-LinkV2: https://github.com/texane/stlink (Linux)
+
+    - ST-LinkV2: https://www.st.com/en/development-tools/stsw-link004.html (Windows)
