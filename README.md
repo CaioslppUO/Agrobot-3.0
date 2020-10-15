@@ -21,11 +21,11 @@
   </a>
 </p>
 
-## > Master
+### > Master
 
     * Instruções e imagens.
 
-## > Branchs
+### > Branchs
 
     * Cada parte do projeto será dividido em uma ou duas branchs.
     * Uma branch será stable e a outra unstable.
