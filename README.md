@@ -15,7 +15,7 @@
 # Protocolo utilizado para a comunicação do Raspberry com o Arduino através do UART:
 
  * É necessário enviar para o Arduino através do UART quatro variáveis, seguindo o padrão: speed;steer;limit;relay;
-       * OBS: O formato é exatamente o descrito acima, com as três variáveis e três ponto e vírgulas separando-as
+       * OBS: O formato é exatamente o descrito acima, com as quatro variáveis e quatro ponto e vírgulas separando-as
 
  * São necessárias quatro variáveis para controlar o robô:
        * Speed.
@@ -49,7 +49,7 @@
   
   * O protocolo implementado é: ABCD;ABCD;ABCD;N; onde ABCD e N são números com os seguintes significados:
   
-       * O número A é o sinal, com duas opções possíveis. 1 significa que o número é positivo(+). 0 significa que o númeor é negativo(-). BCD são números que definem a velocidade, a direção e o limite. É necessário que todas as letras(ABCD) sejam preenchidas, mesmo que com o valor 0.
+       * O número A é o sinal, com duas opções possíveis. 1 significa que o número é positivo(+). 0 significa que o númeor é negativo(-). BCD são números que definem a velocidade, a direção e o limite. É necessário que todas as letras(ABCDN) sejam preenchidas, mesmo que com o valor 0.
        * N pode ser 0 ou 1.
 
 
