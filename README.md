@@ -5,8 +5,6 @@
   <img title="agrobot" src="https://github.com/CaioslppUO/Agrobot-3.0/blob/main/img/agrobot.gif" width="60%" height="400px" /> 
 </p>
 
-
-
 ## Organização do repositório
 
 <p align="center">
