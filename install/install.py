@@ -3,20 +3,23 @@
 import os,pathlib
 from shutil import which
 
+# Caminhos para as pastas.
 user: str = os.getlogin()
 home: str = "/home/" + user + "/"
 project_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../src/agrobot/"
 catkin_ws_dir: str = home + "catkin_ws/"
 
+# Constantes utilizadas para pintar o texto.
 blue: str = '\033[94m'
 green: str = '\033[92m'
 red: str = '\033[91m'
 yellow: str = '\033[93m'
 end: str = '\033[0m'
 
-def set_color(color: str,text: str):
+def set_color(color: str,text: str) -> str:
     return color + text + end
 
+# Resumo da instalação.
 catkin_folder_creation = set_color(red,"NO")
 src_copied = set_color(red,"NO")
 src_compiled = set_color(red,"NO")
@@ -26,7 +29,7 @@ error = [""]
 warning = [""]
 info = [""]
 
-def create_catkin_folder():
+def create_catkin_folder() -> None:
     global catkin_folder_creation,error,warning,info
     try:
         os.mkdir(home+"catkin_ws")
@@ -36,7 +39,7 @@ def create_catkin_folder():
         catkin_folder_creation = set_color(green,"OK")
     catkin_folder_creation = set_color(green,"OK")
 
-def copy_src_to_catkin_ws():
+def copy_src_to_catkin_ws() -> None:
     global src_copied,error,warning,info
     try:
         os.system("cp -r " + project_dir + " " + catkin_ws_dir+"src/")
@@ -46,7 +49,7 @@ def copy_src_to_catkin_ws():
         error.append("- project folder could not be copied to catkin_ws.")
         src_copied = set_color(red,"NO")
 
-def compile_src():
+def compile_src() -> None:
     global src_compiled,error,warning,info
     try:
         os.system("cd " + catkin_ws_dir + " && catkin_make")
@@ -56,7 +59,7 @@ def compile_src():
         error.append("- src files could not be compiled.")
         src_compiled = set_color(red,"NO")
 
-def source_bashrc():
+def source_bashrc() -> None:
     global bashrc_sourced,error,warning,info
     bashrc_path = home + ".bashrc"
     already_sourced = False
@@ -82,7 +85,7 @@ def source_bashrc():
         error.append("- Error (1) trying to source .bashrc.")
         bashrc_sourced = set_color(red,"NO")
 
-def source_zsh():
+def source_zsh() -> None:
     global zshrc_sourced,error,warning,info
     if(which("zsh") is not None):
         zshrc_path = home + ".zshrc"
@@ -113,7 +116,7 @@ def source_zsh():
         warning.append("* zsh is not installed. Skipping zsh sourcing.")
         zshrc_sourced = set_color(red,"NO")
 
-def instalattion_resume():
+def instalattion_resume() -> None:
     os.system("clear")
     print(set_color(blue,"-> Instalattion Resume\n"))
     print(" * Create catkin_ws folder: " + catkin_folder_creation)
@@ -121,13 +124,13 @@ def instalattion_resume():
     print(" * Compile src files:       " + src_compiled)
     print(" * Source .bashrc:          " + bashrc_sourced)
     print(" * Source .zshrc:           " + zshrc_sourced)
-    print(set_color(green,"\n---------------INFO---------------------"))
+    print(set_color(green,"\n----------------INFO---------------------"))
     for inf in info:
         print(" " + inf)
-    print(set_color(yellow,"\n--------------WARNINGS------------------"))
+    print(set_color(yellow,"\n---------------WARNINGS------------------"))
     for war in warning:
         print(" " + war)
-    print(set_color(red,"\n---------------ERRORS-------------------"))
+    print(set_color(red,"\n----------------ERRORS-------------------"))
     for err in error:
         print(" " + err)
 
