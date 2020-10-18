@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os,pathlib
+import os,pathlib,subprocess,time
 from shutil import which
 
 # Caminhos para as pastas.
@@ -85,7 +85,7 @@ def source_bashrc() -> None:
         error.append("- Error (1) trying to source .bashrc.")
         bashrc_sourced = set_color(red,"NO")
 
-def source_zsh() -> None:
+def source_zshrc() -> None:
     global zshrc_sourced,error,warning,info
     if(which("zsh") is not None):
         zshrc_path = home + ".zshrc"
@@ -119,11 +119,11 @@ def source_zsh() -> None:
 def instalattion_resume() -> None:
     os.system("clear")
     print(set_color(blue,"-> Instalattion Resume\n"))
-    print(" * Create catkin_ws folder: " + catkin_folder_creation)
-    print(" * Copy project folder:     " + src_copied)
-    print(" * Compile src files:       " + src_compiled)
-    print(" * Source .bashrc:          " + bashrc_sourced)
-    print(" * Source .zshrc:           " + zshrc_sourced)
+    print(" * Create catkin_ws folder:        " + catkin_folder_creation)
+    print(" * Copy project folder:            " + src_copied)
+    print(" * Compile src files:              " + src_compiled)
+    print(" * Source /devel for .bashrc:      " + bashrc_sourced)
+    print(" * Source /devel for .zshrc:       " + zshrc_sourced)
     print(set_color(green,"\n----------------INFO---------------------"))
     for inf in info:
         print(" " + inf)
@@ -139,5 +139,5 @@ if __name__ == "__main__":
     copy_src_to_catkin_ws()
     compile_src()
     source_bashrc()
-    source_zsh()
+    source_zshrc()
     instalattion_resume()
