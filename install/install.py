@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os,pathlib,subprocess,time
+import os,pathlib,json
 from shutil import which
 
 # Caminhos para as pastas.
@@ -116,6 +116,42 @@ def source_zshrc() -> None:
         warning.append("* zsh is not installed. Skipping zsh sourcing.")
         zshrc_sourced = set_color(red,"NO")
 
+def get_current_version() -> str:
+    version = "NULL"
+    try:
+        with open(project_dir+"../../README.md","r") as file:
+            for line in file.readlines():
+                line = line.rstrip('\n')
+                line = line.split(":")
+                if(line[0] == "# Versão"):
+                    line = line[1].split(".")
+                    version_l = int(line[0])
+                    version_r = int(line[1])
+                    if(version_r == 9):
+                        version_l = version_l + 1
+                        version_r = 0
+                    else:
+                        version_r = version_r + 1
+                    version = str(version_l) + "." + str(version_r)
+            file.close()
+    except:
+        print("Error trying to read README.md")
+    return version
+
+def update_code_version_inside_src() -> None:
+    json_object = None
+    try:
+        with open(project_dir+"src/info.json","r") as file:
+            json_object = json.load(file) 
+            file.close()
+        with open(project_dir+"src/info.json","w") as file:
+            json_object['version'] = get_current_version()
+            json_object = json.dumps(json_object, indent=4)
+            json.dump(json_object,file)
+            file.close()
+    except:
+        print("Error trying to read info.json")
+
 def instalattion_resume() -> None:
     os.system("clear")
     print(set_color(blue,"-> Instalattion Resume\n"))
@@ -140,4 +176,5 @@ if __name__ == "__main__":
     compile_src()
     source_bashrc()
     source_zshrc()
+    update_code_version_inside_src()
     instalattion_resume()
