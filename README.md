@@ -30,3 +30,5 @@
   - O código segue a seguinte estrutura
 
     * Receive Command -> Command Priority Decider -> Command Standardize -> Command Assembler -> Send Command.
+
+# Versão: 1.1
