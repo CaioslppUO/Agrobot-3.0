@@ -127,11 +127,6 @@ def get_current_version() -> str:
                     line = line[1].split(".")
                     version_l = int(line[0])
                     version_r = int(line[1])
-                    if(version_r == 9):
-                        version_l = version_l + 1
-                        version_r = 0
-                    else:
-                        version_r = version_r + 1
                     version = str(version_l) + "." + str(version_r)
             file.close()
     except:
@@ -146,7 +141,6 @@ def update_code_version_inside_src() -> None:
             file.close()
         with open(project_dir+"src/info.json","w") as file:
             json_object['version'] = get_current_version()
-            json_object = json.dumps(json_object, indent=4)
             json.dump(json_object,file)
             file.close()
     except:
