@@ -54,3 +54,5 @@ if __name__ == "__main__":
     get_current_version()
     set_next_version()
     git_add_commit_push()
+
+#2222222
