@@ -76,7 +76,7 @@ def remove_zshrc_source() -> None:
 def recompile_catkin_ws_dir() -> None:
     try:
         if(os.path.exists(catkin_ws_dir)):
-            os.system("cd " + catkin_ws_dir + " && catkin_make")
+            os.system("cd " + catkin_ws_dir + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
         else:
             remove_bashrc_source()
             remove_zshrc_source()
@@ -96,7 +96,8 @@ def test_uninstallattion() -> None:
 
 ## Executa as rotinas de remoção do código do agrobot.
 if __name__ == "__main__":
-    do_log("---------UNINSTALL---------")
+    do_log("        <-  START UNINSTALLATION   ->\n")
     remove_agrobot_folder()
     recompile_catkin_ws_dir()
     test_uninstallattion()
+    do_log("        <- FINISHED UNINSTALLATION ->\n")

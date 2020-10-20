@@ -70,7 +70,7 @@ def copy_src_to_catkin_ws() -> None:
 def compile_src() -> None:
     try:
         if(os.path.exists(catkin_ws_dir)):
-            os.system("cd " + catkin_ws_dir + " && catkin_make")
+            os.system("cd " + catkin_ws_dir + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
     except:
         do_log("<install.py> [ERROR] Could not compile catkin_ws folder.")
 
@@ -167,7 +167,7 @@ def test_installation() -> None:
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
-    do_log("---------INSTALL---------")
+    do_log("        ->   START INSTALLATION  <-\n")
     uninstall_previous_versions()
     remove_previous_compilation()
     create_catkin_folder()
@@ -177,3 +177,4 @@ if __name__ == "__main__":
     source_zshrc()
     update_code_version_inside_src()
     test_installation()
+    do_log("        -> FINISHED INSTALLATION <-\n")
