@@ -5,20 +5,34 @@
 import os,pathlib,json
 from shutil import which
 from shutil import rmtree
+from datetime import datetime
 
 # Caminhos para as pastas.
 user: str = os.getlogin()
 home: str = "/home/" + user + "/"
-project_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../src/agrobot/"
+current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
+project_dir: str = current_dir +  "../src/agrobot/"
 catkin_ws_dir: str = home + "catkin_ws/"
+
+## Escreve mensagens de log no arquivo de logs.
+def do_log(msg: str) -> None:
+    if(not os.path.exists(current_dir+"logs/")):
+        os.mkdir(current_dir+"logs/")
+    try:
+        with open(current_dir+"logs/log.txt","a") as file:
+            current_time = datetime.now().strftime("%H:%M:%S")
+            file.write("(" + current_time + ") " + msg+"\n")
+            file.close()
+    except:
+        print("[ERROR] Could not log msg properly.")
 
 ## Tenta remover o código antigo, caso já tenha sido instalado.
 def uninstall_previous_versions() -> None:
     try:
-        if(os.path.exists(project_dir+"../../install/uninstall.py")):
-            os.system(project_dir+"../../install/./uninstall.py")
+        if(os.path.exists(current_dir+"uninstall.py")):
+            os.system(current_dir+"./uninstall.py")
     except:
-        pass
+        do_log("<install.py> [ERROR] Could not find uninstall.py script.")
 
 ## Tenta deletar a compilação antiga da pasta do ROS.
 def remove_previous_compilation() -> None:
@@ -31,18 +45,18 @@ def remove_previous_compilation() -> None:
             if(os.path.exists(catkin_ws_dir+"src/CMakeLists.txt")):
                 os.system("rm " + catkin_ws_dir+"src/CMakeLists.txt")
     except:
-        pass
+        do_log("<install.py> [INFO] Could not find catkin_ws folder during remove_previous_compilation().")
 
 ## Tenta criar a pasta onde ficam todos os projetos ROS.
 def create_catkin_folder() -> None:
     try:
         os.mkdir(home+"catkin_ws")
     except:
-        pass
+        do_log("<install.py> [INFO] Tried to create catkin_ws but it already exists.")
     try:
         os.mkdir(catkin_ws_dir+"src")
     except:
-        pass
+        do_log("<install.py> [INFO] Tried to create catkin_ws/src but it already exists.")
 
 ## Copia o código fonte do agrobot para a pasta dos projetos ROS.
 def copy_src_to_catkin_ws() -> None:
@@ -50,7 +64,7 @@ def copy_src_to_catkin_ws() -> None:
         if(os.path.exists(catkin_ws_dir+"src")):
             os.system("cp -r " + project_dir + " " + catkin_ws_dir+"src/agrobot/")
     except:
-        pass
+        do_log("<install.py> [ERROR] Could not copy agrobot folder to catkin_ws/src/agrobot/.")
 
 ## Compila o novo código fonte copiado.
 def compile_src() -> None:
@@ -58,7 +72,7 @@ def compile_src() -> None:
         if(os.path.exists(catkin_ws_dir)):
             os.system("cd " + catkin_ws_dir + " && catkin_make")
     except:
-        pass
+        do_log("<install.py> [ERROR] Could not compile catkin_ws folder.")
 
 ## Utiliza o comando source no arquivo .bashrc.
 def source_bashrc() -> None:
@@ -77,11 +91,11 @@ def source_bashrc() -> None:
                     file.write("source " + catkin_ws_dir + "devel/setup.bash\n")
                     file.close()
             except:
-                pass
+                do_log("<install.py> [ERROR] Could not write to .bashrc.")
         else:
-            pass
+            do_log("<install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bashrc.")
     except:
-        pass
+        do_log("<install.py> [ERROR] Could not read .bashrc file.")
 
 ## Utiliza o comando source no arquivo .zshrc.
 def source_zshrc() -> None:
@@ -101,19 +115,19 @@ def source_zshrc() -> None:
                         file.write("source " + catkin_ws_dir + "devel/setup.zsh\n")
                         file.close()
                 except:
-                    pass
+                    do_log("<install.py> [ERROR] Could not write to .zshrc.")
             else:
-                pass
+                do_log("<install.py> [INFO] .zshrc already has source to catkin_ws/devel/setup.zsh.")
         except:
-            pass
+            do_log("<install.py> [ERROR] Could not read .zshrc file.")
     else:
-        pass
+        do_log("<install.py> [WARNING] Could not find zsh installed.")
 
 ## Pega a versão atual do projeto do arquivo README.md no repositório.
 def get_current_version() -> str:
     version = "NULL"
     try:
-        with open(project_dir+"../../README.md","r") as file:
+        with open(current_dir+"../README.md","r") as file:
             for line in file.readlines():
                 line = line.rstrip('\n')
                 line = line.split(":")
@@ -124,7 +138,7 @@ def get_current_version() -> str:
                     version = str(version_l) + "." + str(version_r)
             file.close()
     except:
-        print("Error trying to read README.md")
+        do_log("<install.py> [ERROR] Could not read README.md while trying to get current version.")
     return version
 
 ## Atualiza o json dentro da pasta agrobot/src com a versão atual do código.
@@ -139,17 +153,17 @@ def update_code_version_inside_src() -> None:
             json.dump(json_object,file)
             file.close()
     except:
-        print("Error trying to read info.json")
+        do_log("<install.py> [ERROR] Could not read info.json while trying to set current version.")
 
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_installation() -> None:
     try:
-        if(os.path.exists(project_dir+"../../install/testing/test_install.py")):
-            os.system(project_dir+"../../install/testing/./test_install.py")
+        if(os.path.exists(current_dir+"testing/test_install.py")):
+            os.system(current_dir+"testing/./test_install.py")
         else:
-            print("[ERROR] Could not run instalattion tests.")
+            do_log("<install.py> [ERROR] Could not run instalattion tests. Code = (0)")
     except:
-        print("[ERROR] Could not run instalattion tests.")
+        do_log("<install.py> [ERROR] Could not run instalattion tests. Code = (1)")
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":

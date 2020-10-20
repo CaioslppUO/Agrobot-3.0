@@ -5,19 +5,32 @@
 
 import os,pathlib
 from shutil import rmtree
+from datetime import datetime
 
 # Caminhos para as pastas.
 user: str = os.getlogin()
 home: str = "/home/" + user + "/"
-project_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../src/agrobot/"
+current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
+
+## Escreve mensagens de log no arquivo de logs.
+def do_log(msg: str) -> None:
+    if(not os.path.exists(current_dir+"logs/")):
+        os.mkdir(current_dir+"logs/")
+    try:
+        with open(current_dir+"logs/log.txt","a") as file:
+            current_time = datetime.now().strftime("%H:%M:%S")
+            file.write("(" + current_time + ") " + msg+"\n")
+            file.close()
+    except:
+        print("<uninstall.py> [ERROR] Could not log msg properly.")
 
 ## Tenta remover a pasta do agrobot.
 def remove_agrobot_folder() -> None:
     try:
         rmtree(catkin_ws_dir+"src/agrobot", ignore_errors=True)
     except:
-        pass
+        do_log("<uninstall.py> [WARNING] Could not remove catkin_ws/src/agrobot/.")
 
 ## Remove o source do .bashrc para a pasta catkin_ws, caso exista.
 def remove_bashrc_source() -> None:
@@ -35,9 +48,9 @@ def remove_bashrc_source() -> None:
                 file.write(text_to_copy)
                 file.close()
         except:
-            pass
+            do_log("<uninstall.py> [ERROR] Could not write to .bashrc file.")
     except:
-        pass
+        do_log("<uninstall.py> [ERROR] Could not read from .bashrc file.")
 
 ## Remove o source do .zshrc para a pasta catkin_ws, caso exista.
 def remove_zshrc_source() -> None:
@@ -55,9 +68,9 @@ def remove_zshrc_source() -> None:
                 file.write(text_to_copy)
                 file.close()
         except:
-            pass
+            do_log("<uninstall.py> [ERROR] Could not write to .zshrc file.")
     except:
-        pass
+        do_log("<uninstall.py> [WARNING] Could not read from .zshrc file. Maybe file doesn't exists because zsh is not installed.")
 
 ## Tenta recompilar a pasta de projetos do ROS. Caso a pasta catkin_ws não exista, tenta remover o source do .bashrc e .zshrc.
 def recompile_catkin_ws_dir() -> None:
@@ -67,18 +80,19 @@ def recompile_catkin_ws_dir() -> None:
         else:
             remove_bashrc_source()
             remove_zshrc_source()
+            do_log("<uninstall.py> [WARNING] Since catkin_ws folder wasn't found, source from .bashrc and .zshrc where removed.")
     except:
-        pass
+        do_log("<uninstall.py> [ERROR] Could not compile catkin_ws folder.")
 
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_uninstallattion() -> None:
     try:
-        if(os.path.exists(project_dir+"../../install/testing/test_uninstall.py")):
-            os.system(project_dir+"../../install/testing/./test_uninstall.py")
+        if(os.path.exists(current_dir+"testing/test_uninstall.py")):
+            os.system(current_dir+"testing/./test_uninstall.py")
         else:
-            print("[ERROR] Could not run uninstalattion tests. Code = (0)")
+            do_log("<uninstall.py> [ERROR] Could not run uninstallation tests. Code = (0)")
     except:
-        print("[ERROR] Could not run uninstalattion tests. Code = (1)")
+        do_log("<uninstall.py> [ERROR] Could not run uninstallation tests. Code = (1)")
 
 ## Executa as rotinas de remoção do código do agrobot.
 if __name__ == "__main__":

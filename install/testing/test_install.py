@@ -2,12 +2,15 @@
 
 # Script que realiza os testes para descobrir se a instalação foi bem sucedida.
 
-import os
+import os,pathlib
+from datetime import datetime
+from shutil import which
 
 # Caminhos para as pastas.
 user: str = os.getlogin()
 home: str = "/home/" + user + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
+current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
 # Constantes utilizadas para pintar o texto.
 blue: str = '\033[94m'
@@ -26,6 +29,18 @@ files_copied = set_color(red,"NO")
 compilation_done = set_color(red,"NO")
 source_bashrc = set_color(red,"NO")
 source_zshrc = set_color(red,"NO")
+
+## Escreve mensagens de log no arquivo de logs.
+def do_log(msg: str) -> None:
+    if(not os.path.exists(current_dir+"logs/")):
+        os.mkdir(current_dir+"logs/")
+    try:
+        with open(current_dir+"logs/log.txt","a") as file:
+            current_time = datetime.now().strftime("%H:%M:%S")
+            file.write("(" + current_time + ") " + msg+"\n")
+            file.close()
+    except:
+        print("[ERROR] Could not log msg properly.")
 
 ## Testa se a pasta de projetos do ROS existe.
 def test_catkin_folder_exists() -> None:
@@ -79,17 +94,22 @@ def test_source_bashrc() -> None:
 ## Testa se a função source foi utilizada para o zshrc.
 def test_source_zshrc() -> None:
     global source_zshrc
-    zshrc_path = home + ".zshrc"
-    try:
-        with open(zshrc_path,"r") as file:
-            for line in file.readlines():
-                line = line.rstrip('\n')
-                if(line == "source " + catkin_ws_dir + "devel/setup.zsh"):
-                    source_zshrc = set_color(green,"OK")
-            file.close()
-    except:
-        pass
+    if(which("zsh") is not None):
+        zshrc_path = home + ".zshrc"
+        try:
+            with open(zshrc_path,"r") as file:
+                for line in file.readlines():
+                    line = line.rstrip('\n')
+                    if(line == "source " + catkin_ws_dir + "devel/setup.zsh"):
+                        source_zshrc = set_color(green,"OK")
+                file.close()
+        except:
+            pass
+    else:
+        source_zshrc = set_color(green,"OK")
+        do_log("<test_install.py> [WARNING] Zsh was not found while testing but no errors will be produced.")
 
+## Calcula a procentagem que deu certo da instalação.
 def calc_installation_percent() -> float:
     count = 0
     total = 5
