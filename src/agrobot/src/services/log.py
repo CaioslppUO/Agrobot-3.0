@@ -15,8 +15,8 @@ def create_log_folder():
     try:
         if(not os.path.exists(log_dir)):
             os.mkdir(log_dir)
-    except:
-        pass
+    except Exception as e:
+        print("Error trying to create log_dir. " + str(e))
 
 ## Escreve no arquivo de logs.
 def write_log(log_type,msg):
@@ -26,8 +26,8 @@ def write_log(log_type,msg):
             file.write("(" + current_time + ") " + log_type + " " + msg+"\n")
             file.close()
         return "Succesffuly logged the message."
-    except:
-        return "Error Trying to log the message."
+    except Exception as e:
+        return "Error Trying to log the message. " + str(e)
 
 ## Trata o recebimento de erro.
 def handle_log_error(data):
@@ -49,5 +49,6 @@ def log_server():
 
 ## Executa as rotinas de log.
 if __name__ == "__main__":
+    create_log_folder()
     log_server()
     rospy.spin()
