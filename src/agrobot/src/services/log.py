@@ -4,7 +4,7 @@ import rospy,os,pathlib
 from agrobot.srv import log_error,log_info,log_warning
 from datetime import datetime
 
-# Variáveis de caminho.
+# Variáveis de diretório.
 log_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../../log/"
 
 # Nó de logs.
@@ -23,7 +23,7 @@ def write_log(log_type,msg):
     try:
         with open(log_dir+"log.txt","a") as file:
             current_time = datetime.now().strftime("%H:%M:%S")
-            file.write("(" + current_time + ") " + log_type + " " + msg+"\n")
+            file.write("(" + current_time + ") <" + msg.file + "> " + log_type + " " + msg.log_msg+"\n")
             file.close()
         return "Succesffuly logged the message."
     except Exception as e:
@@ -31,15 +31,15 @@ def write_log(log_type,msg):
 
 ## Trata o recebimento de erro.
 def handle_log_error(data):
-    return write_log("[ERROR]",data.log_msg)
+    return write_log("[ERROR]",data)
 
 ## Trata o recebimento de info.
 def handle_log_info(data):
-    return write_log("[INFO]",data.log_msg)
+    return write_log("[INFO]",data)
 
 ## Trata o recebimento de warning.
 def handle_log_warning(data):
-    return write_log("[WARNING]",data.log_msg)
+    return write_log("[WARNING]",data)
 
 ## Escuta o chamado dos serviços.
 def log_server():
