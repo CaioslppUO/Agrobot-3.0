@@ -96,6 +96,7 @@ def test_uninstallattion() -> None:
 
 ## Executa as rotinas de remoção do código do agrobot.
 if __name__ == "__main__":
+    do_log("---------UNINSTALL---------")
     remove_agrobot_folder()
     recompile_catkin_ws_dir()
     test_uninstallattion()

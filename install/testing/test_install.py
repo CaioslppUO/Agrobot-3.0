@@ -115,14 +115,24 @@ def calc_installation_percent() -> float:
     total = 5
     if(catkin_folder_exists == set_color(green,"OK")):
         count = count + 1
+    else:
+        do_log("<test_install.py> [ERROR] Could not find catkin_ws folder.")
     if(files_copied == set_color(green,"OK")):
         count = count + 1
+    else:
+         do_log("<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
     if(compilation_done == set_color(green,"OK")):
         count = count + 1
+    else:
+         do_log("<test_install.py> [ERROR] Could not compile the src files.")
     if(source_bashrc == set_color(green,"OK")):
         count = count + 1
+    else:
+         do_log("<test_install.py> [ERROR] Could not source .bashrc.")
     if(source_zshrc == set_color(green,"OK")):
         count = count + 1
+    else:
+         do_log("<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
     if(count == 0):
         return 0.0
     return (count*100) / total
@@ -134,7 +144,7 @@ def tests_results() -> None:
     if(installattion_result == 100.0):
         print(set_color(green,"Successfully Installation."))
     else:
-        print(set_color(red,"Could not Install properly. Check log files under install/logs/log.txt for more details."))
+        print(set_color(red,"Could not Install properly. Check log files under " + current_dir + "../logs/log.txt for more details."))
 
 ## Executa as rotinas de teste.
 if __name__ == "__main__":

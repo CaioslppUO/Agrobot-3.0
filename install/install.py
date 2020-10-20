@@ -145,10 +145,10 @@ def get_current_version() -> str:
 def update_code_version_inside_src() -> None:
     json_object = None
     try:
-        with open(catkin_ws_dir+"src/agrobot/src/info.json","r") as file:
+        with open(catkin_ws_dir+"src/agrobot/info.json","r") as file:
             json_object = json.load(file) 
             file.close()
-        with open(catkin_ws_dir+"src/agrobot/src/info.json","w") as file:
+        with open(catkin_ws_dir+"src/agrobot/info.json","w") as file:
             json_object['version'] = get_current_version()
             json.dump(json_object,file)
             file.close()
@@ -167,6 +167,7 @@ def test_installation() -> None:
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
+    do_log("---------INSTALL---------")
     uninstall_previous_versions()
     remove_previous_compilation()
     create_catkin_folder()

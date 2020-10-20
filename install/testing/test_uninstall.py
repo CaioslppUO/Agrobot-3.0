@@ -50,6 +50,8 @@ def calc_uninstallation_percent() -> float:
     total = 1
     if(agrobot_folder_not_exists == set_color(green,"OK")):
         count = count + 1
+    else:
+         do_log("<test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/")
     if(count == 0):
         return 0.0
     return (count*100) / total
@@ -61,7 +63,7 @@ def tests_results() -> None:
     if(uninstallattion_result == 100.0):
         print(set_color(green,"Successfully Uninstalled."))
     else:
-        print(set_color(red,"Could not Uninstall properly. Check log files under install/logs/log.txt for more details."))
+        print(set_color(red,"Could not Uninstall properly. Check log files under " + current_dir + "../logs/log.txt for more details."))
 
 ## Executa as rotinas de teste.
 if __name__ == "__main__":
