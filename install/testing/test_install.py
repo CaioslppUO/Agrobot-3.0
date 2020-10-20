@@ -139,7 +139,6 @@ def calc_installation_percent() -> float:
 
 ## Imprime na tela o resultado dos testes.
 def tests_results() -> None:
-    os.system("clear")
     installattion_result = calc_installation_percent()
     if(installattion_result == 100.0):
         print(set_color(green,"Successfully Installation."))
