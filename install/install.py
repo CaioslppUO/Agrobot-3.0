@@ -4,6 +4,7 @@
 
 import os,pathlib,json
 from shutil import which
+from shutil import rmtree
 
 # Caminhos para as pastas.
 user: str = os.getlogin()
@@ -14,16 +15,21 @@ catkin_ws_dir: str = home + "catkin_ws/"
 ## Tenta remover o código antigo, caso já tenha sido instalado.
 def uninstall_previous_versions() -> None:
     try:
-        os.system(project_dir+"../../install/./uninstall.py")
+        if(os.path.exists(project_dir+"../../install/uninstall.py")):
+            os.system(project_dir+"../../install/./uninstall.py")
     except:
         pass
 
 ## Tenta deletar a compilação antiga da pasta do ROS.
 def remove_previous_compilation() -> None:
     try:
-        os.system("sudo rm -r " + catkin_ws_dir + "devel")
-        os.system("sudo rm -r " + catkin_ws_dir + "build")
-        os.system("sudo rm " + catkin_ws_dir + "src/CMakeLists.txt")
+        if(os.path.exists(catkin_ws_dir)):
+            if(os.path.exists(catkin_ws_dir+"devel")):
+                rmtree(catkin_ws_dir+"devel", ignore_errors=True)
+            if(os.path.exists(catkin_ws_dir+"build")):
+                rmtree(catkin_ws_dir+"build", ignore_errors=True)
+            if(os.path.exists(catkin_ws_dir+"src/CMakeLists.txt")):
+                os.system("rm " + catkin_ws_dir+"src/CMakeLists.txt")
     except:
         pass
 
@@ -33,18 +39,24 @@ def create_catkin_folder() -> None:
         os.mkdir(home+"catkin_ws")
     except:
         pass
+    try:
+        os.mkdir(catkin_ws_dir+"src")
+    except:
+        pass
 
 ## Copia o código fonte do agrobot para a pasta dos projetos ROS.
 def copy_src_to_catkin_ws() -> None:
     try:
-        os.system("cp -r " + project_dir + " " + catkin_ws_dir+"src/")
+        if(os.path.exists(catkin_ws_dir+"src")):
+            os.system("cp -r " + project_dir + " " + catkin_ws_dir+"src/agrobot/")
     except:
         pass
 
 ## Compila o novo código fonte copiado.
 def compile_src() -> None:
     try:
-        os.system("cd " + catkin_ws_dir + " && catkin_make")
+        if(os.path.exists(catkin_ws_dir)):
+            os.system("cd " + catkin_ws_dir + " && catkin_make")
     except:
         pass
 
@@ -129,8 +141,19 @@ def update_code_version_inside_src() -> None:
     except:
         print("Error trying to read info.json")
 
+## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
+def test_installation() -> None:
+    try:
+        if(os.path.exists(project_dir+"../../install/testing/test_install.py")):
+            os.system(project_dir+"../../install/testing/./test_install.py")
+        else:
+            print("[ERROR] Could not run instalattion tests.")
+    except:
+        print("[ERROR] Could not run instalattion tests.")
+
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
+    uninstall_previous_versions()
     remove_previous_compilation()
     create_catkin_folder()
     copy_src_to_catkin_ws()
@@ -138,3 +161,4 @@ if __name__ == "__main__":
     source_bashrc()
     source_zshrc()
     update_code_version_inside_src()
+    test_installation()
