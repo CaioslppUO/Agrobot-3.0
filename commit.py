@@ -45,14 +45,16 @@ def set_next_version() -> None:
     except:
         print("Error trying to write README.md")
 
+def git_pull():
+    os.system("cd " + current_dir + " && git pull")
+
 def git_add_commit_push():
     os.system("cd " + current_dir + " && git add .")
     os.system("cd " + current_dir + " && git commit")
     os.system("cd " + current_dir + " && git push")
 
 if __name__ == "__main__":
+    git_pull()
     get_current_version()
     set_next_version()
     git_add_commit_push()
-
-#2222222
