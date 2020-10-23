@@ -2,7 +2,7 @@
 
 # Script que realiza os testes para descobrir se a instalação foi bem sucedida.
 
-import os,pathlib,rosservice,time,rospy
+import os,pathlib,time,rospy
 from datetime import datetime
 from shutil import which
 
