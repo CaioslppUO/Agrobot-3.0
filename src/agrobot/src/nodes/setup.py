@@ -3,9 +3,14 @@
 import rospy,rosservice,rosparam,pathlib,json
 
 # Variáveis de diretório.
-version: str = ""
 current_file: str = "setup.py"
 project_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../../"
+
+# Parâmetros para serem armazenados.
+version: str = ""
+number_of_hoverboard_boards: int = -1
+extra_module_gpio_pinout: int = -1
+robot_model: str = ""
 
 ## Faz log de erro.
 def do_log_error(msg: str):
@@ -19,7 +24,7 @@ def do_log_info(msg: str):
 def do_log_warning(msg: str):
     rosservice.call_service("/log_warning",[msg,current_file])
 
-## Lê a versão atual do programa do arquivo info.json na pasta raiz do agrobot.
+## Lê e guarda a versão atual do programa do arquivo info.json na pasta raiz do agrobot.
 def get_version():
     global version
     json_object = None
@@ -37,6 +42,45 @@ def get_version():
     except:
         do_log_error("Could not read info.json.")
 
+## Lê e guarda qual modelo de robô será carregado.
+def get_selected_robot_model():
+    global robot_model
+    try:
+        with open(project_dir+"src/config/setup/setup.json","r") as file:
+            json_object = json.load(file)
+            file.close()
+            robot_model = json_object['robot_model']
+            if(robot_model != ""):
+                rosparam.set_param("robot_model",robot_model)
+                do_log_info("Robot model read successfully from setup.json")
+            else:
+                rosparam.set_param("robot_model","No model selected.")
+                do_log_error("Could not read setup.json properly.")
+    except:
+        do_log_error("Could not read setup.json")
+
+## Lê e carrega o modelo de robô selecionado.
+def get_robot_model():
+    global number_of_hoverboard_boards,extra_module_gpio_pinout
+    get_selected_robot_model()
+    try:
+        with open(project_dir+"src/config/robot_models/"+rosparam.get_param("robot_model")+".json","r") as file:
+            json_object = json.load(file)
+            file.close()
+            number_of_hoverboard_boards = json_object['number_of_hoverboard_boards']
+            extra_module_gpio_pinout = json_object['extra_module_gpio_pinout']
+            if(number_of_hoverboard_boards != -1 and extra_module_gpio_pinout != -1):
+                rosparam.set_param("hoverboard_boards",number_of_hoverboard_boards)
+                rosparam.set_param("module_pinout",extra_module_gpio_pinout)
+                do_log_info("Robot model loaded successfully from " + rosparam.get_param("robot_model") + ".json")
+            else:
+                rosparam.set_param("hoverboard_boards",0)
+                rosparam.set_param("module_pinout",-1)
+                do_log_error("Could not load robot model (" + rosparam.get_param("robot_model") + ") properly.")
+    except:
+        do_log_error("Could not read robot_model (" + rosparam.get_param("robot_model") + ").")
+
 ## Executa as rotinas de setup.
 if __name__ == "__main__":
     get_version()
+    get_robot_model()
