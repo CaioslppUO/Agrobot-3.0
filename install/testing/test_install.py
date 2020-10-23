@@ -2,7 +2,7 @@
 
 # Script que realiza os testes para descobrir se a instalação foi bem sucedida.
 
-import os,pathlib
+import os,pathlib,rosservice,time,rospy
 from datetime import datetime
 from shutil import which
 
@@ -29,13 +29,14 @@ files_copied = set_color(red,"NO")
 compilation_done = set_color(red,"NO")
 source_bashrc = set_color(red,"NO")
 source_zshrc = set_color(red,"NO")
+ran_properly = set_color(red,"NO")
 
 ## Escreve mensagens de log no arquivo de logs.
 def do_log(msg: str) -> None:
-    if(not os.path.exists(current_dir+"logs/")):
-        os.mkdir(current_dir+"logs/")
+    if(not os.path.exists(current_dir+"../logs/")):
+        os.mkdir(current_dir+"../logs/")
     try:
-        with open(current_dir+"logs/log.txt","a") as file:
+        with open(current_dir+"../logs/log.txt","a") as file:
             current_time = datetime.now().strftime("%H:%M:%S")
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
@@ -109,10 +110,64 @@ def test_source_zshrc() -> None:
         source_zshrc = set_color(green,"OK")
         do_log("<test_install.py> [WARNING] Zsh was not found while testing but no errors will be produced.")
 
+## Verifica se o código foi compilado corretamente e está rodando.
+def test_run():
+    global ran_properly
+    ## Deleta o script temporário.
+    def delete_tmp_file():
+       if(os.path.exists(current_dir+"run.tmp")):
+            os.system("rm " + current_dir+"run.tmp")
+
+    ## Cria um .sh temporário para ser executado no bash.
+    def create_tmp_file(content: str):
+        sources_path = "source ~/.bashrc && source /opt/ros/$ROS_DISTRO/setup.bash && source " + catkin_ws_dir+"devel/setup.bash && "
+        with open(current_dir+"run.tmp","w") as file:
+            file.write(sources_path + content)
+            os.system("chmod +x " + current_dir+"run.tmp")
+            file.close()
+
+    ## Executa o script .sh temporário.
+    def run_tmp_file():
+        os.system("bash -e "+current_dir+"run.tmp")
+
+    # Rodando o código.
+    try:
+        delete_tmp_file()
+        os.system("roscore& ")
+        while(rospy.is_shutdown()):
+            pass
+        create_tmp_file("rosrun agrobot log.py& ")
+        run_tmp_file()
+        time.sleep(1)
+        delete_tmp_file()
+        create_tmp_file("rosservice call /log_info 'Installation test (run) worked properly.' 'test_install.py'")
+        run_tmp_file()
+        time.sleep(2)
+        os.system("pkill ros")
+        delete_tmp_file()
+        time.sleep(3)
+    except:
+        pass
+
+    # Verificando se rodou.
+    try:
+        with open(catkin_ws_dir+"src/agrobot/log/log.txt") as file:
+            for line in file.readlines():
+                line = line.rstrip('\n')
+                line = line.split("]")
+                try:
+                    if(line[1] == " Installation test (run) worked properly."):
+                        ran_properly = set_color(green,"OK")
+                except:
+                    pass
+            file.close()
+    except:
+        ran_properly = set_color(red,"NO")
+
 ## Calcula a procentagem que deu certo da instalação.
 def calc_installation_percent() -> float:
     count = 0
-    total = 5
+    total = 6
     if(catkin_folder_exists == set_color(green,"OK")):
         count = count + 1
     else:
@@ -120,19 +175,23 @@ def calc_installation_percent() -> float:
     if(files_copied == set_color(green,"OK")):
         count = count + 1
     else:
-         do_log("<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
+        do_log("<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
     if(compilation_done == set_color(green,"OK")):
         count = count + 1
     else:
-         do_log("<test_install.py> [ERROR] Could not compile the src files.")
+        do_log("<test_install.py> [ERROR] Could not compile the src files.")
     if(source_bashrc == set_color(green,"OK")):
         count = count + 1
     else:
-         do_log("<test_install.py> [ERROR] Could not source .bashrc.")
+        do_log("<test_install.py> [ERROR] Could not source .bashrc.")
     if(source_zshrc == set_color(green,"OK")):
         count = count + 1
     else:
-         do_log("<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
+        do_log("<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
+    if(ran_properly == set_color(green,"OK")):
+        count = count + 1
+    else:
+        do_log("<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
     if(count == 0):
         return 0.0
     return (count*100) / total
@@ -152,4 +211,5 @@ if __name__ == "__main__":
     test_compilation()
     test_source_bashrc()
     test_source_zshrc()
+    test_run()
     tests_results()

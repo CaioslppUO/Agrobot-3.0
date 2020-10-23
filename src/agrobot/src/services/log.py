@@ -25,11 +25,11 @@ def write_log(log_type,msg):
             current_time = datetime.now().strftime("%H:%M:%S")
             file.write("(" + current_time + ") <" + msg.file + "> " + log_type + " " + msg.log_msg+"\n")
             file.close()
-        return "Succesffuly logged the message."
+        return "Successfully logged the message."
     except Exception as e:
         return "Error Trying to log the message. " + str(e)
 
-## Trata o recebimento de erro.
+## Trata o recebimento de error.
 def handle_log_error(data):
     return write_log("[ERROR]",data)
 

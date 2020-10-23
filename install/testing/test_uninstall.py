@@ -25,10 +25,10 @@ agrobot_folder_not_exists = set_color(red,"NO")
 
 ## Escreve mensagens de log no arquivo de logs.
 def do_log(msg: str) -> None:
-    if(not os.path.exists(current_dir+"logs/")):
-        os.mkdir(current_dir+"logs/")
+    if(not os.path.exists(current_dir+"../logs/")):
+        os.mkdir(current_dir+"../logs/")
     try:
-        with open(current_dir+"logs/log.txt","a") as file:
+        with open(current_dir+"../logs/log.txt","a") as file:
             current_time = datetime.now().strftime("%H:%M:%S")
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
