@@ -3,9 +3,8 @@
 # Script que remove instalações antigas do código do agrobot e instala a versão atual.
 
 import os,pathlib,json
-from shutil import which
-from shutil import rmtree
-from datetime import datetime
+from shutil import which,rmtree
+from utils.general import do_log,get_python_version
 
 # Caminhos para as pastas.
 user: str = os.getlogin()
@@ -13,18 +12,6 @@ home: str = "/home/" + user + "/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 project_dir: str = current_dir +  "../src/agrobot/"
 catkin_ws_dir: str = home + "catkin_ws/"
-
-## Escreve mensagens de log no arquivo de logs.
-def do_log(msg: str) -> None:
-    if(not os.path.exists(current_dir+"logs/")):
-        os.mkdir(current_dir+"logs/")
-    try:
-        with open(current_dir+"logs/log.txt","a") as file:
-            current_time = datetime.now().strftime("%H:%M:%S")
-            file.write("(" + current_time + ") " + msg+"\n")
-            file.close()
-    except:
-        print("[ERROR] Could not log msg properly.")
 
 ## Tenta remover o código antigo, caso já tenha sido instalado.
 def uninstall_previous_versions() -> None:
@@ -76,8 +63,8 @@ def compile_src() -> None:
 
 ## Utiliza o comando source no arquivo .bashrc.
 def source_bashrc() -> None:
-    bashrc_path = home + ".bashrc"
-    already_sourced = False
+    bashrc_path: str = home + ".bashrc"
+    already_sourced: bool = False
     try:
         with open(bashrc_path,"r") as file:
             for line in file.readlines():
@@ -100,8 +87,8 @@ def source_bashrc() -> None:
 ## Utiliza o comando source no arquivo .zshrc.
 def source_zshrc() -> None:
     if(which("zsh") is not None):
-        zshrc_path = home + ".zshrc"
-        already_sourced = False
+        zshrc_path: str = home + ".zshrc"
+        already_sourced: bool = False
         try:
             with open(zshrc_path,"r") as file:
                 for line in file.readlines():
@@ -125,7 +112,7 @@ def source_zshrc() -> None:
 
 ## Pega a versão atual do projeto do arquivo README.md no repositório.
 def get_current_version() -> str:
-    version = "NULL"
+    version: str = "NULL"
     try:
         with open(current_dir+"../README.md","r") as file:
             for line in file.readlines():
@@ -156,29 +143,10 @@ def update_code_version_inside_src() -> None:
         do_log("<install.py> [ERROR] Could not read info.json while trying to set current version.")
 
 ## Instala todos os módulos no python path.
-def install_code_in_python_path():
-    def get_python_version():
-        try:
-            python_version = "-1"
-            command = "python3 --version > " + current_dir+"python_version.tmp"
-            os.system(command)
-            with open(current_dir+"python_version.tmp","r") as file:
-                for line in file.readlines():
-                    line = line.rstrip('\n')
-                    line = line.split(" ")
-                    line = line[1].split(".")
-                    line = line[0] + "." + line[1]
-                    python_version = line
-                file.close()
-            if(os.path.exists(current_dir+"python_version.tmp")):
-                os.system("rm " + current_dir+"python_version.tmp")
-            return python_version
-        except:
-            do_log("<install.py> [ERROR] Could not get python 3 version.")
-
+def install_code_in_python_path() -> None:
     try:
-        paths_to_copy = ["robot_nodes","robot_services","robot_utils"]
-        python_version = get_python_version()
+        paths_to_copy: list = ["robot_nodes","robot_services","robot_utils"]
+        python_version: str = get_python_version()
         for path in paths_to_copy:
             if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + path)):
                 os.system("sudo ln -s " + catkin_ws_dir+"src/agrobot/src/" + path + "/ /usr/lib/python" + python_version + "/site-packages/" + path)
@@ -186,11 +154,29 @@ def install_code_in_python_path():
     except:
         do_log("<install.py> [ERROR] Could not create the symlink to robot code in python path.")
 
+## Executa as rotinas que limpam instalações anteriores.
+def clear_previous_install():
+    uninstall_previous_versions()
+    remove_previous_compilation()
+
+## Executa as rotinas que instalam o código novo.
+def install():
+    create_catkin_folder()
+    copy_src_to_catkin_ws()
+    compile_src()
+    update_code_version_inside_src()
+
+## Executa as rotinas de configuração pós instalação.
+def post_installation_configurations():
+    source_bashrc()
+    source_zshrc()
+    install_code_in_python_path()
+
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_installation() -> None:
     try:
-        if(os.path.exists(current_dir+"testing/test_install.py")):
-            os.system(current_dir+"testing/./test_install.py")
+        if(os.path.exists(current_dir+"tests/test_install.py")):
+            os.system(current_dir+"tests/./test_install.py")
         else:
             do_log("<install.py> [ERROR] Could not run instalattion tests. Code = (0)")
     except:
@@ -198,15 +184,9 @@ def test_installation() -> None:
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
-    do_log("        ->   START INSTALLATION  <-\n")
-    uninstall_previous_versions()
-    remove_previous_compilation()
-    create_catkin_folder()
-    copy_src_to_catkin_ws()
-    compile_src()
-    source_bashrc()
-    source_zshrc()
-    update_code_version_inside_src()
-    install_code_in_python_path()
+    do_log("\n----------------START INSTALLATION-------------------\n")
+    clear_previous_install()
+    install()
+    post_installation_configurations()
     test_installation()
-    do_log("        -> FINISHED INSTALLATION <-\n")
+    do_log("\n----------------FINISHED INSTALLATION----------------\n")

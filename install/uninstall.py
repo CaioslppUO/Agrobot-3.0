@@ -5,25 +5,13 @@
 
 import os,pathlib
 from shutil import rmtree
-from datetime import datetime
+from utils.general import do_log,get_python_version
 
 # Caminhos para as pastas.
 user: str = os.getlogin()
 home: str = "/home/" + user + "/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
-
-## Escreve mensagens de log no arquivo de logs.
-def do_log(msg: str) -> None:
-    if(not os.path.exists(current_dir+"logs/")):
-        os.mkdir(current_dir+"logs/")
-    try:
-        with open(current_dir+"logs/log.txt","a") as file:
-            current_time = datetime.now().strftime("%H:%M:%S")
-            file.write("(" + current_time + ") " + msg+"\n")
-            file.close()
-    except:
-        print("<uninstall.py> [ERROR] Could not log msg properly.")
 
 ## Tenta remover a pasta do agrobot.
 def remove_agrobot_folder() -> None:
@@ -34,8 +22,8 @@ def remove_agrobot_folder() -> None:
 
 ## Remove o source do .bashrc para a pasta catkin_ws, caso exista.
 def remove_bashrc_source() -> None:
-    bashrc_path = home + ".bashrc"
-    text_to_copy = ""
+    bashrc_path: str = home + ".bashrc"
+    text_to_copy: str = ""
     try:
         with open(bashrc_path,"r") as file:
             for line in file.readlines():
@@ -54,8 +42,8 @@ def remove_bashrc_source() -> None:
 
 ## Remove o source do .zshrc para a pasta catkin_ws, caso exista.
 def remove_zshrc_source() -> None:
-    zshrc_path = home + ".zshrc"
-    text_to_copy = ""
+    zshrc_path: str = home + ".zshrc"
+    text_to_copy: str = ""
     try:
         with open(zshrc_path,"r") as file:
             for line in file.readlines():
@@ -85,39 +73,26 @@ def recompile_catkin_ws_dir() -> None:
         do_log("<uninstall.py> [ERROR] Could not compile catkin_ws folder.")
 
 ## Remove os sym links para os códigos do robô colocados no python path.
-def remove_sym_links():
-    def get_python_version():
-        try:
-            python_version = "-1"
-            command = "python3 --version > " + current_dir+"python_version.tmp"
-            os.system(command)
-            with open(current_dir+"python_version.tmp","r") as file:
-                for line in file.readlines():
-                    line = line.rstrip('\n')
-                    line = line.split(" ")
-                    line = line[1].split(".")
-                    line = line[0] + "." + line[1]
-                    python_version = line
-                file.close()
-            if(os.path.exists(current_dir+"python_version.tmp")):
-                os.system("rm " + current_dir+"python_version.tmp")
-            return python_version
-        except:
-            do_log("<test_install.py> [ERROR] Could not get python 3 version.")
+def remove_sym_links() -> None:
     try:
-        paths_to_uninstall = ["robot_nodes","robot_services","robot_utils"]
-        python_version = get_python_version()
+        paths_to_uninstall: list = ["robot_nodes","robot_services","robot_utils"]
+        python_version: str = get_python_version()
         for path in paths_to_uninstall:
             if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):
                 os.system("sudo rm /usr/lib/python"+python_version+"/site-packages/"+path)
     except:
         do_log("<uninstall.py> [ERROR] Could not remove some sym links.")
 
+## Executa as rotinas de desinstalação.
+def uninstall():
+    remove_agrobot_folder()
+    recompile_catkin_ws_dir()
+
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_uninstallattion() -> None:
     try:
-        if(os.path.exists(current_dir+"testing/test_uninstall.py")):
-            os.system(current_dir+"testing/./test_uninstall.py")
+        if(os.path.exists(current_dir+"tests/test_uninstall.py")):
+            os.system(current_dir+"tests/./test_uninstall.py")
         else:
             do_log("<uninstall.py> [ERROR] Could not run uninstallation tests. Code = (0)")
     except:
@@ -125,8 +100,7 @@ def test_uninstallattion() -> None:
 
 ## Executa as rotinas de remoção do código do agrobot.
 if __name__ == "__main__":
-    do_log("        <-  START UNINSTALLATION   ->\n")
-    remove_agrobot_folder()
-    recompile_catkin_ws_dir()
+    do_log("\n----------------START UNINSTALLATION----------------\n")
+    uninstall()
     test_uninstallattion()
-    do_log("        <- FINISHED UNINSTALLATION ->\n")
+    do_log("\n----------------FINISHED UNINSTALLATION-------------\n")
