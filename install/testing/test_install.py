@@ -2,7 +2,9 @@
 
 # Script que realiza os testes para descobrir se a instalação foi bem sucedida.
 
+from genericpath import exists
 import os,pathlib,time,rospy
+from os import symlink
 from datetime import datetime
 from shutil import which
 
@@ -30,6 +32,7 @@ compilation_done = set_color(red,"NO")
 source_bashrc = set_color(red,"NO")
 source_zshrc = set_color(red,"NO")
 ran_properly = set_color(red,"NO")
+sym_links = set_color(red,"NO")
 
 ## Escreve mensagens de log no arquivo de logs.
 def do_log(msg: str) -> None:
@@ -164,10 +167,43 @@ def test_run():
     except:
         ran_properly = set_color(red,"NO")
 
+## Testa se os links simbólicos para o código no python path foram criados corretamente.
+def test_sym_link():
+    global sym_links
+    def get_python_version():
+        try:
+            python_version = "-1"
+            command = "python3 --version > " + current_dir+"python_version.tmp"
+            os.system(command)
+            with open(current_dir+"python_version.tmp","r") as file:
+                for line in file.readlines():
+                    line = line.rstrip('\n')
+                    line = line.split(" ")
+                    line = line[1].split(".")
+                    line = line[0] + "." + line[1]
+                    python_version = line
+                file.close()
+            if(os.path.exists(current_dir+"python_version.tmp")):
+                os.system("rm " + current_dir+"python_version.tmp")
+            return python_version
+        except:
+            do_log("<test_install.py> [ERROR] Could not get python 3 version.")
+    try:
+        paths_to_copy = ["robot_nodes","robot_services","robot_utils"]
+        python_version = get_python_version()
+        sym_links = set_color(green,"OK")
+        for path in paths_to_copy:
+            if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + path)):
+                sym_links = set_color(red,"NO")
+                break
+    except:
+        sym_links = set_color(red,"NO")
+        do_log("<test_install.py> [ERROR] Could not check some needed symlinks.")
+
 ## Calcula a procentagem que deu certo da instalação.
 def calc_installation_percent() -> float:
     count = 0
-    total = 6
+    total = 7
     if(catkin_folder_exists == set_color(green,"OK")):
         count = count + 1
     else:
@@ -192,6 +228,10 @@ def calc_installation_percent() -> float:
         count = count + 1
     else:
         do_log("<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
+    if(sym_links == set_color(green,"OK")):
+        count = count + 1
+    else:
+        do_log("<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
     if(count == 0):
         return 0.0
     return (count*100) / total
@@ -212,4 +252,5 @@ if __name__ == "__main__":
     test_source_bashrc()
     test_source_zshrc()
     test_run()
+    test_sym_link()
     tests_results()

@@ -84,6 +84,35 @@ def recompile_catkin_ws_dir() -> None:
     except:
         do_log("<uninstall.py> [ERROR] Could not compile catkin_ws folder.")
 
+## Remove os sym links para os códigos do robô colocados no python path.
+def remove_sym_links():
+    def get_python_version():
+        try:
+            python_version = "-1"
+            command = "python3 --version > " + current_dir+"python_version.tmp"
+            os.system(command)
+            with open(current_dir+"python_version.tmp","r") as file:
+                for line in file.readlines():
+                    line = line.rstrip('\n')
+                    line = line.split(" ")
+                    line = line[1].split(".")
+                    line = line[0] + "." + line[1]
+                    python_version = line
+                file.close()
+            if(os.path.exists(current_dir+"python_version.tmp")):
+                os.system("rm " + current_dir+"python_version.tmp")
+            return python_version
+        except:
+            do_log("<test_install.py> [ERROR] Could not get python 3 version.")
+    try:
+        paths_to_uninstall = ["robot_nodes","robot_services","robot_utils"]
+        python_version = get_python_version()
+        for path in paths_to_uninstall:
+            if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):
+                os.system("sudo rm /usr/lib/python"+python_version+"/site-packages/"+path)
+    except:
+        do_log("<uninstall.py> [ERROR] Could not remove some sym links.")
+
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_uninstallattion() -> None:
     try:
