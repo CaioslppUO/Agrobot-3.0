@@ -155,6 +155,37 @@ def update_code_version_inside_src() -> None:
     except:
         do_log("<install.py> [ERROR] Could not read info.json while trying to set current version.")
 
+## Instala todos os módulos no python path.
+def install_code_in_python_path():
+    def get_python_version():
+        try:
+            python_version = "-1"
+            command = "python3 --version > " + current_dir+"python_version.tmp"
+            os.system(command)
+            with open(current_dir+"python_version.tmp","r") as file:
+                for line in file.readlines():
+                    line = line.rstrip('\n')
+                    line = line.split(" ")
+                    line = line[1].split(".")
+                    line = line[0] + "." + line[1]
+                    python_version = line
+                file.close()
+            if(os.path.exists(current_dir+"python_version.tmp")):
+                os.system("rm " + current_dir+"python_version.tmp")
+            return python_version
+        except:
+            do_log("<install.py> [ERROR] Could not get python 3 version.")
+
+    try:
+        paths_to_copy = ["robot_nodes","robot_services","robot_utils"]
+        python_version = get_python_version()
+        for path in paths_to_copy:
+            if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + path)):
+                os.system("sudo ln -s " + catkin_ws_dir+"src/agrobot/src/" + path + "/ /usr/lib/python" + python_version + "/site-packages/" + path)
+                print("Symlink created from " + catkin_ws_dir+"src/agrobot/src/" + path +"/ to " + "/usr/lib/python" + python_version + "/site-packages/" + path + "/")
+    except:
+        do_log("<install.py> [ERROR] Could not create the symlink to robot code in python path.")
+
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_installation() -> None:
     try:
@@ -176,5 +207,6 @@ if __name__ == "__main__":
     source_bashrc()
     source_zshrc()
     update_code_version_inside_src()
+    install_code_in_python_path()
     test_installation()
     do_log("        -> FINISHED INSTALLATION <-\n")

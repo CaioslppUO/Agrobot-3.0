@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 import rosservice,rosparam,pathlib,json,time
+from robot_utils import logs
 
 # Variáveis de diretório.
 current_file: str = "setup.py"
+robot_config_dir: str = "robot_config"
 project_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../../"
 
 # Parâmetros para serem armazenados.
@@ -18,18 +20,6 @@ def verify_services_availability():
     while(log == None):
         log = rosservice.get_service_type("/log_error")
 
-## Faz log de erro.
-def do_log_error(msg: str):
-    rosservice.call_service("/log_error",[msg,current_file])
-
-## Faz log de info.
-def do_log_info(msg: str):
-    rosservice.call_service("/log_info",[msg,current_file])
-
-## Faz log de warning.
-def do_log_warning(msg: str):
-    rosservice.call_service("/log_warning",[msg,current_file])
-
 ## Lê e guarda a versão atual do programa do arquivo info.json na pasta raiz do agrobot.
 def get_version():
     global version
@@ -41,36 +31,36 @@ def get_version():
             version = json_object['version']
             if(version != ""):
                 rosparam.set_param("version",version)
-                do_log_info("Version read successfully from info.json.")
+                logs.do_log_info("Version read successfully from info.json.",current_file)
             else:
                 rosparam.set_param("version","-1")
-                do_log_error("Could not read info.json properly.")
+                logs.do_log_error("Could not read info.json properly.",current_file)
     except:
-        do_log_error("Could not read info.json.")
+        logs.do_log_error("Could not read info.json.",current_file)
 
 ## Lê e guarda qual modelo de robô será carregado.
 def get_selected_robot_model():
     global robot_model
     try:
-        with open(project_dir+"src/config/setup/setup.json","r") as file:
+        with open(project_dir+"src/" + robot_config_dir + "/setup/setup.json","r") as file:
             json_object = json.load(file)
             file.close()
             robot_model = json_object['robot_model']
             if(robot_model != ""):
                 rosparam.set_param("robot_model",robot_model)
-                do_log_info("Robot model read successfully from setup.json")
+                logs.do_log_info("Robot model read successfully from setup.json",current_file)
             else:
                 rosparam.set_param("robot_model","No model selected")
-                do_log_error("Could not read setup.json properly.")
+                logs.do_log_error("Could not read setup.json properly.",current_file)
     except:
-        do_log_error("Could not read setup.json")
+        logs.do_log_error("Could not read setup.json",current_file)
 
 ## Lê e carrega o modelo de robô selecionado.
 def get_robot_model():
     global number_of_hoverboard_boards,extra_module_gpio_pinout
     get_selected_robot_model()
     try:
-        with open(project_dir+"src/config/robot_models/"+str(rosparam.get_param("robot_model"))+".json","r") as file:
+        with open(project_dir+"src/" + robot_config_dir + "/robot_models/"+str(rosparam.get_param("robot_model"))+".json","r") as file:
             json_object = json.load(file)
             file.close()
             number_of_hoverboard_boards = json_object['number_of_hoverboard_boards']
@@ -78,13 +68,13 @@ def get_robot_model():
             if(number_of_hoverboard_boards != -1 and extra_module_gpio_pinout != -1):
                 rosparam.set_param("hoverboard_boards",str(number_of_hoverboard_boards))
                 rosparam.set_param("module_pinout",str(extra_module_gpio_pinout))
-                do_log_info("Robot model loaded successfully from " + str(rosparam.get_param("robot_model")) + ".json")
+                logs.do_log_info("Robot model loaded successfully from " + str(rosparam.get_param("robot_model")) + ".json",current_file)
             else:
                 rosparam.set_param("hoverboard_boards","0")
                 rosparam.set_param("module_pinout","-1")
-                do_log_error("Could not load robot model (" + str(rosparam.get_param("robot_model")) + ") properly. Check for invalid values.")
+                logs.do_log_error("Could not load robot model (" + str(rosparam.get_param("robot_model")) + ") properly. Check for invalid values.",current_file)
     except Exception as e:
-        do_log_error("Could not load robot_model (" + str(rosparam.get_param("robot_model")) + "). " + str(e))
+        logs.do_log_error("Could not load robot_model (" + str(rosparam.get_param("robot_model")) + "). " + str(e),current_file)
 
 ## Executa as rotinas de setup.
 if __name__ == "__main__":
