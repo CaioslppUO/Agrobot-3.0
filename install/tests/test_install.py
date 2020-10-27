@@ -225,13 +225,13 @@ def test_service() -> None:
 def calc_installation_aux(variable_to_check: str, log_msg: str) -> int:
     if(variable_to_check == set_color(green,"OK")):
         return 1
-    do_log("<test_install.py> [ERROR] " + log_msg)
+    do_log(log_msg)
     return 0
 
 ## Calcula a procentagem que deu certo da instalação.
 def calc_installation_percent() -> float:
     count = 0
-    total = 9
+    total = 7
     count += calc_installation_aux(catkin_folder_exists,"<test_install.py> [ERROR] Could not find catkin_ws folder.")
     count += calc_installation_aux(files_copied,"<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
     count += calc_installation_aux(compilation_done,"<test_install.py> [ERROR] Could not compile the src files.")
@@ -239,8 +239,8 @@ def calc_installation_percent() -> float:
     count += calc_installation_aux(source_zshrc,"<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
     count += calc_installation_aux(ran_properly,"<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
     count += calc_installation_aux(sym_links,"<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
-    count += calc_installation_aux(service_script,"<test_install> [ERROR] Could not setup the robot service.")
-    count += calc_installation_aux(service,"<test_install> [ERROR] Could not setup the robot service.")
+    calc_installation_aux(service_script,"<test_install> [WARNING] Could not setup the robot service.")
+    calc_installation_aux(service,"<test_install> [WARNING] Could not setup the robot service.")
     if(count == 0):
         return 0.0
     return (count*100) / total

@@ -139,8 +139,8 @@ def update_code_version_inside_src() -> None:
             json_object['version'] = get_current_version()
             json.dump(json_object,file)
             file.close()
-    except:
-        do_log("<install.py> [ERROR] Could not read info.json while trying to set current version.")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not read info.json while trying to set current version. " + str(e))
 
 ## Instala todos os módulos no python path.
 def install_code_in_python_path() -> None:
@@ -239,11 +239,11 @@ def test_installation() -> None:
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
     try:
-        do_log("\n----------------START INSTALLATION-------------------\n")
+        do_log(">>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<\n")
         clear_previous_install()
         install()
         post_installation_configurations()
         test_installation()
-        do_log("\n----------------FINISHED INSTALLATION----------------\n")
+        do_log("<<<================================<<<FINISHED INSTALLATION>>>================================>>>\n")
     except:
         do_log("<istall.py> [ERROR] Could not run install.py.")
