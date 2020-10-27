@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
 import rosparam,pathlib,json
-from robot_utils import logs
-from robot_utils import services
+
+if(rosparam.get_param("testing") != "True"):
+    from robot_utils import logs,services
+else:
+    from test_robot_utils import logs_dependency,services_dependency
 
 # Variáveis de diretório.
 current_file: str = "setup.py"
@@ -30,8 +33,8 @@ def get_version():
             else:
                 rosparam.set_param("version","-1")
                 logs.do_log_error("Could not read info.json properly.",current_file)
-    except:
-        logs.do_log_error("Could not read info.json.",current_file)
+    except Exception as e:
+        logs.do_log_error("Could not read info.json."+str(e),current_file)
 
 ## Lê e guarda qual modelo de robô será carregado.
 def get_selected_robot_model():
@@ -47,8 +50,8 @@ def get_selected_robot_model():
             else:
                 rosparam.set_param("robot_model","No model selected")
                 logs.do_log_error("Could not read setup.json properly.",current_file)
-    except:
-        logs.do_log_error("Could not read setup.json",current_file)
+    except Exception as e:
+        logs.do_log_error("Could not read setup.json"+str(e),current_file)
 
 ## Lê e carrega o modelo de robô selecionado.
 def get_robot_model():

@@ -45,8 +45,8 @@ def do_log(msg: str) -> None:
             current_time = datetime.now().strftime("%H:%M:%S")
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
-    except:
-        print("[ERROR] Could not log msg properly.")
+    except Exception as e: 
+        print("[ERROR] Could not log msg properly." + str(e))
 
 ## Testa se a pasta de projetos do ROS existe.
 def test_catkin_folder_exists() -> None:
@@ -189,19 +189,21 @@ def test_sym_link():
             if(os.path.exists(current_dir+"python_version.tmp")):
                 os.system("rm " + current_dir+"python_version.tmp")
             return python_version
-        except:
-            do_log("<test_install.py> [ERROR] Could not get python 3 version.")
+        except Exception as e:
+            do_log("<test_install.py> [ERROR] Could not get python 3 version."+str(e))
     try:
-        paths_to_copy = ["robot_nodes","robot_services","robot_utils"]
+        paths_to_copy = ["robot_nodes","robot_services",
+            "robot_utils","test_robot_nodes",
+            "test_robot_services","test_robot_utils"]
         python_version = get_python_version()
         sym_links = set_color(green,"OK")
         for path in paths_to_copy:
             if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + path)):
                 sym_links = set_color(red,"NO")
                 break
-    except:
+    except Exception as e:
         sym_links = set_color(red,"NO")
-        do_log("<test_install.py> [ERROR] Could not check some needed symlinks.")
+        do_log("<test_install.py> [ERROR] Could not check some needed symlinks."+str(e))
 
 ## Testa se o script do serviço foi instalado corretamente.
 def test_service_script() -> None:
@@ -209,8 +211,8 @@ def test_service_script() -> None:
     try:
         if(os.path.exists(home+"bin/start_robot.sh")):
             service_script = set_color(green,"OK")
-    except:
-        do_log("<test_install.py> [ERROR] Could not find service script on " + home+"bin/start_robot.sh.")
+    except Exception as e:
+        do_log("<test_install.py> [ERROR] Could not find service script on " + home+"bin/start_robot.sh."+str(e))
 
 ## Testa se o serviço foi instalado corretamente.
 def test_service() -> None:
@@ -218,8 +220,8 @@ def test_service() -> None:
     try:
         if(os.path.exists("/etc/systemd/system/start_robot.service")):
             service = set_color(green,"OK")
-    except:
-        do_log("<test_install> [ERROR] Could not find service on /etc/systemd/system/start_robot.service")
+    except Exception as e:
+        do_log("<test_install> [ERROR] Could not find service on /etc/systemd/system/start_robot.service"+str(e))
 
 ## Auxiliar para o cálculo do sucesso instalação.
 def calc_installation_aux(variable_to_check: str, log_msg: str) -> int:

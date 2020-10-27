@@ -18,8 +18,8 @@ def uninstall_previous_versions() -> None:
     try:
         if(os.path.exists(current_dir+"uninstall.py")):
             os.system(current_dir+"./uninstall.py")
-    except:
-        do_log("<install.py> [ERROR] Could not find uninstall.py script.")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not find uninstall.py script."+str(e))
 
 ## Tenta deletar a compilação antiga da pasta do ROS.
 def remove_previous_compilation() -> None:
@@ -31,35 +31,35 @@ def remove_previous_compilation() -> None:
                 rmtree(catkin_ws_dir+"build", ignore_errors=True)
             if(os.path.exists(catkin_ws_dir+"src/CMakeLists.txt")):
                 os.system("rm " + catkin_ws_dir+"src/CMakeLists.txt")
-    except:
-        do_log("<install.py> [INFO] Could not find catkin_ws folder during remove_previous_compilation().")
+    except Exception as e:
+        do_log("<install.py> [INFO] Could not find catkin_ws folder during remove_previous_compilation()."+str(e))
 
 ## Tenta criar a pasta onde ficam todos os projetos ROS.
 def create_catkin_folder() -> None:
     try:
         os.mkdir(home+"catkin_ws")
-    except:
-        do_log("<install.py> [INFO] Tried to create catkin_ws but it already exists.")
+    except Exception as e:
+        do_log("<install.py> [INFO] Tried to create catkin_ws but it already exists."+str(e))
     try:
         os.mkdir(catkin_ws_dir+"src")
-    except:
-        do_log("<install.py> [INFO] Tried to create catkin_ws/src but it already exists.")
+    except Exception as e:
+        do_log("<install.py> [INFO] Tried to create catkin_ws/src but it already exists."+str(e))
 
 ## Copia o código fonte do agrobot para a pasta dos projetos ROS.
 def copy_src_to_catkin_ws() -> None:
     try:
         if(os.path.exists(catkin_ws_dir+"src")):
             os.system("cp -r " + project_dir + " " + catkin_ws_dir+"src/agrobot/")
-    except:
-        do_log("<install.py> [ERROR] Could not copy agrobot folder to catkin_ws/src/agrobot/.")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not copy agrobot folder to catkin_ws/src/agrobot/." +str(e))
 
 ## Compila o novo código fonte copiado.
 def compile_src() -> None:
     try:
         if(os.path.exists(catkin_ws_dir)):
             os.system("cd " + catkin_ws_dir + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
-    except:
-        do_log("<install.py> [ERROR] Could not compile catkin_ws folder.")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not compile catkin_ws folder."+str(e))
 
 ## Utiliza o comando source no arquivo .bashrc.
 def source_bashrc() -> None:
@@ -77,12 +77,12 @@ def source_bashrc() -> None:
                 with open(bashrc_path,"a") as file:
                     file.write("source " + catkin_ws_dir + "devel/setup.bash\n")
                     file.close()
-            except:
-                do_log("<install.py> [ERROR] Could not write to .bashrc.")
+            except Exception as e:
+                do_log("<install.py> [ERROR] Could not write to .bashrc." +str(e))
         else:
             do_log("<install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bash.")
-    except:
-        do_log("<install.py> [ERROR] Could not read .bashrc file.")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not read .bashrc file." +str(e))
 
 ## Utiliza o comando source no arquivo .zshrc.
 def source_zshrc() -> None:
@@ -101,12 +101,12 @@ def source_zshrc() -> None:
                     with open(zshrc_path,"a") as file:
                         file.write("source " + catkin_ws_dir + "devel/setup.zsh\n")
                         file.close()
-                except:
-                    do_log("<install.py> [ERROR] Could not write to .zshrc.")
+                except Exception as e:
+                    do_log("<install.py> [ERROR] Could not write to .zshrc."+str(e))
             else:
                 do_log("<install.py> [INFO] .zshrc already has source to catkin_ws/devel/setup.zsh.")
-        except:
-            do_log("<install.py> [ERROR] Could not read .zshrc file.")
+        except Exception as e:
+            do_log("<install.py> [ERROR] Could not read .zshrc file."+str(e))
     else:
         do_log("<install.py> [WARNING] Could not find zsh installed.")
 
@@ -124,8 +124,8 @@ def get_current_version() -> str:
                     version_r = int(line[1])
                     version = str(version_l) + "." + str(version_r)
             file.close()
-    except:
-        do_log("<install.py> [ERROR] Could not read README.md while trying to get current version.")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not read README.md while trying to get current version."+str(e))
     return version
 
 ## Atualiza o json dentro da pasta agrobot/src com a versão atual do código.
@@ -145,14 +145,17 @@ def update_code_version_inside_src() -> None:
 ## Instala todos os módulos no python path.
 def install_code_in_python_path() -> None:
     try:
-        paths_to_copy: list = ["robot_nodes","robot_services","robot_utils"]
+        paths_to_copy: list = ["src/robot_nodes","src/robot_services",
+            "src/robot_utils","test/test_robot_nodes",
+            "test/test_robot_services","test/test_robot_utils"]
         python_version: str = get_python_version()
         for path in paths_to_copy:
-            if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + path)):
-                os.system("sudo ln -s " + catkin_ws_dir+"src/agrobot/src/" + path + "/ /usr/lib/python" + python_version + "/site-packages/" + path)
-                print("Symlink created from " + catkin_ws_dir+"src/agrobot/src/" + path +"/ to " + "/usr/lib/python" + python_version + "/site-packages/" + path + "/")
-    except:
-        do_log("<install.py> [ERROR] Could not create the symlink to robot code in python path.")
+            aux = path.split("/")
+            if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + aux[1])):
+                os.system("sudo ln -s " + catkin_ws_dir+"src/agrobot/"+ path + "/ /usr/lib/python" + python_version + "/site-packages/" + aux[1])
+                print("Symlink created from " + catkin_ws_dir+"src/agrobot/" + path +"/ to " + "/usr/lib/python" + python_version + "/site-packages/" + aux[1] + "/")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not create the symlink to robot code in python path."+str(e))
 
 ## Instala o script de inicialização do serviço.
 def install_service_script() -> str:
@@ -172,10 +175,10 @@ def install_service_script() -> str:
                 file.write(script)
                 file.close()
                 os.chmod(script_location+"start_robot.sh",0o777)
-        except:
-            do_log("<install.py> [ERROR] Could not create service script on /usr/bin")
-    except:
-        do_log("<install.py> [ERROR] Could not create " + script_location + " folder")
+        except Exception as e:
+            do_log("<install.py> [ERROR] Could not create service script on /usr/bin"+str(e))
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not create " + script_location + " folder"+str(e))
     return script_location
 
 ## Instala o serviço que roda o código.
@@ -202,10 +205,10 @@ def install_service() -> None:
                     do_log("<install.py> [INFO] The service was installed, started and enabled.")
                 else:
                     do_log("<install.py> [INFO] The service was installed but not started and enabled.")
-        except:
-            do_log("<install.py> [ERROR] Could not write .service file.")
-    except:
-        do_log("<install.py> [ERROR] Could not run install_service_script().")
+        except Exception as e:
+            do_log("<install.py> [ERROR] Could not write .service file."+str(e))
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not run install_service_script()."+str(e))
 
 ## Executa as rotinas que limpam instalações anteriores.
 def clear_previous_install() -> None:
@@ -233,8 +236,8 @@ def test_installation() -> None:
             os.system(current_dir+"tests/./test_install.py")
         else:
             do_log("<install.py> [ERROR] Could not run instalattion tests. Code = (0)")
-    except:
-        do_log("<install.py> [ERROR] Could not run instalattion tests. Code = (1)")
+    except Exception as e:
+        do_log("<install.py> [ERROR] Could not run instalattion tests. Code = (1)"+str(e))
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
@@ -245,5 +248,5 @@ if __name__ == "__main__":
         post_installation_configurations()
         test_installation()
         do_log("<<<================================<<<FINISHED INSTALLATION>>>================================>>>\n")
-    except:
-        do_log("<istall.py> [ERROR] Could not run install.py.")
+    except Exception as e:
+        do_log("<istall.py> [ERROR] Could not run install.py."+str(e))

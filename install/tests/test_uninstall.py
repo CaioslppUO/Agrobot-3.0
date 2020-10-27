@@ -33,8 +33,8 @@ def do_log(msg: str) -> None:
             current_time = datetime.now().strftime("%H:%M:%S")
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
-    except:
-        print("[ERROR] Could not log msg properly.")
+    except Exception as e:
+        print("[ERROR] Could not log msg properly."+str(e))
 
 ## Testa se a pasta agrobot existe.
 def test_agrobot_folder_exists() -> None:
@@ -64,19 +64,20 @@ def test_sym_links_removed():
             if(os.path.exists(current_dir+"python_version.tmp")):
                 os.system("rm " + current_dir+"python_version.tmp")
             return python_version
-        except:
-            do_log("<test_install.py> [ERROR] Could not get python 3 version.")
+        except Exception as e:
+            do_log("<test_install.py> [ERROR] Could not get python 3 version."+str(e))
     try:
-        paths_to_check_uninstall = ["robot_nodes","robot_services","robot_utils"]
+        paths_to_check_uninstall = ["robot_nodes","robot_services","robot_utils",
+            "test_robot_nodes","test_robot_services","test_robot_utils"]
         python_version = get_python_version()
         sym_links_removed = set_color(green,"OK")
         for path in paths_to_check_uninstall:
             if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):
                 sym_links_removed = set_color(red,"NO")
                 break
-    except:
+    except Exception as e:
         sym_links_removed = set_color(red,"NO")
-        do_log("<test_uninstall.py> [ERROR] Some of the symlinks could not be checked")
+        do_log("<test_uninstall.py> [ERROR] Some of the symlinks could not be checked."+str(e))
 
 ## Calcula a procentagem que deu certo da desinstalação.
 def calc_uninstallation_percent() -> float:
@@ -96,7 +97,6 @@ def calc_uninstallation_percent() -> float:
 
 ## Imprime na tela o resultado dos testes.
 def tests_results() -> None:
-    os.system("clear")
     uninstallattion_result = calc_uninstallation_percent()
     if(uninstallattion_result == 100.0):
         print(set_color(green,"Successfully Uninstalled."))
