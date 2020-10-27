@@ -33,6 +33,8 @@ source_bashrc = set_color(red,"NO")
 source_zshrc = set_color(red,"NO")
 ran_properly = set_color(red,"NO")
 sym_links = set_color(red,"NO")
+service_script = set_color(red,"NO")
+service = set_color(red,"NO")
 
 ## Escreve mensagens de log no arquivo de logs.
 def do_log(msg: str) -> None:
@@ -123,7 +125,7 @@ def test_run():
 
     ## Cria um .sh temporário para ser executado no bash.
     def create_tmp_file(content: str):
-        sources_path = "source ~/.bashrc && source /opt/ros/$ROS_DISTRO/setup.bash && source " + catkin_ws_dir+"devel/setup.bash && "
+        sources_path = "source /opt/ros/$ROS_DISTRO/setup.bash && source " + catkin_ws_dir+"devel/setup.bash && source ~/.bashrc && "
         with open(current_dir+"run.tmp","w") as file:
             file.write(sources_path + content)
             os.system("chmod +x " + current_dir+"run.tmp")
@@ -154,7 +156,7 @@ def test_run():
 
     # Verificando se rodou.
     try:
-        with open(catkin_ws_dir+"src/agrobot/log/log.txt") as file:
+        with open(catkin_ws_dir+"src/agrobot/log/log.txt","r") as file:
             for line in file.readlines():
                 line = line.rstrip('\n')
                 line = line.split("]")
@@ -163,9 +165,10 @@ def test_run():
                         ran_properly = set_color(green,"OK")
                 except:
                     pass
-            file.close()
-    except:
+                file.close()
+    except Exception as e:
         ran_properly = set_color(red,"NO")
+        do_log("<test_install.py> [ERROR] Could not open agrobot log file. " + str(e))
 
 ## Testa se os links simbólicos para o código no python path foram criados corretamente.
 def test_sym_link():
@@ -200,38 +203,44 @@ def test_sym_link():
         sym_links = set_color(red,"NO")
         do_log("<test_install.py> [ERROR] Could not check some needed symlinks.")
 
+## Testa se o script do serviço foi instalado corretamente.
+def test_service_script() -> None:
+    global service_script
+    try:
+        if(os.path.exists(home+"bin/start_robot.sh")):
+            service_script = set_color(green,"OK")
+    except:
+        do_log("<test_install.py> [ERROR] Could not find service script on " + home+"bin/start_robot.sh.")
+
+## Testa se o serviço foi instalado corretamente.
+def test_service() -> None:
+    global service
+    try:
+        if(os.path.exists("/etc/systemd/system/start_robot.service")):
+            service = set_color(green,"OK")
+    except:
+        do_log("<test_install> [ERROR] Could not find service on /etc/systemd/system/start_robot.service")
+
+## Auxiliar para o cálculo do sucesso instalação.
+def calc_installation_aux(variable_to_check: str, log_msg: str) -> int:
+    if(variable_to_check == set_color(green,"OK")):
+        return 1
+    do_log("<test_install.py> [ERROR] " + log_msg)
+    return 0
+
 ## Calcula a procentagem que deu certo da instalação.
 def calc_installation_percent() -> float:
     count = 0
-    total = 7
-    if(catkin_folder_exists == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_install.py> [ERROR] Could not find catkin_ws folder.")
-    if(files_copied == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
-    if(compilation_done == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_install.py> [ERROR] Could not compile the src files.")
-    if(source_bashrc == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_install.py> [ERROR] Could not source .bashrc.")
-    if(source_zshrc == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
-    if(ran_properly == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
-    if(sym_links == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
+    total = 9
+    count += calc_installation_aux(catkin_folder_exists,"<test_install.py> [ERROR] Could not find catkin_ws folder.")
+    count += calc_installation_aux(files_copied,"<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
+    count += calc_installation_aux(compilation_done,"<test_install.py> [ERROR] Could not compile the src files.")
+    count += calc_installation_aux(source_bashrc,"<test_install.py> [ERROR] Could not source .bashrc.")
+    count += calc_installation_aux(source_zshrc,"<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
+    count += calc_installation_aux(ran_properly,"<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
+    count += calc_installation_aux(sym_links,"<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
+    count += calc_installation_aux(service_script,"<test_install> [ERROR] Could not setup the robot service.")
+    count += calc_installation_aux(service,"<test_install> [ERROR] Could not setup the robot service.")
     if(count == 0):
         return 0.0
     return (count*100) / total

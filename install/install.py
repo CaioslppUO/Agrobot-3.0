@@ -80,7 +80,7 @@ def source_bashrc() -> None:
             except:
                 do_log("<install.py> [ERROR] Could not write to .bashrc.")
         else:
-            do_log("<install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bashrc.")
+            do_log("<install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bash.")
     except:
         do_log("<install.py> [ERROR] Could not read .bashrc file.")
 
@@ -154,23 +154,77 @@ def install_code_in_python_path() -> None:
     except:
         do_log("<install.py> [ERROR] Could not create the symlink to robot code in python path.")
 
+## Instala o script de inicialização do serviço.
+def install_service_script() -> str:
+    script_location: str = home + "bin/"
+    try:
+        if(not os.path.exists(script_location)):
+            os.mkdir(script_location)
+        if(os.path.exists(script_location+"start_robot.sh")):
+            os.system("sudo rm " + script_location+"start_robot.sh")
+        script: str = ""    
+        script += "#!/bin/bash\n"
+        script += "source /opt/ros/melodic/setup.bash && "
+        script += "source " + catkin_ws_dir+"devel/setup.bash && "
+        script += "roslaunch agrobot run.launch\n"
+        try:
+            with open(script_location+"start_robot.sh","w") as file:
+                file.write(script)
+                file.close()
+                os.chmod(script_location+"start_robot.sh",0o777)
+        except:
+            do_log("<install.py> [ERROR] Could not create service script on /usr/bin")
+    except:
+        do_log("<install.py> [ERROR] Could not create " + script_location + " folder")
+    return script_location
+
+## Instala o serviço que roda o código.
+def install_service() -> None:
+    try:
+        service_location: str = "/etc/systemd/system/"
+        service: str = ""
+        service += "[Unit]\n"
+        service += "Description=Serviço que inicializa o agrobot.\n\n"
+        service += "[Service]\n"
+        service += "Type=simple\n"
+        service += "ExecStart=/bin/bash " + install_service_script() + "start_robot.sh\n\n"
+        service += "[Install]\n"
+        service += "WantedBy=multi-user.target\n"
+        try:
+            with open(current_dir+"start_robot.service","w") as file:
+                file.write(service)
+                file.close()
+                os.chmod(current_dir+"start_robot.service",0o644)
+                os.system("sudo mv " + current_dir+"start_robot.service " + service_location)
+                if(user == "labiot"):
+                    os.system("sudo systemctl enable start_robot.service")
+                    os.system("sudo systemctl start start_robot.service")
+                    do_log("<install.py> [INFO] The service was installed, started and enabled.")
+                else:
+                    do_log("<install.py> [INFO] The service was installed but not started and enabled.")
+        except:
+            do_log("<install.py> [ERROR] Could not write .service file.")
+    except:
+        do_log("<install.py> [ERROR] Could not run install_service_script().")
+
 ## Executa as rotinas que limpam instalações anteriores.
-def clear_previous_install():
+def clear_previous_install() -> None:
     uninstall_previous_versions()
     remove_previous_compilation()
 
 ## Executa as rotinas que instalam o código novo.
-def install():
+def install() -> None:
     create_catkin_folder()
     copy_src_to_catkin_ws()
     compile_src()
     update_code_version_inside_src()
 
 ## Executa as rotinas de configuração pós instalação.
-def post_installation_configurations():
+def post_installation_configurations() -> None:
     source_bashrc()
     source_zshrc()
     install_code_in_python_path()
+    install_service()
 
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_installation() -> None:
@@ -184,9 +238,12 @@ def test_installation() -> None:
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
-    do_log("\n----------------START INSTALLATION-------------------\n")
-    clear_previous_install()
-    install()
-    post_installation_configurations()
-    test_installation()
-    do_log("\n----------------FINISHED INSTALLATION----------------\n")
+    try:
+        do_log("\n----------------START INSTALLATION-------------------\n")
+        clear_previous_install()
+        install()
+        post_installation_configurations()
+        test_installation()
+        do_log("\n----------------FINISHED INSTALLATION----------------\n")
+    except:
+        do_log("<istall.py> [ERROR] Could not run install.py.")
