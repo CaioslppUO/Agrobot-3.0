@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import rosservice,rosparam,pathlib,json,time
+import rosparam,pathlib,json
 from robot_utils import logs
+from robot_utils import services
 
 # Variáveis de diretório.
 current_file: str = "setup.py"
@@ -13,12 +14,6 @@ version: str = ""
 number_of_hoverboard_boards: int = -1
 extra_module_gpio_pinout: int = -1
 robot_model: str = ""
-
-## Verifica a disponibilidade dos serviços utilizados nesse nó.
-def verify_services_availability():
-    log = rosservice.get_service_type("/log_error")
-    while(log == None):
-        log = rosservice.get_service_type("/log_error")
 
 ## Lê e guarda a versão atual do programa do arquivo info.json na pasta raiz do agrobot.
 def get_version():
@@ -78,6 +73,8 @@ def get_robot_model():
 
 ## Executa as rotinas de setup.
 if __name__ == "__main__":
-    verify_services_availability()
-    get_version()
-    get_robot_model()
+    if(services.wait_for_services_availability()):
+        get_version()
+        get_robot_model()
+    else:
+        logs.do_log_error("Time limit reached when waiting for used services to respond.","setup.py")
