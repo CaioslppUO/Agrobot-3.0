@@ -6,12 +6,13 @@
 import os,pathlib
 from shutil import rmtree
 from utils.general import do_log,get_python_version
+from typing import Final
 
 # Caminhos para as pastas.
-user: str = os.getlogin()
-home: str = "/home/" + user + "/"
-current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
-catkin_ws_dir: str = home + "catkin_ws/"
+user: Final = os.getlogin()
+home: Final = "/home/" + user + "/"
+current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
+catkin_ws_dir: Final = home + "catkin_ws/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 uninstalled: bool = False
@@ -80,8 +81,7 @@ def recompile_catkin_ws_dir() -> bool:
 ## Remove os sym links para os códigos do robô colocados no python path.
 def remove_sym_links() -> bool:
     try:
-        paths_to_uninstall: list = ["robot_nodes","robot_services","robot_utils",
-            "test_robot_nodes","test_robot_services","test_robot_utils"]
+        paths_to_uninstall: list = ["robot_utils","test_robot_nodes","test_robot_services","test_robot_utils"]
         python_version: str = get_python_version()
         for path in paths_to_uninstall:
             if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):

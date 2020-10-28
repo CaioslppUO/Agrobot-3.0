@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 
 import rosparam,time,os
+from typing import Final
 
 # Constantes utilizadas para pintar o texto.
-blue: str = '\033[94m'
-green: str = '\033[92m'
-red: str = '\033[91m'
-yellow: str = '\033[93m'
-end: str = '\033[0m'
+blue: Final = '\033[94m'
+green: Final = '\033[92m'
+red: Final = '\033[91m'
+yellow: Final = '\033[93m'
+end: Final = '\033[0m'
 
 ## Recebe um texto e o retorna com uma cor específica.
 def set_color(color: str,text: str) -> str:
     return color + text + end
 
 # Variáveis de controle de tentativas.
-limit_attempts: int = 100
+limit_attempts: Final = 100
 
 # Variáveis para o resultado dos testes.
 version = set_color(red,"NO")

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import rosparam,pathlib,json,robot_utils.testing as testing
+from typing import Final
 
 if(testing.is_test_running()):
     from test_robot_utils import log_dependency as logs, services_dependency as services, nodes_dependency as nodes, params_dependency as params
@@ -8,9 +9,9 @@ else:
     from robot_utils import logs, services, nodes, params
 
 # Variáveis de diretório.
-current_file: str = "setup.py"
-robot_config_dir: str = "robot_config"
-project_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../../"
+current_file: Final = "setup.py"
+robot_config_dir: Final = "robot_config"
+project_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/../../"
 
 # Parâmetros para serem armazenados.
 version: str = ""
@@ -34,7 +35,7 @@ def get_version():
                 rosparam.set_param("version","-1")
                 logs.do_log_error("Could not read info.json properly.",current_file)
     except Exception as e:
-        logs.do_log_error("Could not read info.json."+str(e),current_file)
+        logs.do_log_error("Could not read info.json. "+str(e),current_file)
 
 ## Lê e guarda qual modelo de robô será carregado.
 def get_selected_robot_model():
@@ -51,7 +52,7 @@ def get_selected_robot_model():
                 rosparam.set_param("robot_model","No model selected")
                 logs.do_log_error("Could not read setup.json properly.",current_file)
     except Exception as e:
-        logs.do_log_error("Could not read setup.json"+str(e),current_file)
+        logs.do_log_error("Could not read setup.json. "+str(e),current_file)
 
 ## Lê e carrega o modelo de robô selecionado.
 def get_robot_model():
@@ -76,8 +77,9 @@ def get_robot_model():
 
 ## Executa as rotinas de setup.
 if __name__ == "__main__":
-    if(services.wait_for_services_availability() and nodes.wait_for_nodes_availability()) and params.wait_for_param_availability(['']):
+    if(services.wait_for_services_availability() and nodes.wait_for_nodes_availability() and params.wait_for_param_availability([''])):
+        logs.do_log_info("SETUP.PY STARTED.","setup.py")
         get_version()
         get_robot_model()
     else:
-        logs.do_log_error("Time limit reached when waiting for used services to respond.","setup.py")
+        logs.do_log_error("Time limit reached when waiting for used services,nodes or parameters to respond.","setup.py")

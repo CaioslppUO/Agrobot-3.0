@@ -2,22 +2,23 @@
 
 import os,pathlib
 from datetime import datetime
+from typing import Final
 
 # Caminhos para as pastas.
-user: str = os.getlogin()
-home: str = "/home/" + user + "/"
-catkin_ws_dir: str = home + "catkin_ws/"
-current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
+user: Final = os.getlogin()
+home: Final = "/home/" + user + "/"
+catkin_ws_dir: Final = home + "catkin_ws/"
+current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 uninstalled: bool = False
 
 # Constantes utilizadas para pintar o texto.
-blue: str = '\033[94m'
-green: str = '\033[92m'
-red: str = '\033[91m'
-yellow: str = '\033[93m'
-end: str = '\033[0m'
+blue: Final = '\033[94m'
+green: Final = '\033[92m'
+red: Final = '\033[91m'
+yellow: Final = '\033[93m'
+end: Final = '\033[0m'
 
 ## Recebe um texto e o retorna com uma cor específica.
 def set_color(color: str,text: str) -> str:
@@ -71,7 +72,7 @@ def test_sym_links_removed() -> bool:
         except Exception as e:
             do_log("<test_install.py> [ERROR] Could not get python 3 version. "+str(e))
     try:
-        paths_to_check_uninstall = ["robot_nodes","robot_services","robot_utils",
+        paths_to_check_uninstall = ["robot_utils",
             "test_robot_nodes","test_robot_services","test_robot_utils"]
         python_version = get_python_version()
         sym_links_removed = set_color(green,"OK")
