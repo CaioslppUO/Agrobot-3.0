@@ -9,6 +9,9 @@ home: str = "/home/" + user + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
+# Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
+uninstalled: bool = False
+
 # Constantes utilizadas para pintar o texto.
 blue: str = '\033[94m'
 green: str = '\033[92m'
@@ -34,21 +37,22 @@ def do_log(msg: str) -> None:
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
     except Exception as e:
-        print("[ERROR] Could not log msg properly."+str(e))
+        print("[ERROR] Could not log msg properly. "+str(e))
 
 ## Testa se a pasta agrobot existe.
-def test_agrobot_folder_exists() -> None:
+def test_agrobot_folder_exists() -> bool:
     global agrobot_folder_not_exists
     try:
         if(not os.path.exists(catkin_ws_dir+"src/agrobot")):
             agrobot_folder_not_exists = set_color(green,"OK")
+        return True
     except:
-        pass
+        return False
 
 ## Testa se os links simbólicos criados para o código fonte no python path foram removidos.
-def test_sym_links_removed():
+def test_sym_links_removed() -> bool:
     global sym_links_removed
-    def get_python_version():
+    def get_python_version() -> str:
         try:
             python_version = "-1"
             command = "python3 --version > " + current_dir+"python_version.tmp"
@@ -65,7 +69,7 @@ def test_sym_links_removed():
                 os.system("rm " + current_dir+"python_version.tmp")
             return python_version
         except Exception as e:
-            do_log("<test_install.py> [ERROR] Could not get python 3 version."+str(e))
+            do_log("<test_install.py> [ERROR] Could not get python 3 version. "+str(e))
     try:
         paths_to_check_uninstall = ["robot_nodes","robot_services","robot_utils",
             "test_robot_nodes","test_robot_services","test_robot_utils"]
@@ -75,25 +79,34 @@ def test_sym_links_removed():
             if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):
                 sym_links_removed = set_color(red,"NO")
                 break
+        return True
     except Exception as e:
         sym_links_removed = set_color(red,"NO")
-        do_log("<test_uninstall.py> [ERROR] Some of the symlinks could not be checked."+str(e))
+        do_log("<test_uninstall.py> [ERROR] Some of the symlinks could not be checked. "+str(e))
+        return False
+
+## Auxiliar para o cálculo do sucesso da desinstalação.
+def calc_uninstallation_aux(variable_to_check: str, log_msg: str) -> int:
+    if(variable_to_check == set_color(green,"OK")):
+        return 1
+    do_log(log_msg)
+    return 0
 
 ## Calcula a procentagem que deu certo da desinstalação.
 def calc_uninstallation_percent() -> float:
     count = 0
     total = 2
-    if(agrobot_folder_not_exists == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/")
-    if(sym_links_removed == set_color(green,"OK")):
-        count = count + 1
-    else:
-        do_log("<test_uninstall.py> [ERROR] Could not remove symlinks.")
+    # Precisa passar no teste (Entra para o total).
+    count += calc_uninstallation_aux(agrobot_folder_not_exists,"<test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/")
+    count += calc_uninstallation_aux(sym_links_removed,"<test_uninstall.py> [ERROR] Could not remove symlinks.")
     if(count == 0):
         return 0.0
     return (count*100) / total
+
+## Roda os testes de desinstalação.
+def run_uninstall_tests():
+    global uninstalled
+    uninstalled = test_agrobot_folder_exists() and test_sym_links_removed()
 
 ## Imprime na tela o resultado dos testes.
 def tests_results() -> None:
@@ -105,6 +118,5 @@ def tests_results() -> None:
 
 ## Executa as rotinas de teste.
 if __name__ == "__main__":
-    test_agrobot_folder_exists()
-    test_sym_links_removed()
+    run_uninstall_tests()
     tests_results()

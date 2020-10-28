@@ -13,12 +13,15 @@ home: str = "/home/" + user + "/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
 
+# Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
+uninstalled: bool = False
+
 ## Tenta remover a pasta do agrobot.
 def remove_agrobot_folder() -> None:
     try:
         rmtree(catkin_ws_dir+"src/agrobot", ignore_errors=True)
     except Exception as e:
-        do_log("<uninstall.py> [WARNING] Could not remove catkin_ws/src/agrobot/."+str(e))
+        do_log("<uninstall.py> [WARNING] Could not remove catkin_ws/src/agrobot/. "+str(e))
 
 ## Remove o source do .bashrc para a pasta catkin_ws, caso exista.
 def remove_bashrc_source() -> None:
@@ -36,9 +39,9 @@ def remove_bashrc_source() -> None:
                 file.write(text_to_copy)
                 file.close()
         except Exception as e:
-            do_log("<uninstall.py> [ERROR] Could not write to .bashrc file."+str(e))
+            do_log("<uninstall.py> [ERROR] Could not write to .bashrc file. "+str(e))
     except Exception as e:
-        do_log("<uninstall.py> [ERROR] Could not read from .bashrc file."+str(e))
+        do_log("<uninstall.py> [ERROR] Could not read from .bashrc file. "+str(e))
 
 ## Remove o source do .zshrc para a pasta catkin_ws, caso exista.
 def remove_zshrc_source() -> None:
@@ -56,12 +59,12 @@ def remove_zshrc_source() -> None:
                 file.write(text_to_copy)
                 file.close()
         except Exception as e:
-            do_log("<uninstall.py> [ERROR] Could not write to .zshrc file."+str(e))
+            do_log("<uninstall.py> [ERROR] Could not write to .zshrc file. "+str(e))
     except Exception as e:
-        do_log("<uninstall.py> [WARNING] Could not read from .zshrc file. Maybe file doesn't exists because zsh is not installed."+str(e))
+        do_log("<uninstall.py> [WARNING] Could not read from .zshrc file. Maybe file doesn't exists because zsh is not installed. "+str(e))
 
 ## Tenta recompilar a pasta de projetos do ROS. Caso a pasta catkin_ws não exista, tenta remover o source do .bashrc e .zshrc.
-def recompile_catkin_ws_dir() -> None:
+def recompile_catkin_ws_dir() -> bool:
     try:
         if(os.path.exists(catkin_ws_dir)):
             os.system("cd " + catkin_ws_dir + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
@@ -69,28 +72,31 @@ def recompile_catkin_ws_dir() -> None:
             remove_bashrc_source()
             remove_zshrc_source()
             do_log("<uninstall.py> [WARNING] Since catkin_ws folder wasn't found, source from .bashrc and .zshrc where removed.")
+        return True
     except Exception as e:
-        do_log("<uninstall.py> [ERROR] Could not compile catkin_ws folder."+str(e))
+        do_log("<uninstall.py> [ERROR] Could not compile catkin_ws folder. "+str(e))
+        return False
 
 ## Remove os sym links para os códigos do robô colocados no python path.
-def remove_sym_links() -> None:
+def remove_sym_links() -> bool:
     try:
         paths_to_uninstall: list = ["robot_nodes","robot_services","robot_utils",
             "test_robot_nodes","test_robot_services","test_robot_utils"]
         python_version: str = get_python_version()
         for path in paths_to_uninstall:
-            print("/usr/lib/python"+python_version+"/site-packages/"+path)
             if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):
                 os.system("sudo rm /usr/lib/python"+python_version+"/site-packages/"+path)
+        return True
     except Exception as e:
-        do_log("<uninstall.py> [ERROR] Could not remove some sym links."+str(e))
+        do_log("<uninstall.py> [ERROR] Could not remove some sym links. "+str(e))
+        return False
 
 ## Executa as rotinas de desinstalação.
 def uninstall():
-    remove_sym_links()
+    global uninstalled
+    uninstalled = remove_sym_links()
     remove_agrobot_folder()
-    recompile_catkin_ws_dir()
-
+    uninstalled = uninstalled and recompile_catkin_ws_dir()
 
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_uninstallattion() -> None:
@@ -100,7 +106,7 @@ def test_uninstallattion() -> None:
         else:
             do_log("<uninstall.py> [ERROR] Could not run uninstallation tests. Code = (0)")
     except Exception as e:
-        do_log("<uninstall.py> [ERROR] Could not run uninstallation tests. Code = (1)"+str(e))
+        do_log("<uninstall.py> [ERROR] Could not run uninstallation tests. Code = (1). "+str(e))
 
 ## Executa as rotinas de remoção do código do agrobot.
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ def do_log(msg: str) -> None:
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
     except Exception as e:
-        print("[ERROR] Could not log msg properly."+str(e))
+        print("[ERROR] Could not log msg properly. "+str(e))
 
 ## Pega a versão do python instalada e a retorna.
 def get_python_version() -> str:
@@ -38,5 +38,5 @@ def get_python_version() -> str:
             if(os.path.exists(current_dir+"python_version.tmp")):
                 os.system("rm " + current_dir+"python_version.tmp")
         except Exception as e:
-            do_log("<install.py> [ERROR] Could not get python 3 version."+str(e))
+            do_log("<install.py> [ERROR] Could not get python 3 version. "+str(e))
         return python_version

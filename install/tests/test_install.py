@@ -2,9 +2,7 @@
 
 # Script que realiza os testes para descobrir se a instalação foi bem sucedida.
 
-from genericpath import exists
 import os,pathlib,time,rospy
-from os import symlink
 from datetime import datetime
 from shutil import which
 
@@ -13,6 +11,10 @@ user: str = os.getlogin()
 home: str = "/home/" + user + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
+
+# Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
+installation_tests: bool = False
+post_installation_tests: bool = False
 
 # Constantes utilizadas para pintar o texto.
 blue: str = '\033[94m'
@@ -46,28 +48,30 @@ def do_log(msg: str) -> None:
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
     except Exception as e: 
-        print("[ERROR] Could not log msg properly." + str(e))
+        print("[ERROR] Could not log msg properly. " + str(e))
 
 ## Testa se a pasta de projetos do ROS existe.
-def test_catkin_folder_exists() -> None:
+def test_catkin_folder_exists() -> bool:
     global catkin_folder_exists
     try:
         if(os.path.exists(catkin_ws_dir)):
             catkin_folder_exists = set_color(green,"OK")
+            return True
     except:
-        pass
+        return False
 
 ## Testa se os arquivos do agrobot foram copiados.
-def test_files_where_copied() -> None:
+def test_files_where_copied() -> bool:
     global files_copied
     try:
         if(os.path.exists(catkin_ws_dir+"src/agrobot/")):
             files_copied = set_color(green,"OK")
+            return True
     except:
-        pass
+        return False
 
 ## Testa se o código foi compilado com sucesso.
-def test_compilation() -> None:
+def test_compilation() -> bool:
     global compilation_done
     aux1,aux2,aux3 = False,False,False
     try:
@@ -82,9 +86,11 @@ def test_compilation() -> None:
 
     if(aux1 == True and aux2 == True and aux3 == True):
         compilation_done = set_color(green,"OK")
+        return True
+    return False
 
 ## Testa se a função source foi utilizada para o bashrc.
-def test_source_bashrc() -> None:
+def test_source_bashrc() -> bool:
     global source_bashrc
     bashrc_path = home + ".bashrc"
     try:
@@ -94,11 +100,12 @@ def test_source_bashrc() -> None:
                 if(line == "source " + catkin_ws_dir + "devel/setup.bash"):
                     source_bashrc = set_color(green,"OK")
             file.close()
+        return True
     except:
-        pass
+        return False
 
 ## Testa se a função source foi utilizada para o zshrc.
-def test_source_zshrc() -> None:
+def test_source_zshrc() -> bool:
     global source_zshrc
     if(which("zsh") is not None):
         zshrc_path = home + ".zshrc"
@@ -109,14 +116,16 @@ def test_source_zshrc() -> None:
                     if(line == "source " + catkin_ws_dir + "devel/setup.zsh"):
                         source_zshrc = set_color(green,"OK")
                 file.close()
+            return True
         except:
-            pass
+            return False
     else:
         source_zshrc = set_color(green,"OK")
         do_log("<test_install.py> [WARNING] Zsh was not found while testing but no errors will be produced.")
+        return True
 
 ## Verifica se o código foi compilado corretamente e está rodando.
-def test_run():
+def test_run() -> bool:
     global ran_properly
     ## Deleta o script temporário.
     def delete_tmp_file():
@@ -153,7 +162,7 @@ def test_run():
         time.sleep(3)
     except:
         pass
-
+    
     # Verificando se rodou.
     try:
         with open(catkin_ws_dir+"src/agrobot/log/log.txt","r") as file:
@@ -166,14 +175,16 @@ def test_run():
                 except:
                     pass
                 file.close()
+            return True
     except Exception as e:
         ran_properly = set_color(red,"NO")
         do_log("<test_install.py> [ERROR] Could not open agrobot log file. " + str(e))
+        return False
 
 ## Testa se os links simbólicos para o código no python path foram criados corretamente.
-def test_sym_link():
+def test_sym_link() -> bool:
     global sym_links
-    def get_python_version():
+    def get_python_version() -> str:
         try:
             python_version = "-1"
             command = "python3 --version > " + current_dir+"python_version.tmp"
@@ -190,7 +201,7 @@ def test_sym_link():
                 os.system("rm " + current_dir+"python_version.tmp")
             return python_version
         except Exception as e:
-            do_log("<test_install.py> [ERROR] Could not get python 3 version."+str(e))
+            do_log("<test_install.py> [ERROR] Could not get python 3 version. "+str(e))
     try:
         paths_to_copy = ["robot_nodes","robot_services",
             "robot_utils","test_robot_nodes",
@@ -201,9 +212,11 @@ def test_sym_link():
             if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + path)):
                 sym_links = set_color(red,"NO")
                 break
+        return True
     except Exception as e:
         sym_links = set_color(red,"NO")
-        do_log("<test_install.py> [ERROR] Could not check some needed symlinks."+str(e))
+        do_log("<test_install.py> [ERROR] Could not check some needed symlinks. "+str(e))
+        return False
 
 ## Testa se o script do serviço foi instalado corretamente.
 def test_service_script() -> None:
@@ -212,7 +225,7 @@ def test_service_script() -> None:
         if(os.path.exists(home+"bin/start_robot.sh")):
             service_script = set_color(green,"OK")
     except Exception as e:
-        do_log("<test_install.py> [ERROR] Could not find service script on " + home+"bin/start_robot.sh."+str(e))
+        do_log("<test_install.py> [ERROR] Could not find service script on " + home+"bin/start_robot.sh. "+str(e))
 
 ## Testa se o serviço foi instalado corretamente.
 def test_service() -> None:
@@ -221,9 +234,9 @@ def test_service() -> None:
         if(os.path.exists("/etc/systemd/system/start_robot.service")):
             service = set_color(green,"OK")
     except Exception as e:
-        do_log("<test_install> [ERROR] Could not find service on /etc/systemd/system/start_robot.service"+str(e))
+        do_log("<test_install> [ERROR] Could not find service on /etc/systemd/system/start_robot.service. "+str(e))
 
-## Auxiliar para o cálculo do sucesso instalação.
+## Auxiliar para o cálculo do sucesso da instalação.
 def calc_installation_aux(variable_to_check: str, log_msg: str) -> int:
     if(variable_to_check == set_color(green,"OK")):
         return 1
@@ -231,9 +244,10 @@ def calc_installation_aux(variable_to_check: str, log_msg: str) -> int:
     return 0
 
 ## Calcula a procentagem que deu certo da instalação.
-def calc_installation_percent() -> float:
+def calc_installation_percent() -> bool:
     count = 0
     total = 7
+    # Precisa passar no teste (Entra para o total).
     count += calc_installation_aux(catkin_folder_exists,"<test_install.py> [ERROR] Could not find catkin_ws folder.")
     count += calc_installation_aux(files_copied,"<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
     count += calc_installation_aux(compilation_done,"<test_install.py> [ERROR] Could not compile the src files.")
@@ -241,27 +255,37 @@ def calc_installation_percent() -> float:
     count += calc_installation_aux(source_zshrc,"<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
     count += calc_installation_aux(ran_properly,"<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
     count += calc_installation_aux(sym_links,"<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
+    # Não precisa passar no teste.
     calc_installation_aux(service_script,"<test_install> [WARNING] Could not setup the robot service.")
     calc_installation_aux(service,"<test_install> [WARNING] Could not setup the robot service.")
-    if(count == 0):
-        return 0.0
-    return (count*100) / total
+    return count == total
+
+## Roda os testes relacionados à instalação.
+def run_installation_tests():
+    global installation_tests
+    installation_tests = test_catkin_folder_exists() and test_files_where_copied() and test_compilation()
+
+## Roda os testes relacionados à pós instalação.
+def run_post_installation_tests():
+    global post_installation_tests
+    if(installation_tests):
+        post_installation_tests =  test_source_bashrc() and test_source_zshrc() and test_sym_link() and test_run()
+    else:
+        do_log("<test_install.py> [ERROR] Could not run post_installation_tests(). Installation tests where not executed.")
 
 ## Imprime na tela o resultado dos testes.
 def tests_results() -> None:
     installattion_result = calc_installation_percent()
-    if(installattion_result == 100.0):
+    if(installattion_result == True):
         print(set_color(green,"Successfully Installation."))
     else:
         print(set_color(red,"Could not Install properly. Check log files under " + current_dir + "../logs/log.txt for more details."))
 
 ## Executa as rotinas de teste.
 if __name__ == "__main__":
-    test_catkin_folder_exists()
-    test_files_where_copied()
-    test_compilation()
-    test_source_bashrc()
-    test_source_zshrc()
-    test_run()
-    test_sym_link()
-    tests_results()
+    try:
+        run_installation_tests()
+        run_post_installation_tests()
+        tests_results()
+    except Exception as e:
+        do_log("<test_install.py> [ERROR] Could not run test_install.py. " + str(e))
