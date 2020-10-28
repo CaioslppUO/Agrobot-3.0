@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
-
-
-## Faz log de erro.
+## Injeção de dependências.
 def do_log_error(msg: str, file: str)->None:
     pass
 
-## Faz log de info.
+## Injeção de dependências.
 def do_log_info(msg: str, file: str)->None:
     pass
 
-## Faz log de warning.
+## Injeção de dependências.
 def do_log_warning(msg: str, file: str)->None:
     pass

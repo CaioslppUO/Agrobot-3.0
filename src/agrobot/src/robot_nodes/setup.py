@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import rosparam,pathlib,json
+import rosparam,pathlib,json,robot_utils.testing as testing
 
-if(rosparam.get_param("testing") != "True"):
-    from robot_utils import logs,services
+if(testing.is_test_running()):
+    from test_robot_utils import log_dependency as logs, services_dependency as services, nodes_dependency as nodes, params_dependency as params
 else:
-    from test_robot_utils import logs_dependency,services_dependency
+    from robot_utils import logs, services, nodes, params
 
 # Variáveis de diretório.
 current_file: str = "setup.py"
@@ -76,7 +76,7 @@ def get_robot_model():
 
 ## Executa as rotinas de setup.
 if __name__ == "__main__":
-    if(services.wait_for_services_availability()):
+    if(services.wait_for_services_availability() and nodes.wait_for_nodes_availability()) and params.wait_for_param_availability(['']):
         get_version()
         get_robot_model()
     else:
