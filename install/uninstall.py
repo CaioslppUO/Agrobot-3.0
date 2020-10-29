@@ -81,7 +81,7 @@ def recompile_catkin_ws_dir() -> bool:
 ## Remove os sym links para os códigos do robô colocados no python path.
 def remove_sym_links() -> bool:
     try:
-        paths_to_uninstall: list = ["robot_utils","test_robot_nodes","test_robot_services","test_robot_utils"]
+        paths_to_uninstall: list = ["robot_utils","test_robot_utils"]
         python_version: str = get_python_version()
         for path in paths_to_uninstall:
             if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):

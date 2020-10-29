@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 
-import rospy
-from robot_utils import services,nodes,params,logs
+import rospy,rosparam
 from geometry_msgs.msg import Twist
 from typing import Final
+from robot_utils import testing
+
+if(testing.is_test_running()):
+    from test_robot_utils import log_dependency as logs, services_dependency as services, nodes_dependency as nodes, params_dependency as params
+else:
+    from robot_utils import services,nodes,params,logs
 
 ## Definição do nó.
 rospy.init_node("priority_decider",anonymous=True)
 
 # Definição das prioridades e constantes.
-APP: Final = 1000
-LIDAR: Final = 999
+APP_PRIORITY: Final = 1000
+LIDAR_PRIORITY: Final = 999
 GUARANTEED_COMMANDS: Final = 50
 
 # Definição dos tópicos de publicação.
@@ -20,6 +25,15 @@ pub_priority_decider = rospy.Publisher("priority_decider", Twist, queue_size=10)
 current_priority: int = 0
 remaining_commands: int = 0
 current_command: Twist = None
+
+## Coloca as constantes de prioridade no rosparam.
+def publish_priorities_in_rosparam() -> None:
+    try:
+        rosparam.set_param("APP_PRIORITY",APP_PRIORITY)
+        rosparam.set_param("LIDAR_PRIORITY",LIDAR_PRIORITY)
+        rosparam.set_param("GUARANTEED_COMMANDS",GUARANTEED_COMMANDS)
+    except Exception as e:
+        logs.do_log_error("Could not publish priority variables to rosparam. " + str(e),"priority_decider.py")
 
 ## Publica o comando escolhido com base na prioridade.
 def publish_selected_command(command: Twist) -> None:
@@ -57,7 +71,7 @@ def listen(topic,priority) -> None:
 ## Adiciona os listenners e continua a escutar em loop.
 def add_listeners_and_listen():
     global current_command
-    topics_to_listen: dict = {'web_server':APP, 'control_lidar':LIDAR}
+    topics_to_listen: dict = {'web_server':APP_PRIORITY, 'control_lidar_PRIORITY':LIDAR_PRIORITY}
     for key in topics_to_listen:
         listen(key,topics_to_listen[key])
     rospy.spin()
@@ -67,6 +81,7 @@ if __name__ == "__main__":
     try:
         if(services.wait_for_services_availability() and nodes.wait_for_nodes_availability() and params.wait_for_param_availability([''])):
             logs.do_log_info("PRIORITY_DECIDER.PY STARTED.","priority_decider.py")
+            publish_priorities_in_rosparam()
             add_listeners_and_listen()
         else:
             logs.do_log_error("Time limit reached when waiting for used services,nodes or parameters to respond.","priority_decider.py")

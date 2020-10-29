@@ -204,8 +204,7 @@ def test_sym_link() -> bool:
         except Exception as e:
             do_log("<test_install.py> [ERROR] Could not get python 3 version. "+str(e))
     try:
-        paths_to_copy = ["robot_utils","test_robot_nodes",
-            "test_robot_services","test_robot_utils"]
+        paths_to_copy = ["robot_utils","test_robot_utils"]
         python_version = get_python_version()
         sym_links = set_color(green,"OK")
         for path in paths_to_copy:

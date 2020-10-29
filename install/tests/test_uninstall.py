@@ -53,6 +53,7 @@ def test_agrobot_folder_exists() -> bool:
 ## Testa se os links simbólicos criados para o código fonte no python path foram removidos.
 def test_sym_links_removed() -> bool:
     global sym_links_removed
+    
     def get_python_version() -> str:
         try:
             python_version = "-1"
@@ -71,9 +72,9 @@ def test_sym_links_removed() -> bool:
             return python_version
         except Exception as e:
             do_log("<test_install.py> [ERROR] Could not get python 3 version. "+str(e))
+
     try:
-        paths_to_check_uninstall = ["robot_utils",
-            "test_robot_nodes","test_robot_services","test_robot_utils"]
+        paths_to_check_uninstall = ["robot_utils","test_robot_utils"]
         python_version = get_python_version()
         sym_links_removed = set_color(green,"OK")
         for path in paths_to_check_uninstall:

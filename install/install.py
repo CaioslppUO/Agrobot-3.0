@@ -160,8 +160,7 @@ def update_code_version_inside_src() -> bool:
 ## Instala todos os módulos no python path.
 def install_code_in_python_path() -> None:
     try:
-        paths_to_copy: list = ["src/robot_utils","test/test_robot_nodes",
-            "test/test_robot_services","test/test_robot_utils"]
+        paths_to_copy: list = ["src/robot_utils","test/test_robot_utils"]
         python_version: str = get_python_version()
         for path in paths_to_copy:
             aux = path.split("/")
