@@ -4,7 +4,7 @@
 
 ## Organização
 
-### - install
+### - img
   - Imagens de documentação.
 
 ### - install
@@ -31,4 +31,4 @@
 
     * Receive Command -> Command Priority Decider -> Command Standardize -> Command Assembler -> Send Command.
 
-# Versão: 4.3
+# Versão: 4.4
