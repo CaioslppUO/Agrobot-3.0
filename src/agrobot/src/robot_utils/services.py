@@ -2,7 +2,7 @@
 
 import rosservice
 
-available_services = ['/log_error','/log_info','/log_warning']
+available_services = ['/log_error','/log_info','/log_warning','/relay']
 
 ## Espera até todos os serviços utilizados estejam disponível.
 def wait_for_services_availability() -> bool:
