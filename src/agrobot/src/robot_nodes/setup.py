@@ -81,4 +81,4 @@ if __name__ == "__main__":
         get_version()
         get_robot_model()
     else:
-        logs.do_log_error("Time limit reached when waiting for used services,nodes or parameters to respond.","setup.py")
+        logs.do_log_error("Time limit reached when waiting for used services to respond.","setup.py")

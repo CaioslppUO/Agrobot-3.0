@@ -58,10 +58,10 @@ def send_signal(data: relay) -> None:
 
 
 ## Escuta o chamado dos serviços.
-def log_server():
+def relay_server() -> None:
     rospy.Service("relay", relay, send_signal)
 
 ## Executa as rotinas do serviço.
 if __name__ == "__main__":
-    log_server()
+    relay_server()
     rospy.spin()
