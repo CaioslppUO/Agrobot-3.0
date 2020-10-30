@@ -2,4 +2,5 @@
     <node pkg="agrobot" type="log.py" name="log" output="screen"/>
     <node pkg="agrobot" type="setup.py" name="setup" output="screen"/>
     <node pkg="agrobot" type="priority_decider.py" name="priority_decider" output="screen"/>
+    <node pkg="agrobot" type="relay.py" name="relay" output="screen"/>
 </launch>

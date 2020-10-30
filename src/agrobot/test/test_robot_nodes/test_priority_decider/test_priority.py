@@ -12,7 +12,7 @@ rospy.init_node("test_priority.py",anonymous=True)
 ## Retorna um parâmetro do tipo inteiro do rosparam, ou -1 caso não exista.
 def get_param(param_name: str) -> int:
     try:
-        return rosparam.get_param(param_name)
+        return int(rosparam.get_param(param_name))
     except:
         return -1
 

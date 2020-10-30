@@ -11,15 +11,27 @@ log_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../../log/"
 rospy.init_node("log")
 
 ## Cria a pasta de logs caso não exista.
-def create_log_folder():
+def create_log_folder() -> None:
     try:
         if(not os.path.exists(log_dir)):
             os.mkdir(log_dir)
     except Exception as e:
         print("Error trying to create log_dir. " + str(e))
 
+## Escreve no log que uma nova execução começou.
+def write_new_execution_in_log() -> None:
+    try:
+        with open(log_dir+"log.txt","a") as file:
+            current_time = datetime.now().strftime("%H:%M:%S")
+            file.write("\n\n===================================== NEW EXECUTION (" + str(current_time) + ") =====================================\n")
+            file.close()
+        return "Successfully logged the message."
+    except Exception as e:
+        return "Error Trying to log the message. " + str(e)
+
+
 ## Escreve no arquivo de logs.
-def write_log(log_type,msg):
+def write_log(log_type,msg) -> None:
     try:
         with open(log_dir+"log.txt","a") as file:
             current_time = datetime.now().strftime("%H:%M:%S")
@@ -30,19 +42,19 @@ def write_log(log_type,msg):
         return "Error Trying to log the message. " + str(e)
 
 ## Trata o recebimento de error.
-def handle_log_error(data):
+def handle_log_error(data) -> None:
     return write_log("[ERROR]",data)
 
 ## Trata o recebimento de info.
-def handle_log_info(data):
+def handle_log_info(data) -> None:
     return write_log("[INFO]",data)
 
 ## Trata o recebimento de warning.
-def handle_log_warning(data):
+def handle_log_warning(data) -> None:
     return write_log("[WARNING]",data)
 
 ## Escuta o chamado dos serviços.
-def log_server():
+def log_server() -> None:
     rospy.Service("log_error", log_error, handle_log_error)
     rospy.Service("log_info", log_info, handle_log_info)
     rospy.Service("log_warning", log_warning, handle_log_warning)
@@ -50,5 +62,6 @@ def log_server():
 ## Executa as rotinas de log.
 if __name__ == "__main__":
     create_log_folder()
+    write_new_execution_in_log()
     log_server()
     rospy.spin()

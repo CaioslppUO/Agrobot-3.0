@@ -4,9 +4,9 @@ import rosparam,pathlib,json,robot_utils.testing as testing
 from typing import Final
 
 if(testing.is_test_running()):
-    from test_robot_utils import log_dependency as logs, services_dependency as services, nodes_dependency as nodes, params_dependency as params
+    from test_robot_utils import log_dependency as logs, services_dependency as services
 else:
-    from robot_utils import logs, services, nodes, params
+    from robot_utils import logs, services
 
 # Variáveis de diretório.
 current_file: Final = "setup.py"
@@ -77,8 +77,7 @@ def get_robot_model():
 
 ## Executa as rotinas de setup.
 if __name__ == "__main__":
-    if(services.wait_for_services_availability() and nodes.wait_for_nodes_availability() and params.wait_for_param_availability([''])):
-        logs.do_log_info("SETUP.PY STARTED.","setup.py")
+    if(services.wait_for_services_availability()):
         get_version()
         get_robot_model()
     else:

@@ -6,9 +6,9 @@ from typing import Final
 from robot_utils import testing
 
 if(testing.is_test_running()):
-    from test_robot_utils import log_dependency as logs, services_dependency as services, nodes_dependency as nodes, params_dependency as params
+    from test_robot_utils import log_dependency as logs, services_dependency as services
 else:
-    from robot_utils import services,nodes,params,logs
+    from robot_utils import services,logs
 
 ## Definição do nó.
 rospy.init_node("priority_decider",anonymous=True)
@@ -29,9 +29,9 @@ current_command: Twist = None
 ## Coloca as constantes de prioridade no rosparam.
 def publish_priorities_in_rosparam() -> None:
     try:
-        rosparam.set_param("APP_PRIORITY",APP_PRIORITY)
-        rosparam.set_param("LIDAR_PRIORITY",LIDAR_PRIORITY)
-        rosparam.set_param("GUARANTEED_COMMANDS",GUARANTEED_COMMANDS)
+        rosparam.set_param("APP_PRIORITY",str(APP_PRIORITY))
+        rosparam.set_param("LIDAR_PRIORITY",str(LIDAR_PRIORITY))
+        rosparam.set_param("GUARANTEED_COMMANDS",str(GUARANTEED_COMMANDS))
     except Exception as e:
         logs.do_log_error("Could not publish priority variables to rosparam. " + str(e),"priority_decider.py")
 
@@ -71,7 +71,7 @@ def listen(topic,priority) -> None:
 ## Adiciona os listenners e continua a escutar em loop.
 def add_listeners_and_listen():
     global current_command
-    topics_to_listen: dict = {'web_server':APP_PRIORITY, 'control_lidar_PRIORITY':LIDAR_PRIORITY}
+    topics_to_listen: dict = {'web_server':APP_PRIORITY, 'control_lidar':LIDAR_PRIORITY}
     for key in topics_to_listen:
         listen(key,topics_to_listen[key])
     rospy.spin()
@@ -79,8 +79,7 @@ def add_listeners_and_listen():
 ## Executa as rotinas de decisão ed prioridade.
 if __name__ == "__main__":
     try:
-        if(services.wait_for_services_availability() and nodes.wait_for_nodes_availability() and params.wait_for_param_availability([''])):
-            logs.do_log_info("PRIORITY_DECIDER.PY STARTED.","priority_decider.py")
+        if(services.wait_for_services_availability()):
             publish_priorities_in_rosparam()
             add_listeners_and_listen()
         else:
