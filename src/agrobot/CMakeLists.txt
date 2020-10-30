@@ -62,6 +62,7 @@ find_package(catkin REQUIRED COMPONENTS
    log_info.srv
    relay.srv
    control_robot.srv
+   control_mini_robot.srv
  )
 
 ## Generate actions in the 'action' folder

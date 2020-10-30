@@ -6,9 +6,9 @@ from typing import Final
 from robot_utils import testing
 
 if(testing.is_test_running()):
-    from test_robot_utils import log_dependency as logs, services_dependency as services
+    from test_robot_utils import services_dependency as services
 else:
-    from robot_utils import services,logs
+    from robot_utils import services
 
 ## Definição do nó.
 rospy.init_node("priority_decider",anonymous=True)
@@ -33,7 +33,7 @@ def publish_priorities_in_rosparam() -> None:
         rosparam.set_param("LIDAR_PRIORITY",str(LIDAR_PRIORITY))
         rosparam.set_param("GUARANTEED_COMMANDS",str(GUARANTEED_COMMANDS))
     except Exception as e:
-        logs.do_log_error("Could not publish priority variables to rosparam. " + str(e),"priority_decider.py")
+        services.do_log_error("Could not publish priority variables to rosparam. " + str(e),"priority_decider.py")
 
 ## Publica o comando escolhido com base na prioridade.
 def publish_selected_command(command: Twist) -> None:
@@ -44,10 +44,10 @@ def publish_selected_command(command: Twist) -> None:
             current_command = None
         else:
             pass
-            logs.do_log_error("Could not publish command to topic priority_decider. The command is None.","priority_decider.py")
+            services.do_log_error("Could not publish command to topic priority_decider. The command is None.","priority_decider.py")
     except Exception as e:
         pass
-        logs.do_log_error("Could not publish command to topic priority_decider. " + str(e),"priority_decider.py")
+        services.do_log_error("Could not publish command to topic priority_decider. " + str(e),"priority_decider.py")
 
 ## Trata o recebimento de um novo comando.
 def callback(command: Twist, priority: int) -> None:
@@ -66,7 +66,7 @@ def listen(topic,priority) -> None:
         rospy.Subscriber(topic,Twist,callback,priority)
     except Exception as e:
         pass
-        logs.do_log_error("Could not subscribe to topic (" + topic + "). " + str(e),"priority_decider.py")
+        services.do_log_error("Could not subscribe to topic (" + topic + "). " + str(e),"priority_decider.py")
 
 ## Adiciona os listenners e continua a escutar em loop.
 def add_listeners_and_listen():
@@ -83,7 +83,7 @@ if __name__ == "__main__":
             publish_priorities_in_rosparam()
             add_listeners_and_listen()
         else:
-            logs.do_log_error("Time limit reached when waiting for used services,nodes or parameters to respond.","priority_decider.py")
+            services.do_log_error("Time limit reached when waiting for used services,nodes or parameters to respond.","priority_decider.py")
     except:
         pass
-        logs.do_log_error("Could not run priority_decider.py","priority_decider.py")
+        services.do_log_error("Could not run priority_decider.py","priority_decider.py")

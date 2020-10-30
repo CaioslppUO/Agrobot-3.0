@@ -3,3 +3,23 @@
 ## Injeção de dependências.
 def wait_for_services_availability() -> bool:
     return True
+
+## Injeção de dependências.
+def do_log_error(msg: str, file: str)->None:
+    pass
+
+## Injeção de dependências.
+def do_log_info(msg: str, file: str)->None:
+    pass
+
+## Injeção de dependências.
+def do_log_warning(msg: str, file: str)->None:
+    pass
+
+## Injeção de dependências.
+def send_command(speed: int, steer: int, limit: int, power_signal: int) -> None:
+    pass
+
+## Injeção de dependências.
+def send_signal(signal: int) -> None:
+    pass

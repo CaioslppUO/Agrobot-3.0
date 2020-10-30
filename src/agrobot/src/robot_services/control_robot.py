@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
-import time,serial,rospy,rosparam
+import time,serial,rospy
 from typing import Final
 from agrobot.srv import control_robot
 from robot_utils import testing
 
 if(testing.is_test_running()):
-    from test_robot_utils import log_dependency as logs
+    from test_robot_utils import services_dependency as services
 else:
-    from robot_utils import logs
+    from robot_utils import services
 
 # Nó do controle do robô.
 rospy.init_node("control_robot")
@@ -63,7 +63,7 @@ def write_to_uart(command: str) -> None:
                 used_uarts[uart].write(str.encode(command))
         time.sleep(0.02)
     except Exception as e:
-        logs.do_log_error("Could not send command through UART. " + str(e),"control_robot.py")
+        services.do_log_error("Could not send command through UART. " + str(e),"control_robot.py")
 
 ## Envia o comando de controle para o robô.
 def send_control_command(data: control_robot) -> None:

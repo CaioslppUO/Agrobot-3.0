@@ -1,0 +1,6 @@
+{
+    "gpio_left_wheel_1": 16,
+    "gpio_left_wheel_2": 13,
+    "gpio_right_wheel_1": 18,
+    "gpio_right_wheel_2": 15
+}
