@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-import rospy
-from std_msgs.msg import String
+import rospy,os,pathlib
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
 from robot_utils import services
 from agrobot.msg import complete_command,power_control,speed_limit
+from typing import Final
+
+# Variáveis de diretórios.
+current_directory: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
 ## Nó web_server.
 rospy.init_node('web_server', anonymous=True)
@@ -56,12 +59,30 @@ class RequestHandler_httpd(BaseHTTPRequestHandler):
         publish_msg(setup_command(msg))
         return
 
+## Retorna o ipv4 do computador.
+def get_ipv4() -> str:
+    ip: str = ""
+    try:
+        os.system("ifconfig | grep '192.' > " + current_directory + "ipv4.tmp")
+        with open(current_directory+"ipv4.tmp","r") as file:
+            line = file.readlines()
+            file.close()
+            line = line[0]
+            line = line.rstrip('\n')
+            line = line.split(" ")
+            ip = line[1]
+        if(os.path.exists(current_directory+"ipv4.tmp")):
+            os.system("rm " + current_directory+"ipv4.tmp")
+    except Exception as e:
+        services.do_log_error("Could not get ipv4. " + str(e),"web_server.py")
+    return ip
+
 ## Classe que gerencia o servidor http.
 class Web_server():
     ## Inicializa as variáveis e o servidor.
     def __init__(self):
         try:
-            self.server_address_httpd = ("192.168.1.15",8080)
+            self.server_address_httpd = (get_ipv4(),8080)
             httpd = HTTPServer(self.server_address_httpd, RequestHandler_httpd)
             self.server_thread = Thread(target=httpd.serve_forever)
             self.server_thread.daemon = True # O servidor é fechado ao finalizar o programa.

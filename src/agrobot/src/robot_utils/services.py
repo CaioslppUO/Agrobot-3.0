@@ -33,7 +33,7 @@ def wait_for_services_availability() -> bool:
     return True
 
 ## Envia o sinal para o relé.
-def send_signal_to_relay(signal: int) -> None:
+def send_signal_to_relay_module(signal: int) -> None:
     os.system("rosservice call /relay '" + str(signal)+"'")
 
 ## Faz log de erro.
