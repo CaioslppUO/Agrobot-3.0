@@ -1,42 +1,38 @@
 #!/usr/bin/env python3
 
 import rospy
-from agrobot.msg import complete_command,power_control,speed_limit
+from agrobot.msg import complete_command,power_control
 from robot_utils import services
+from typing import Final
 
 ## Nó command_center.
 rospy.init_node("command_center", anonymous=True)
 
-# Variáveis de controle de lag.
-last_signal_sent_to_module: int = 0
+# Variáveis de controle de publicação.
+pub_relay: Final = rospy.Publisher("/relay", power_control, queue_size=10)
+pub_control_robot: Final = rospy.Publisher("/control_robot", complete_command, queue_size=10)
+pub_control_mini_robot: Final = rospy.Publisher("/control_mini_robot", complete_command, queue_size=10)
 
 ## Envia o comando de movimento para o mini robô.
 def send_command_to_mini_robot(command: complete_command) -> None:
-    speed: int = int(command.move.linear.x)
-    steer: int = int(command.move.linear.y)
-    limit: int = int(command.limit.speed_limit)
-    services.send_command_to_mini_robot(speed,steer,limit)
+    pub_control_mini_robot.publish(command)
 
 ## Envia o comando de movimento para o robô.
 def send_command_to_robot(command: complete_command) -> None:
-    speed: int = int(command.move.linear.x)
-    steer: int = int(command.move.linear.y)
-    limit: int = int(command.limit.speed_limit)
-    services.send_command_to_robot(speed,steer,limit,0)
+    pub_control_robot.publish(command)
 
 ## Envia o sinal para ligar/desligar o robô.
 def send_signal_to_power_relay(command: power_control) -> None:
-    signal: int = int(command.signal_relay_power)
-    if(signal != 0):
-        services.send_command_to_robot(0,0,0,signal)
+    cmd = complete_command()
+    cmd.move.linear.x = 0
+    cmd.move.linear.y = 0
+    cmd.limit.speed_limit = 0
+    cmd.relay = command
+    pub_control_robot.publish(cmd)
 
 ## Envia o sinal para ligar/desligar o modulo do relé.
 def send_signal_to_module_relay(command: power_control) -> None:
-    global last_signal_sent_to_module
-    signal: int = int(command.signal_relay_power)
-    if(signal != last_signal_sent_to_module):
-        last_signal_sent_to_module = signal
-        services.send_signal_to_relay_module(signal)
+    pub_relay.publish(command)
     
 ## Trata o recebimento de um novo comando.
 def priority_decider_callback(command: complete_command) -> None:

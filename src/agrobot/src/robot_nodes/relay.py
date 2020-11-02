@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import robot_utils.testing as testing,rospy,time
-from agrobot.srv import relay
+from agrobot.msg import power_control
 from typing import Final
 
 if(testing.is_test_running()):
@@ -25,19 +25,19 @@ except Exception as e:
 rospy.init_node("relay")
 
 ## Envia o sinal para o relé.
-def send_signal(data: relay) -> None:
+def power_control_callback(data: power_control) -> None:
     pinout: Final = int(services.get_parameter("module_pinout"))        
     try:
         if(gpio_imported):
             if(pinout != -1):
-                if(int(data.signal) == 1):
+                if(int(data.signal_relay_power) == 1):
                     GPIO.setmode(GPIO.BOARD)
                     GPIO.setwarnings(False)
                     GPIO.setup(pinout, GPIO.OUT)
                     GPIO.output(pinout, GPIO.HIGH)
                     time.sleep(0.2)
                     services.do_log_info("The signal 1 was sent to the relay module.","relay.py")
-                elif(int(data.signal) == 0):
+                elif(int(data.signal_relay_power) == 0):
                     GPIO.setmode(GPIO.BOARD)
                     GPIO.setwarnings(False)
                     GPIO.setup(pinout, GPIO.OUT)
@@ -50,7 +50,7 @@ def send_signal(data: relay) -> None:
                     GPIO.setup(pinout, GPIO.OUT)
                     GPIO.output(pinout, GPIO.HIGH)
                     time.sleep(0.2)
-                    services.do_log_warning("The signal " + str(data.signal) + " is not valid, 0 was sent to the relay module.","relay.py")
+                    services.do_log_warning("The signal " + str(data.signal_relay_power) + " is not valid, 0 was sent to the relay module.","relay.py")
             else:
                 services.do_log_warning("The rosparam module_pinout parameter wasn't set. The relay service will not work properly. " + str(e),"relay.py")
         else:
@@ -61,10 +61,10 @@ def send_signal(data: relay) -> None:
 
 
 ## Escuta o chamado dos serviços.
-def relay_server() -> None:
-    rospy.Service("relay", relay, send_signal)
+def listen_relay() -> None:
+    rospy.Subscriber("relay", power_control, power_control_callback)
 
 ## Executa as rotinas do serviço.
 if __name__ == "__main__":
-    relay_server()
+    listen_relay()
     rospy.spin()

@@ -2,7 +2,7 @@
 
 import time,serial,rospy
 from typing import Final
-from agrobot.srv import control_robot
+from agrobot.msg import complete_command
 from robot_utils import testing
 
 if(testing.is_test_running()):
@@ -11,7 +11,7 @@ else:
     from robot_utils import services
 
 # Nó do controle do robô.
-rospy.init_node("control_robot")
+rospy.init_node("control_robot", anonymous=True)
 
 # Variável de controle e definição.
 uart_names: Final = ['ttyUSB_CONVERSOR-0','ttyUSB_CONVERSOR-1','ttyUSB_CONVERSOR-2','ttyUSB_CONVERSOR-3']
@@ -66,21 +66,21 @@ def write_to_uart(command: str) -> None:
         services.do_log_error("Could not send command through UART. " + str(e),"control_robot.py")
 
 ## Envia o comando de controle para o robô.
-def send_control_command(data: control_robot) -> None:
-    speed: Final = converts_to_arduino_pattern(int(data.speed))
-    steer: Final = converts_to_arduino_pattern(int(data.steer))
-    limit: Final = converts_to_arduino_pattern(int(data.limit))
-    power_signal: Final = int(data.power_signal)
-    command: Final = speed+';'+steer+';'+limit+';'+str(power_signal)+";"
+def control_robot_callback(data: complete_command) -> None:
+    speed: Final = int(data.move.linear.x)
+    steer: Final = int(data.move.linear.y)
+    limit: Final = int(data.limit.speed_limit)
+    power_signal: Final = int(data.relay.signal_relay_power)
+    command: Final = str(speed)+';'+str(steer)+';'+str(limit)+';'+str(power_signal)+";"
     write_to_uart(command)
     return command
 
 ## Escuta o chamado dos serviços.
-def control_robot_server() -> None:
-    rospy.Service("control_robot",control_robot,send_control_command)
+def listen_control_robot() -> None:
+    rospy.Subscriber("control_robot",complete_command, control_robot_callback)
 
 ## Executa as rotinas do serviço.
 if __name__ == "__main__":
     set_uarts()
-    control_robot_server()
+    listen_control_robot()
     rospy.spin()

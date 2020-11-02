@@ -6,7 +6,7 @@ from agrobot.msg import complete_command
 
 ## Serviços disponíveis para serem utilizados.
 # Utilizado para esperar até que todos estejam disponível.
-available_services: Final = ['/log_error','/log_info','/log_warning','/relay','/control_robot']
+available_services: Final = ['/log_error','/log_info','/log_warning']
 
 ## Variável de controle de tentativa.
 services_attempt_limit: int = 10000
@@ -32,10 +32,6 @@ def wait_for_services_availability() -> bool:
             return False
     return True
 
-## Envia o sinal para o relé.
-def send_signal_to_relay_module(signal: int) -> None:
-    os.system("rosservice call /relay '" + str(signal)+"'")
-
 ## Faz log de erro.
 def do_log_error(msg: str, file: str):
     os.system("rosservice call /log_error '" + msg + "' '" + file + "'")
@@ -47,14 +43,6 @@ def do_log_info(msg: str, file: str):
 ## Faz log de warning.
 def do_log_warning(msg: str, file: str):
     os.system("rosservice call /log_warning '" + msg + "' '" + file + "'")
-
-## Envia o comando de controle para o arduino.
-def send_command_to_robot(speed: int, steer: int, limit: int, power_signal: int) -> None:
-    os.system("rosservice call /control_robot '{speed: " + str(speed) + ", steer: " + str(steer) + ", limit: " + str(limit) + ", power_signal: " + str(power_signal) + "}'")
-
-## Envia o comando de controle para o arduino.
-def send_command_to_mini_robot(speed: int, steer: int, limit: int) -> None:
-    os.system("rosservice call /control_mini_robot '{speed: " + str(speed) + ", steer: " + str(steer) + ", limit: " + str(limit) + "}'")
 
 ## Pega um parâmetro do rosparam, caso ele não exista, retorna -1 (int).
 def get_parameter(parameter_name: str) -> Any:
