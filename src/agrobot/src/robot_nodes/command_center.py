@@ -8,6 +8,9 @@ from typing import Final
 ## Nó command_center.
 rospy.init_node("command_center", anonymous=True)
 
+# Variáveis de controle de lag.
+last_module_signal_sent: int = 0
+
 # Variáveis de controle de publicação.
 pub_relay: Final = rospy.Publisher("/relay", power_control, queue_size=10)
 pub_control_robot: Final = rospy.Publisher("/control_robot", complete_command, queue_size=10)
@@ -21,24 +24,17 @@ def send_command_to_mini_robot(command: complete_command) -> None:
 def send_command_to_robot(command: complete_command) -> None:
     pub_control_robot.publish(command)
 
-## Envia o sinal para ligar/desligar o robô.
-def send_signal_to_power_relay(command: power_control) -> None:
-    cmd = complete_command()
-    cmd.move.linear.x = 0
-    cmd.move.linear.y = 0
-    cmd.limit.speed_limit = 0
-    cmd.relay = command
-    pub_control_robot.publish(cmd)
-
 ## Envia o sinal para ligar/desligar o modulo do relé.
 def send_signal_to_module_relay(command: power_control) -> None:
-    pub_relay.publish(command)
+    global last_module_signal_sent
+    if(command.signal_relay_module != last_module_signal_sent):
+        last_module_signal_sent = command.signal_relay_module
+        pub_relay.publish(command)
     
 ## Trata o recebimento de um novo comando.
 def priority_decider_callback(command: complete_command) -> None:
     robot_model = services.get_parameter("robot_model")
     if(robot_model != -1):
-        send_signal_to_power_relay(command.relay)
         send_signal_to_module_relay(command.relay)
         if(robot_model == "mini_robot"):
             send_command_to_mini_robot(command)

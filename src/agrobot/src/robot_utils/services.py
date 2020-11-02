@@ -10,7 +10,7 @@ available_services: Final = ['/log_error','/log_info','/log_warning']
 
 ## Variável de controle de tentativa.
 services_attempt_limit: int = 10000
-parameters_attempt_limit: int = 2000
+parameters_attempt_limit: int = 2500
 
 ## Espera até todos os serviços utilizados estejam disponível.
 def wait_for_services_availability() -> bool:

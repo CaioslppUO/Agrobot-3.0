@@ -90,10 +90,7 @@ class Web_server():
         except Exception as e:
             services.do_log_error("Could not run web_server.py. " + str(e),"web_server.py")
 
-# ------------------------ #
-# -> Execução de código <- #
-# ------------------------ #
-  
+## Execução das rotinas do web_server.
 if __name__ == '__main__':
     try:
         web_server = Web_server()

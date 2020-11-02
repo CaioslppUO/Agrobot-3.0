@@ -25,7 +25,7 @@ right_wheel_2 = int(services.get_parameter('gpio_right_wheel_2'))
 if(left_wheel_1 != -1 and left_wheel_2 != -1 and right_wheel_1 != -1 and right_wheel_2 != -1):
     robot_model_is_mini_robot = True
 else:
-    services.do_log_warning("Robot model is not mini_robot. control_mini_robot will not work properly. ","control_mini_robot.py")
+    services.do_log_warning("Robot model is not mini_robot or could not load wheels gpio. control_mini_robot will not work properly. ","control_mini_robot.py")
 
 left_wheel_1_pwm = None
 left_wheel_2_pwm = None
