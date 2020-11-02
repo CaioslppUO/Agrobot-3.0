@@ -2,6 +2,7 @@
 
 import rosservice,os,rosparam
 from typing import Any, Final
+from agrobot.msg import complete_command
 
 ## Serviços disponíveis para serem utilizados.
 # Utilizado para esperar até que todos estejam disponível.
@@ -68,3 +69,21 @@ def get_parameter(parameter_name: str) -> Any:
     if(parameter != ""):
         return parameter
     return -1
+
+## Faz a verificação e corrige os valores do comando de controle do robô, caso necessário.
+def check_complete_control_command(command: complete_command) -> None:
+    if(command.move.linear.x < -100 or command.move.linear.x > 100):
+        command.move.linear.x = 0
+        do_log_error("Speed value is under -100 or above 100. Sending 0 instead.","services.py")
+    if(command.move.linear.y < -100 or command.move.linear.y > 100):
+        command.move.linear.y = 0
+        do_log_error("Steer value is under -100 or above 100. Sending 0 instead.","services.py")
+    if(command.limit.speed_limit < 0 or command.limit.speed_limit > 100):
+        command.limit.speed_limit = 0
+        do_log_error("Limit value is under 0 or above 100. Sending 0 instead.","services.py")
+    if(command.relay.signal_relay_module != 0 and command.relay.signal_relay_module != 1):
+        command.relay.signal_relay_module = 0
+        do_log_error("Module relay value is not 1 or 0. Sending 0 instead.","services.py")
+    if(command.relay.signal_relay_power != 0 and command.relay.signal_relay_power != 1):
+        command.relay.signal_relay_power = 0
+        do_log_error("Power relay value is not 1 or 0. Sending 0 instead.","services.py")

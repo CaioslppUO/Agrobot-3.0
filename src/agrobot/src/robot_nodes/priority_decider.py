@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy,rosparam
-from geometry_msgs.msg import Twist
+from agrobot.msg import complete_command
 from typing import Final
 from robot_utils import testing
 
@@ -19,12 +19,12 @@ LIDAR_PRIORITY: Final = 999
 GUARANTEED_COMMANDS: Final = 50
 
 # Definição dos tópicos de publicação.
-pub_priority_decider = rospy.Publisher("priority_decider", Twist, queue_size=10)
+pub_priority_decider = rospy.Publisher("priority_decider", complete_command, queue_size=10)
 
 ## Variável de controle de prioridade e quantidade de comandos.
 current_priority: int = 0
 remaining_commands: int = 0
-current_command: Twist = None
+current_command: complete_command = None
 
 ## Coloca as constantes de prioridade no rosparam.
 def publish_priorities_in_rosparam() -> None:
@@ -36,7 +36,7 @@ def publish_priorities_in_rosparam() -> None:
         services.do_log_error("Could not publish priority variables to rosparam. " + str(e),"priority_decider.py")
 
 ## Publica o comando escolhido com base na prioridade.
-def publish_selected_command(command: Twist) -> None:
+def publish_selected_command(command: complete_command) -> None:
     global current_command
     try:
         if(command != None):
@@ -50,7 +50,7 @@ def publish_selected_command(command: Twist) -> None:
         services.do_log_error("Could not publish command to topic priority_decider. " + str(e),"priority_decider.py")
 
 ## Trata o recebimento de um novo comando.
-def callback(command: Twist, priority: int) -> None:
+def callback(command: complete_command, priority: int) -> None:
     global current_priority,remaining_commands,current_command
     if(priority >= current_priority or (remaining_commands == 0 and priority < current_priority)):
         current_priority = priority
@@ -63,7 +63,7 @@ def callback(command: Twist, priority: int) -> None:
 ## Se inscreve em um tópico e chama a função de callback.
 def listen(topic,priority) -> None:
     try:
-        rospy.Subscriber(topic,Twist,callback,priority)
+        rospy.Subscriber(topic,complete_command,callback,priority)
     except Exception as e:
         pass
         services.do_log_error("Could not subscribe to topic (" + topic + "). " + str(e),"priority_decider.py")
