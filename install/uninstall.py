@@ -6,13 +6,12 @@
 import os,pathlib,pwd
 from shutil import rmtree
 from utils.general import do_log,get_python_version
-from typing import Final
 
 # Caminhos para as pastas.
-user: Final = pwd.getpwuid(os.getuid())[0]
-home: Final = "/home/" + user + "/"
-current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
-catkin_ws_dir: Final = home + "catkin_ws/"
+user: str = pwd.getpwuid(os.getuid())[0]
+home: str = "/home/" + user + "/"
+current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
+catkin_ws_dir: str = home + "catkin_ws/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 uninstalled: bool = False

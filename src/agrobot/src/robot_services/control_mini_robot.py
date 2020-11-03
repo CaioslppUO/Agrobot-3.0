@@ -2,7 +2,6 @@
 
 import sys,rospy
 from agrobot.srv import control_mini_robot
-from typing import Final
 from robot_utils import testing
 
 if(testing.is_test_running()):

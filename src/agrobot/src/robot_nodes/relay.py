@@ -2,7 +2,6 @@
 
 import robot_utils.testing as testing,rospy,time
 from agrobot.msg import power_control
-from typing import Final
 
 if(testing.is_test_running()):
     from test_robot_utils import services_dependency as services
@@ -26,7 +25,7 @@ rospy.init_node("relay")
 
 ## Envia o sinal para o relé.
 def power_control_callback(data: power_control) -> None:
-    pinout: Final = int(services.get_parameter("module_pinout"))        
+    pinout: int = int(services.get_parameter("module_pinout"))        
     try:
         if(gpio_imported):
             if(pinout != -1):

@@ -2,7 +2,6 @@
 
 import rospy,rosparam
 from agrobot.msg import complete_command
-from typing import Final
 from robot_utils import testing
 
 if(testing.is_test_running()):
@@ -14,9 +13,9 @@ else:
 rospy.init_node("priority_decider",anonymous=True)
 
 # Definição das prioridades e constantes.
-APP_PRIORITY: Final = 1000
-LIDAR_PRIORITY: Final = 999
-GUARANTEED_COMMANDS: Final = 50
+APP_PRIORITY: int = 1000
+LIDAR_PRIORITY: int = 999
+GUARANTEED_COMMANDS: int = 50
 
 # Definição dos tópicos de publicação.
 pub_priority_decider = rospy.Publisher("priority_decider", complete_command, queue_size=10)
