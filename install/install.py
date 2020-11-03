@@ -18,6 +18,15 @@ catkin_ws_directory: Final = home + "catkin_ws/"
 previous_version_was_uninstalled: bool = False
 installed_successfully: bool = False
 
+## Tenta fazer a instalação das dependências do node
+def install_server() -> bool:
+    try:
+        os.system("cd "+catkin_ws_directory+"src/agrobot/server && yarn install")
+        return True
+    except Exception as e:
+        do_log("<install.py> [ERROR] Cold not install yarn server. " + str(e))
+        return False
+
 ## Tenta remover o código antigo, caso já tenha sido instalado.
 def uninstall_previous_versions() -> bool:
     try:
@@ -39,6 +48,7 @@ def remove_previous_compilation() -> bool:
             if(os.path.exists(catkin_ws_directory+"src/CMakeLists.txt")):
                 os.system("rm " + catkin_ws_directory+"src/CMakeLists.txt")
             return True
+        return False
     except Exception as e:
         do_log("<install.py> [INFO] Could not find catkin_ws folder during remove_previous_compilation(). "+str(e))
         return False
@@ -60,6 +70,7 @@ def copy_src_to_catkin_ws() -> bool:
         if(os.path.exists(catkin_ws_directory+"src")):
             os.system("cp -r " + project_directory + " " + catkin_ws_directory+"src/agrobot/")
             return True
+        return False
     except Exception as e:
         do_log("<install.py> [ERROR] Could not copy agrobot folder to catkin_ws/src/agrobot/. " +str(e))
         return False
@@ -70,6 +81,7 @@ def compile_src() -> bool:
         if(os.path.exists(catkin_ws_directory)):
             os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
             return True
+        return False
     except Exception as e:
         do_log("<install.py> [ERROR] Could not compile catkin_ws folder. "+str(e))
         return False
@@ -239,6 +251,7 @@ def install() -> None:
 ## Executa as rotinas de configuração pós instalação.
 def post_installation_configurations() -> None:
     if(installed_successfully):
+        install_server()
         source_bashrc()
         source_zshrc()
         install_code_in_python_path()

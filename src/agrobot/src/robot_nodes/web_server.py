@@ -2,11 +2,10 @@
 
 import rospy,os,pathlib,json,requests
 from robot_utils import services
-from agrobot.msg import complete_command,power_control,speed_limit
-from typing import Any, Final
+from agrobot.msg import complete_command
 
 # Variáveis de diretórios.
-current_directory: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
+current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
 ## Nó web_server.
 rospy.init_node('web_server', anonymous=True)
@@ -16,7 +15,7 @@ def convert_bool_to_int(data: bool) -> int:
         return 1
     return 0
 ## Separa e configura o tipo de cada comando recebido.
-def setup_command(command: Any) -> complete_command:
+def setup_command(command) -> complete_command:
     cpt_command = complete_command()
     try:
         cpt_command.move.linear.x = int(command["speed"])
