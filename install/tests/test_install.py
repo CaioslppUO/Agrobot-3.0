@@ -2,7 +2,7 @@
 
 # Script que realiza os testes para descobrir se a instalação foi bem sucedida.
 
-import os,pathlib,time,rospy
+import os,pathlib,time,rospy,rosservice
 from datetime import datetime
 from shutil import which
 from typing import Final
@@ -145,6 +145,28 @@ def test_run() -> bool:
     def run_tmp_file():
         os.system("bash -e "+current_dir+"run.tmp")
 
+    ## Espera até todos os serviços utilizados estejam disponível.
+    def wait_for_services_availability() -> bool:
+        available_services: list = ['/log_info']
+        services_attempt_limit: Final = 20000
+        limit_reached: bool = False
+        index: int = 0
+        for service in available_services:
+            index = 0
+            waiting = None
+            while(waiting == None):
+                try:
+                    waiting = rosservice.get_service_type(service)
+                except:
+                    pass
+                index = index + 1
+                if(index > services_attempt_limit):
+                    limit_reached = True
+                    break
+            if(limit_reached == True):
+                return False
+        return True
+
     # Rodando o código.
     try:
         delete_tmp_file()
@@ -154,10 +176,11 @@ def test_run() -> bool:
         create_tmp_file("rosrun agrobot log.py& ")
         run_tmp_file()
         time.sleep(1)
-        delete_tmp_file()
-        create_tmp_file("rosservice call /log_info 'Installation test (run) worked properly.' 'test_install.py'")
-        run_tmp_file()
-        time.sleep(2)
+        if(wait_for_services_availability()):
+            delete_tmp_file()
+            create_tmp_file("rosservice call /log_info 'Installation test (run) worked properly.' 'test_install.py'")
+            run_tmp_file()
+            time.sleep(2)
         os.system("pkill ros")
         delete_tmp_file()
         time.sleep(3)
