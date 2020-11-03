@@ -1,12 +1,11 @@
 #1/usr/bin/env python3
 
 import rosservice,os,rosparam
-from typing import Any, Final
 from agrobot.msg import complete_command
 
 ## Serviços disponíveis para serem utilizados.
 # Utilizado para esperar até que todos estejam disponível.
-available_services: Final = ['/log_error','/log_info','/log_warning']
+available_services: list = ['/log_error','/log_info','/log_warning']
 
 ## Variável de controle de tentativa.
 services_attempt_limit: int = 10000
@@ -45,7 +44,7 @@ def do_log_warning(msg: str, file: str):
     os.system("rosservice call /log_warning '" + msg + "' '" + file + "'")
 
 ## Pega um parâmetro do rosparam, caso ele não exista, retorna -1 (int).
-def get_parameter(parameter_name: str) -> Any:
+def get_parameter(parameter_name: str):
     count: int = 0
     parameter: str = ""
     while(parameter == "" and count < parameters_attempt_limit):

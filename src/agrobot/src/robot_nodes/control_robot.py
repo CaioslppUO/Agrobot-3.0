@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import time,serial,rospy
-from typing import Final
 from agrobot.msg import complete_command
 from robot_utils import testing
 
@@ -14,7 +13,7 @@ else:
 rospy.init_node("control_robot", anonymous=True)
 
 # Variável de controle e definição.
-uart_names: Final = ['ttyUSB_CONVERSOR-0','ttyUSB_CONVERSOR-1','ttyUSB_CONVERSOR-2','ttyUSB_CONVERSOR-3']
+uart_names: list = ['ttyUSB_CONVERSOR-0','ttyUSB_CONVERSOR-1','ttyUSB_CONVERSOR-2','ttyUSB_CONVERSOR-3']
 used_uarts: dict = {'0':None,'1':None,'2':None,'3':None}
 
 ## Pega a e retorna e porta UART.
@@ -67,11 +66,11 @@ def write_to_uart(command: str) -> None:
 
 ## Envia o comando de controle para o robô.
 def control_robot_callback(data: complete_command) -> None:
-    speed: Final = int(data.move.linear.x)
-    steer: Final = int(data.move.linear.y)
-    limit: Final = int(data.limit.speed_limit)
-    power_signal: Final = int(data.relay.signal_relay_power)
-    command: Final = str(speed)+';'+str(steer)+';'+str(limit)+';'+str(power_signal)+";"
+    speed: int = int(data.move.linear.x)
+    steer: int = int(data.move.linear.y)
+    limit: int = int(data.limit.speed_limit)
+    power_signal: int = int(data.relay.signal_relay_power)
+    command: int = str(speed)+';'+str(steer)+';'+str(limit)+';'+str(power_signal)+";"
     write_to_uart(command)
     return command
 

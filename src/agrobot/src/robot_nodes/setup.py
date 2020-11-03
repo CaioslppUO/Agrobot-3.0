@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import rosparam,pathlib,json,robot_utils.testing as testing
-from typing import Final
 
 if(testing.is_test_running()):
     from test_robot_utils import services_dependency as services
@@ -9,9 +8,9 @@ else:
     from robot_utils import services
 
 # Variáveis de diretório.
-current_file: Final = "setup.py"
-robot_config_dir: Final = "robot_config"
-project_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/../../"
+current_file: str = "setup.py"
+robot_config_dir: str = "robot_config"
+project_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../../"
 
 # Parâmetros para serem armazenados.
 version: str = ""

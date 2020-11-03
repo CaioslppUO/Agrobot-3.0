@@ -5,14 +5,13 @@
 import os,pathlib,json,pwd
 from shutil import which,rmtree
 from utils.general import do_log,get_python_version
-from typing import Final
 
 # Caminhos para as pastas.
-user: Final = pwd.getpwuid(os.getuid())[0]
-home: Final = "/home/" + user + "/"
-current_directory: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
-project_directory: Final = current_directory +  "../src/agrobot/"
-catkin_ws_directory: Final = home + "catkin_ws/"
+user: str = pwd.getpwuid(os.getuid())[0]
+home: str = "/home/" + user + "/"
+current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
+project_directory: str = current_directory +  "../src/agrobot/"
+catkin_ws_directory: str = home + "catkin_ws/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 previous_version_was_uninstalled: bool = False

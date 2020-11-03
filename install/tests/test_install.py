@@ -5,24 +5,23 @@
 import os,pathlib,time,rospy,rosservice,pwd
 from datetime import datetime
 from shutil import which
-from typing import Final
 
 # Caminhos para as pastas.
-user: Final = pwd.getpwuid(os.getuid())[0]
-home: Final = "/home/" + user + "/"
-catkin_ws_dir: Final = home + "catkin_ws/"
-current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
+user: str = pwd.getpwuid(os.getuid())[0]
+home: str = "/home/" + user + "/"
+catkin_ws_dir: str = home + "catkin_ws/"
+current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 installation_tests: bool = False
 post_installation_tests: bool = False
 
 # Constantes utilizadas para pintar o texto.
-blue: Final = '\033[94m'
-green: Final = '\033[92m'
-red: Final = '\033[91m'
-yellow: Final = '\033[93m'
-end: Final = '\033[0m'
+blue: str = '\033[94m'
+green: str = '\033[92m'
+red: str = '\033[91m'
+yellow: str = '\033[93m'
+end: str = '\033[0m'
 
 ## Recebe um texto e o retorna com uma cor específica.
 def set_color(color: str,text: str) -> str:
@@ -148,7 +147,7 @@ def test_run() -> bool:
     ## Espera até todos os serviços utilizados estejam disponível.
     def wait_for_services_availability() -> bool:
         available_services: list = ['/log_info']
-        services_attempt_limit: Final = 20000
+        services_attempt_limit: int = 20000
         limit_reached: bool = False
         index: int = 0
         for service in available_services:

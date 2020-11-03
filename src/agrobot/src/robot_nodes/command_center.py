@@ -3,7 +3,6 @@
 import rospy
 from agrobot.msg import complete_command,power_control
 from robot_utils import services
-from typing import Final
 
 ## Nó command_center.
 rospy.init_node("command_center", anonymous=True)
@@ -12,9 +11,9 @@ rospy.init_node("command_center", anonymous=True)
 last_module_signal_sent: int = 0
 
 # Variáveis de controle de publicação.
-pub_relay: Final = rospy.Publisher("/relay", power_control, queue_size=10)
-pub_control_robot: Final = rospy.Publisher("/control_robot", complete_command, queue_size=10)
-pub_control_mini_robot: Final = rospy.Publisher("/control_mini_robot", complete_command, queue_size=10)
+pub_relay: rospy.Publisher = rospy.Publisher("/relay", power_control, queue_size=10)
+pub_control_robot: rospy.Publisher = rospy.Publisher("/control_robot", complete_command, queue_size=10)
+pub_control_mini_robot: rospy.Publisher = rospy.Publisher("/control_mini_robot", complete_command, queue_size=10)
 
 ## Envia o comando de movimento para o mini robô.
 def send_command_to_mini_robot(command: complete_command) -> None:
