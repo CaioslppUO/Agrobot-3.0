@@ -2,13 +2,13 @@
 
 # Script que realiza os testes para descobrir se a instalação foi bem sucedida.
 
-import os,pathlib,time,rospy,rosservice
+import os,pathlib,time,rospy,rosservice,pwd
 from datetime import datetime
 from shutil import which
 from typing import Final
 
 # Caminhos para as pastas.
-user: Final = os.getlogin()
+user: Final = pwd.getpwuid(os.getuid())
 home: Final = "/home/" + user + "/"
 catkin_ws_dir: Final = home + "catkin_ws/"
 current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"

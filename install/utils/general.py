@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import os,pathlib
+import os,pathlib,pwd
 from datetime import datetime
 
 # Caminhos para as pastas.
-user: str = os.getlogin()
+user: str = pwd.getpwuid(os.getuid())
 home: str = "/home/" + user + "/"
 log_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../logs/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"

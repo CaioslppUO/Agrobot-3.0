@@ -2,13 +2,13 @@
 
 # Script que remove instalações antigas do código do agrobot e instala a versão atual.
 
-import os,pathlib,json
+import os,pathlib,json,pwd
 from shutil import which,rmtree
 from utils.general import do_log,get_python_version
 from typing import Final
 
 # Caminhos para as pastas.
-user: Final = os.getlogin()
+user: Final = pwd.getpwuid(os.getuid())
 home: Final = "/home/" + user + "/"
 current_directory: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
 project_directory: Final = current_directory +  "../src/agrobot/"

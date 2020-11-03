@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import os,pathlib
+import os,pathlib,pwd
 from datetime import datetime
 from typing import Final
 
 # Caminhos para as pastas.
-user: Final = os.getlogin()
+user: Final = pwd.getpwuid(os.getuid())
 home: Final = "/home/" + user + "/"
 catkin_ws_dir: Final = home + "catkin_ws/"
 current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
