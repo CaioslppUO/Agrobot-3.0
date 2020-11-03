@@ -4,7 +4,7 @@ import os,pathlib,pwd
 from datetime import datetime
 
 # Caminhos para as pastas.
-user: str = pwd.getpwuid(os.getuid())
+user: str = pwd.getpwuid(os.getuid())[0]
 home: str = "/home/" + user + "/"
 log_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/../logs/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"

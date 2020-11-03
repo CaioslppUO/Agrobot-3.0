@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Final
 
 # Caminhos para as pastas.
-user: Final = pwd.getpwuid(os.getuid())
+user: Final = pwd.getpwuid(os.getuid())[0]
 home: Final = "/home/" + user + "/"
 catkin_ws_dir: Final = home + "catkin_ws/"
 current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"

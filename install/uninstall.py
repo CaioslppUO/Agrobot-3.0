@@ -9,7 +9,7 @@ from utils.general import do_log,get_python_version
 from typing import Final
 
 # Caminhos para as pastas.
-user: Final = pwd.getpwuid(os.getuid())
+user: Final = pwd.getpwuid(os.getuid())[0]
 home: Final = "/home/" + user + "/"
 current_dir: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
 catkin_ws_dir: Final = home + "catkin_ws/"
