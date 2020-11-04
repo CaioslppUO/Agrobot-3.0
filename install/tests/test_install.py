@@ -180,7 +180,7 @@ def test_run() -> bool:
             create_tmp_file("rosservice call /log_info 'Installation test (run) worked properly.' 'test_install.py'")
             run_tmp_file()
             time.sleep(2)
-        os.system("pkill ros")
+        os.system("sudo pkill ros")
         delete_tmp_file()
         time.sleep(3)
     except:
