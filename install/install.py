@@ -75,8 +75,12 @@ def copy_src_to_catkin_ws() -> bool:
 ## Compila o novo código fonte copiado.
 def compile_src() -> bool:
     try:
-        if(os.path.exists(catkin_ws_directory)):
-            os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
+        if(user == "labiot"):
+            if(os.path.exists(catkin_ws_directory)):
+                os.system("cd " + catkin_ws_directory + " && catkin_make ")
+        else:
+            if(os.path.exists(catkin_ws_directory)):
+                os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m")
         return True
     except Exception as e:
         do_log("<install.py> [ERROR] Could not compile catkin_ws folder. "+str(e))
@@ -218,7 +222,6 @@ def install_service() -> None:
                 os.system("sudo mv " + current_directory+"start_robot.service " + service_location)
                 if(user == "labiot"):
                     os.system("sudo systemctl enable start_robot.service")
-                    os.system("sudo systemctl start start_robot.service")
                     do_log("<install.py> [INFO] The service was installed, started and enabled.")
                 else:
                     do_log("<install.py> [INFO] The service was installed but not started and enabled.")
