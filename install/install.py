@@ -168,8 +168,8 @@ def update_code_version_inside_src() -> bool:
 ## Instala todos os módulos no python path.
 def install_robot_utils() -> None:
     try:
-        os.system("python " + catkin_ws_directory + "src/agrobot/src/robot_utils/install.py bdist_wheel")
-        os.system("pip install " + catkin_ws_directory + "src/agrobot/src/robot_utils/dist/*")
+        os.system("cd " + catkin_ws_directory + "src/agrobot/src/robot_utils/ && python install.py bdist_wheel")
+        os.system("cd " + catkin_ws_directory + "src/agrobot/src/robot_utils/dist/ && pip install robot_utils-0.1-py3-none-any.whl")
     except Exception as e:
         do_log("<install.py> [ERROR] Could not install robot_utils "+str(e))
 
