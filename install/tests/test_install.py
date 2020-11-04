@@ -208,7 +208,7 @@ def test_run() -> bool:
 def test_robot_utils_is_installed() -> bool:
     global robot_utils_installed
     try:
-        from robot_utils import services
+        import robot_utils
         robot_utils_installed = set_color(green,"OK")
         return True
     except Exception as e:

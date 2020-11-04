@@ -54,7 +54,7 @@ def test_uninstall_robot_utils() -> bool:
     global robot_utils_removed
     try:
         try:
-            from robot_utils import services
+            import robot_utils
             robot_utils_removed = set_color(red,"OK")
             return False
         except:

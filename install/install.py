@@ -4,7 +4,7 @@
 
 import os,pathlib,json,pwd
 from shutil import which,rmtree
-from utils.general import do_log,get_python_version
+from utils.general import do_log
 
 # Caminhos para as pastas.
 user: str = pwd.getpwuid(os.getuid())[0]
