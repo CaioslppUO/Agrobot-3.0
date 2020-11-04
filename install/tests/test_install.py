@@ -252,7 +252,7 @@ def calc_installation_percent() -> bool:
     count += calc_installation_aux(source_bashrc,"<test_install.py> [ERROR] Could not source .bashrc.")
     count += calc_installation_aux(source_zshrc,"<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
     count += calc_installation_aux(ran_properly,"<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
-    count += calc_installation_aux(robot_utils_installed,"<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
+    count += calc_installation_aux(robot_utils_installed,"<test_install.py> [ERROR] Robot_utils was not installed properly. Check the output for more information.")
     # Não precisa passar no teste.
     calc_installation_aux(service_script,"<test_install> [WARNING] Could not setup the robot service.")
     calc_installation_aux(service,"<test_install> [WARNING] Could not setup the robot service.")
