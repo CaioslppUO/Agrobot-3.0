@@ -4,6 +4,7 @@ curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt install -y nodejs
 yes | sudo npm install -g yarn
 yes | sudo apt install python-pip
+sudo apt install -y build-essential libssl-dev libffi-dev python-dev
 if [[ $USER == *"labiot"* ]]; then
     sudo apt install -y python3-venv
 else
