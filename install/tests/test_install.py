@@ -172,6 +172,7 @@ def test_run() -> bool:
         os.system("roscore& ")
         while(rospy.is_shutdown()):
             pass
+        time.sleep(8)
         create_tmp_file("rosrun agrobot log.py& ")
         run_tmp_file()
         time.sleep(1)
