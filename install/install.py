@@ -54,7 +54,7 @@ def remove_previous_compilation() -> bool:
 ## Tenta criar a pasta onde ficam todos os projetos ROS.
 def create_catkin_folder() -> None:
     try:
-        os.mkdir(home+"catkin_ws")
+        os.mkdir(catkin_ws_directory)
     except Exception as e:
         do_log("<install.py> [INFO] Tried to create catkin_ws but it already exists. "+str(e))
     try:
