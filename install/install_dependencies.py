@@ -22,7 +22,7 @@ def install() -> None:
     exec("yes | sudo apt install python-pip")
     exec("yes | python3 -m pip install --user virtualenv")
     exec("mkdir -p /home/$USER/.envs/agrobot_env/ && virtualenv /home/$USER/.envs/agrobot_env/")
-    exec("cd /home/$USER/.envs/agrobot_env/ && source /bin/activate && pip install " + current_directory + "requirements.env")
+    exec("source /home/$USER/.envs/agrobot_env/bin/activate && pip install -r " + current_directory + "requirements.env")
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
