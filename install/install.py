@@ -2,7 +2,7 @@
 
 # Script que remove instalações antigas do código do agrobot e instala a versão atual.
 
-import os,pathlib,json,pwd
+import os,pathlib,json,pwd,time
 from shutil import which,rmtree
 from utils.general import do_log
 
@@ -238,6 +238,7 @@ def install() -> None:
     if(previous_version_was_uninstalled):
         create_catkin_folder()
         installed_successfully = copy_src_to_catkin_ws() and compile_src() and update_code_version_inside_src()
+        time.sleep(3)
     else:
         do_log("<install.py> [ERROR] Could not install. Previous version of code was not uninstalled.")
 
@@ -249,6 +250,7 @@ def post_installation_configurations() -> None:
         source_zshrc()
         install_robot_utils()
         install_service()
+        time.sleep(3)
     else:
         do_log("<install.py> [ERROR] Could not configure post installation. Code was not installed.")
 
