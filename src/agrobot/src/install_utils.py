@@ -1,18 +1,18 @@
 import setuptools
 
 setuptools.setup(
-    name="robot_utils",
-    version="0.1",
-    scripts=['testing.py','services.py'],
-    author="Caio Moreira",
+    name="robot-utils", # Replace with your own username
+    version="0.0.1",
+    author="Caio Cezar",
     author_email="caioslppuo@gmail.com",
-    description="Utils library used by Agrobot.",
+    description="Library used by Agrobot.",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent"
+        "Operating System :: OS Independent",
     ],
+    python_requires='>=3.6',
     install_requires=[
         'rosservice',
         'rosparam'

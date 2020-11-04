@@ -80,8 +80,8 @@ def recompile_catkin_ws_directory() -> bool:
 ## Remove os sym links para os códigos do robô colocados no python path.
 def uninstall_robot_utils() -> bool:
     try:
-        if(os.path.exists(catkin_ws_directory + "src/agrobot/src/robot_utils/dist/")):
-            os.system("yes | pip uninstall " + catkin_ws_directory + "src/agrobot/src/robot_utils/dist/*")
+        if(os.path.exists(catkin_ws_directory + "src/agrobot/src/.dist/")):
+            os.system("cd " + catkin_ws_directory + "src/agrobot/src/.dist/ && yes | python3 -m pip uninstall robot_utils-0.0.1-py3-none-any.whl")
         try:
             from robot_utils import services
             return False
