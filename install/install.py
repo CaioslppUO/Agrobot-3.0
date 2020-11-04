@@ -76,7 +76,7 @@ def copy_src_to_catkin_ws() -> bool:
 def compile_src() -> bool:
     try:
         if(os.path.exists(catkin_ws_directory)):
-            os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
+            os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m")
         return True
     except Exception as e:
         do_log("<install.py> [ERROR] Could not compile catkin_ws folder. "+str(e))
