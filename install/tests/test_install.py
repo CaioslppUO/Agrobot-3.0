@@ -34,7 +34,7 @@ compilation_done = set_color(red,"NO")
 source_bashrc = set_color(red,"NO")
 source_zshrc = set_color(red,"NO")
 ran_properly = set_color(red,"NO")
-sym_links = set_color(red,"NO")
+robot_utils_installed = set_color(red,"NO")
 service_script = set_color(red,"NO")
 service = set_color(red,"NO")
 
@@ -205,38 +205,15 @@ def test_run() -> bool:
         return False
 
 ## Testa se os links simbólicos para o código no python path foram criados corretamente.
-def test_sym_link() -> bool:
-    global sym_links
-    def get_python_version() -> str:
-        try:
-            python_version = "-1"
-            command = "python3 --version > " + current_dir+"python_version.tmp"
-            os.system(command)
-            with open(current_dir+"python_version.tmp","r") as file:
-                for line in file.readlines():
-                    line = line.rstrip('\n')
-                    line = line.split(" ")
-                    line = line[1].split(".")
-                    line = line[0] + "." + line[1]
-                    python_version = line
-                file.close()
-            if(os.path.exists(current_dir+"python_version.tmp")):
-                os.system("rm " + current_dir+"python_version.tmp")
-            return python_version
-        except Exception as e:
-            do_log("<test_install.py> [ERROR] Could not get python 3 version. "+str(e))
+def test_robot_utils_is_installed() -> bool:
+    global robot_utils_installed
     try:
-        paths_to_copy = ["robot_utils","test_robot_utils"]
-        python_version = get_python_version()
-        sym_links = set_color(green,"OK")
-        for path in paths_to_copy:
-            if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + path)):
-                sym_links = set_color(red,"NO")
-                break
+        from robot_utils import services
+        robot_utils_installed = set_color(green,"OK")
         return True
     except Exception as e:
-        sym_links = set_color(red,"NO")
-        do_log("<test_install.py> [ERROR] Could not check some needed symlinks. "+str(e))
+        robot_utils_installed = set_color(red,"NO")
+        do_log("<test_install.py> [ERROR] Could not check if robot_utils is installed. "+str(e))
         return False
 
 ## Testa se o script do serviço foi instalado corretamente.
@@ -275,7 +252,7 @@ def calc_installation_percent() -> bool:
     count += calc_installation_aux(source_bashrc,"<test_install.py> [ERROR] Could not source .bashrc.")
     count += calc_installation_aux(source_zshrc,"<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
     count += calc_installation_aux(ran_properly,"<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
-    count += calc_installation_aux(sym_links,"<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
+    count += calc_installation_aux(robot_utils_installed,"<test_install.py> [ERROR] Could not find some needed symlinks. Check /usr/lib/python<version>/site-packages/ and look for robot_* symlinks.")
     # Não precisa passar no teste.
     calc_installation_aux(service_script,"<test_install> [WARNING] Could not setup the robot service.")
     calc_installation_aux(service,"<test_install> [WARNING] Could not setup the robot service.")
@@ -290,7 +267,7 @@ def run_installation_tests():
 def run_post_installation_tests():
     global post_installation_tests
     if(installation_tests):
-        post_installation_tests =  test_source_bashrc() and test_source_zshrc() and test_sym_link() and test_run()
+        post_installation_tests =  test_source_bashrc() and test_source_zshrc() and test_robot_utils_is_installed() and test_run()
     else:
         do_log("<test_install.py> [ERROR] Could not run post_installation_tests(). Installation tests where not executed.")
 

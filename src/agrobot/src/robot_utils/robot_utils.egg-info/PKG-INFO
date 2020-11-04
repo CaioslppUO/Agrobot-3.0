@@ -1,0 +1,13 @@
+Metadata-Version: 1.1
+Name: robot-utils
+Version: 0.1
+Summary: Utils library used by Agrobot.
+Home-page: UNKNOWN
+Author: Caio Moreira
+Author-email: caioslppuo@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent

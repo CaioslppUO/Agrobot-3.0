@@ -25,7 +25,7 @@ def set_color(color: str,text: str) -> str:
 
 # Variáveis para o resultado dos testes.
 agrobot_folder_not_exists = set_color(red,"NO")
-sym_links_removed = set_color(red,"NO")
+robot_utils_removed = set_color(red,"NO")
 
 ## Escreve mensagens de log no arquivo de logs.
 def do_log(msg: str) -> None:
@@ -50,40 +50,19 @@ def test_agrobot_folder_exists() -> bool:
         return False
 
 ## Testa se os links simbólicos criados para o código fonte no python path foram removidos.
-def test_sym_links_removed() -> bool:
-    global sym_links_removed
-    
-    def get_python_version() -> str:
-        try:
-            python_version = "-1"
-            command = "python3 --version > " + current_dir+"python_version.tmp"
-            os.system(command)
-            with open(current_dir+"python_version.tmp","r") as file:
-                for line in file.readlines():
-                    line = line.rstrip('\n')
-                    line = line.split(" ")
-                    line = line[1].split(".")
-                    line = line[0] + "." + line[1]
-                    python_version = line
-                file.close()
-            if(os.path.exists(current_dir+"python_version.tmp")):
-                os.system("rm " + current_dir+"python_version.tmp")
-            return python_version
-        except Exception as e:
-            do_log("<test_install.py> [ERROR] Could not get python 3 version. "+str(e))
-
+def test_uninstall_robot_utils() -> bool:
+    global robot_utils_removed
     try:
-        paths_to_check_uninstall = ["robot_utils","test_robot_utils"]
-        python_version = get_python_version()
-        sym_links_removed = set_color(green,"OK")
-        for path in paths_to_check_uninstall:
-            if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):
-                sym_links_removed = set_color(red,"NO")
-                break
-        return True
+        try:
+            from robot_utils import services
+            robot_utils_removed = set_color(red,"OK")
+            return False
+        except:
+            robot_utils_removed = set_color(green,"OK")
+            return True
     except Exception as e:
-        sym_links_removed = set_color(red,"NO")
-        do_log("<test_uninstall.py> [ERROR] Some of the symlinks could not be checked. "+str(e))
+        robot_utils_removed = set_color(red,"NO")
+        do_log("<test_uninstall.py> [ERROR] Could not check if robot_utils is uninstalled. "+str(e))
         return False
 
 ## Auxiliar para o cálculo do sucesso da desinstalação.
@@ -99,7 +78,7 @@ def calc_uninstallation_percent() -> float:
     total = 2
     # Precisa passar no teste (Entra para o total).
     count += calc_uninstallation_aux(agrobot_folder_not_exists,"<test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/")
-    count += calc_uninstallation_aux(sym_links_removed,"<test_uninstall.py> [ERROR] Could not remove symlinks.")
+    count += calc_uninstallation_aux(robot_utils_removed,"<test_uninstall.py> [ERROR] Could not remove symlinks.")
     if(count == 0):
         return 0.0
     return (count*100) / total
@@ -107,7 +86,7 @@ def calc_uninstallation_percent() -> float:
 ## Roda os testes de desinstalação.
 def run_uninstall_tests():
     global uninstalled
-    uninstalled = test_agrobot_folder_exists() and test_sym_links_removed()
+    uninstalled = test_agrobot_folder_exists() and test_uninstall_robot_utils()
 
 ## Imprime na tela o resultado dos testes.
 def tests_results() -> None:

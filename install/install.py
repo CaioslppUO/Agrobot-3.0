@@ -169,16 +169,12 @@ def update_code_version_inside_src() -> bool:
         return False
 
 ## Instala todos os módulos no python path.
-def install_code_in_python_path() -> None:
+def install_robot_utils() -> None:
     try:
-        paths_to_copy: list = ["src/robot_utils","test/test_robot_utils"]
-        python_version: str = get_python_version()
-        for path in paths_to_copy:
-            aux = path.split("/")
-            if(not os.path.exists("/usr/lib/python" + python_version + "/site-packages/" + aux[1])):
-                os.system("sudo ln -s " + catkin_ws_directory+"src/agrobot/"+ path + "/ /usr/lib/python" + python_version + "/site-packages/" + aux[1])
+        os.system("python " + catkin_ws_directory + "src/agrobot/src/robot_utils/install.py bdist_wheel")
+        os.system("pip install " + catkin_ws_directory + "src/agrobot/src/robot_utils/dist/*")
     except Exception as e:
-        do_log("<install.py> [ERROR] Could not create the symlink to robot code in python path. "+str(e))
+        do_log("<install.py> [ERROR] Could not install robot_utils "+str(e))
 
 ## Instala o script de inicialização do serviço.
 def install_service_script() -> str:
@@ -253,7 +249,7 @@ def post_installation_configurations() -> None:
         install_server()
         source_bashrc()
         source_zshrc()
-        install_code_in_python_path()
+        install_robot_utils()
         install_service()
     else:
         do_log("<install.py> [ERROR] Could not configure post installation. Code was not installed.")

@@ -11,7 +11,7 @@ from utils.general import do_log,get_python_version
 user: str = pwd.getpwuid(os.getuid())[0]
 home: str = "/home/" + user + "/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
-catkin_ws_dir: str = home + "catkin_ws/"
+catkin_ws_directory: str = home + "catkin_ws/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 uninstalled: bool = False
@@ -19,7 +19,7 @@ uninstalled: bool = False
 ## Tenta remover a pasta do agrobot.
 def remove_agrobot_folder() -> None:
     try:
-        rmtree(catkin_ws_dir+"src/agrobot", ignore_errors=True)
+        rmtree(catkin_ws_directory+"src/agrobot", ignore_errors=True)
     except Exception as e:
         do_log("<uninstall.py> [WARNING] Could not remove catkin_ws/src/agrobot/. "+str(e))
 
@@ -31,7 +31,7 @@ def remove_bashrc_source() -> None:
         with open(bashrc_path,"r") as file:
             for line in file.readlines():
                 line = line.rstrip('\n')
-                if(line != "source " + catkin_ws_dir + "devel/setup.bash"):
+                if(line != "source " + catkin_ws_directory + "devel/setup.bash"):
                     text_to_copy += line + "\n"
             file.close()
         try:
@@ -51,7 +51,7 @@ def remove_zshrc_source() -> None:
         with open(zshrc_path,"r") as file:
             for line in file.readlines():
                 line = line.rstrip('\n')
-                if(line != "source " + catkin_ws_dir + "devel/setup.zsh"):
+                if(line != "source " + catkin_ws_directory + "devel/setup.zsh"):
                     text_to_copy += line + "\n"
             file.close()
         try:
@@ -64,10 +64,10 @@ def remove_zshrc_source() -> None:
         do_log("<uninstall.py> [WARNING] Could not read from .zshrc file. Maybe file doesn't exists because zsh is not installed. "+str(e))
 
 ## Tenta recompilar a pasta de projetos do ROS. Caso a pasta catkin_ws não exista, tenta remover o source do .bashrc e .zshrc.
-def recompile_catkin_ws_dir() -> bool:
+def recompile_catkin_ws_directory() -> bool:
     try:
-        if(os.path.exists(catkin_ws_dir)):
-            os.system("cd " + catkin_ws_dir + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
+        if(os.path.exists(catkin_ws_directory)):
+            os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
         else:
             remove_bashrc_source()
             remove_zshrc_source()
@@ -78,24 +78,25 @@ def recompile_catkin_ws_dir() -> bool:
         return False
 
 ## Remove os sym links para os códigos do robô colocados no python path.
-def remove_sym_links() -> bool:
+def uninstall_robot_utils() -> bool:
     try:
-        paths_to_uninstall: list = ["robot_utils","test_robot_utils"]
-        python_version: str = get_python_version()
-        for path in paths_to_uninstall:
-            if(os.path.exists("/usr/lib/python"+python_version+"/site-packages/"+path)):
-                os.system("sudo rm /usr/lib/python"+python_version+"/site-packages/"+path)
-        return True
+        if(os.path.exists(catkin_ws_directory + "src/agrobot/src/robot_utils/dist/")):
+            os.system("yes | pip uninstall " + catkin_ws_directory + "src/agrobot/src/robot_utils/dist/*")
+        try:
+            from robot_utils import services
+            return False
+        except:
+            return True
     except Exception as e:
-        do_log("<uninstall.py> [ERROR] Could not remove some sym links. "+str(e))
+        do_log("<uninstall.py> [ERROR] Could not remove robot_utils. "+str(e))
         return False
 
 ## Executa as rotinas de desinstalação.
 def uninstall():
     global uninstalled
-    uninstalled = remove_sym_links()
+    uninstalled = uninstall_robot_utils()
     remove_agrobot_folder()
-    uninstalled = uninstalled and recompile_catkin_ws_dir()
+    uninstalled = uninstalled and recompile_catkin_ws_directory()
 
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_uninstallattion() -> None:
