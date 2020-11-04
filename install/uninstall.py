@@ -19,7 +19,8 @@ uninstalled: bool = False
 ## Tenta remover a pasta do agrobot.
 def remove_agrobot_folder() -> None:
     try:
-        os.system("sudo rm -r " + catkin_ws_directory)
+        if(os.path.exists(catkin_ws_directory)):
+            os.system("sudo rm -r " + catkin_ws_directory)
     except Exception as e:
         do_log("<uninstall.py> [WARNING] Could not remove catkin_ws/src/agrobot/. "+str(e))
 
