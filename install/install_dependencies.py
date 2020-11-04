@@ -24,7 +24,7 @@ def install() -> None:
     else:
         exec("yes | python3 -m pip install --user virtualenv")
     exec("mkdir -p /home/$USER/.envs/agrobot_env/ && python3 -m venv /home/$USER/.envs/agrobot_env/")
-    exec("source /home/$USER/.envs/agrobot_env/bin/activate && pip install -r " + current_directory + "requirements.env")
+    exec("source /home/" + user + "/.envs/agrobot_env/bin/activate && pip install -r " + current_directory + "requirements.env")
 
 ## Executa as rotinas de instalação.
 if __name__ == "__main__":
