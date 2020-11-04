@@ -19,7 +19,7 @@ uninstalled: bool = False
 ## Tenta remover a pasta do agrobot.
 def remove_agrobot_folder() -> None:
     try:
-        rmtree(catkin_ws_directory+"src/agrobot", ignore_errors=True)
+        os.system("sudo rm -r " + catkin_ws_directory)
     except Exception as e:
         do_log("<uninstall.py> [WARNING] Could not remove catkin_ws/src/agrobot/. "+str(e))
 
@@ -63,20 +63,6 @@ def remove_zshrc_source() -> None:
     except Exception as e:
         do_log("<uninstall.py> [WARNING] Could not read from .zshrc file. Maybe file doesn't exists because zsh is not installed. "+str(e))
 
-## Tenta recompilar a pasta de projetos do ROS. Caso a pasta catkin_ws não exista, tenta remover o source do .bashrc e .zshrc.
-def recompile_catkin_ws_directory() -> bool:
-    try:
-        if(os.path.exists(catkin_ws_directory)):
-            os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m")
-        else:
-            remove_bashrc_source()
-            remove_zshrc_source()
-            do_log("<uninstall.py> [WARNING] Since catkin_ws folder wasn't found, source from .bashrc and .zshrc where removed.")
-        return True
-    except Exception as e:
-        do_log("<uninstall.py> [ERROR] Could not compile catkin_ws folder. "+str(e))
-        return False
-
 ## Remove os sym links para os códigos do robô colocados no python path.
 def uninstall_robot_utils() -> bool:
     try:
@@ -96,7 +82,7 @@ def uninstall():
     global uninstalled
     uninstalled = uninstall_robot_utils()
     remove_agrobot_folder()
-    uninstalled = uninstalled and recompile_catkin_ws_directory()
+    uninstalled = uninstalled
 
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_uninstallattion() -> None:
