@@ -43,7 +43,7 @@ def do_log(msg: str) -> None:
 def test_agrobot_folder_exists() -> bool:
     global agrobot_folder_not_exists
     try:
-        if(not os.path.exists(catkin_ws_dir+"src/agrobot")):
+        if(not os.path.exists(catkin_ws_dir)):
             agrobot_folder_not_exists = set_color(green,"OK")
         return True
     except:
