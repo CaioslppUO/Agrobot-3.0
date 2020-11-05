@@ -23,7 +23,7 @@ source /home/$USER/.bashrc
 wichsh="`ps -o pid,args| awk '$1=='"$$"'{print $2}'`"
 
 if [[ $wichsh == *"bash"* ]]; then
-    bash
+    bash -e 'source /home/$USER/catkin_ws/devel/setup.bash'
 elif [[ $wichsh == *"zsh"* ]]; then
-    zsh
+    zsh -e 'source /home/$USER/catkin_ws/devel/setup.zsh'
 fi
