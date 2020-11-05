@@ -16,14 +16,14 @@ rosd=$(head -n 1 "ros_distro.txt")
 
 mkdir -p /home/$USER/.envs/agrobot_env/ && python3 -m venv /home/$USER/.envs/agrobot_env/
 source /home/$USER/.envs/agrobot_env/bin/activate && pip install -r requirements.env
-echo 'source /home/$USER/.envs/agrobot_env/bin/activate && source /opt/ros/'${rosd}'/setup.bash' >> /home/$USER/.bashrc
-echo 'source /home/$USER/.envs/agrobot_env/bin/activate && source /opt/ros/'${rosd}'/setup.zsh' >> /home/$USER/.zshrc
+echo 'source /home/$USER/.envs/agrobot_env/bin/activate && source /opt/ros/'${rosd}'/setup.bash && source /home/$USER/catkin_ws/devel/setup.bash' >> /home/$USER/.bashrc
+echo 'source /home/$USER/.envs/agrobot_env/bin/activate && source /opt/ros/'${rosd}'/setup.zsh && source /home/$USER/catkin_ws/devel/setup.zsh' >> /home/$USER/.zshrc
 source /home/$USER/.bashrc
 
 wichsh="`ps -o pid,args| awk '$1=='"$$"'{print $2}'`"
 
 if [[ $wichsh == *"bash"* ]]; then
-    bash -e 'source /home/$USER/catkin_ws/devel/setup.bash'
+    bash
 elif [[ $wichsh == *"zsh"* ]]; then
-    zsh -e 'source /home/$USER/catkin_ws/devel/setup.zsh'
+    zsh
 fi
