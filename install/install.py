@@ -222,7 +222,6 @@ def install_service() -> None:
                 os.system("sudo mv " + current_directory+"start_robot.service " + service_location)
                 if(user == "labiot"):
                     os.system("sudo systemctl enable start_robot.service")
-                    os.system("sudo systemctl start start_robot.service")
                     do_log("<install.py> [INFO] The service was installed, started and enabled.")
                 else:
                     do_log("<install.py> [INFO] The service was installed but not started and enabled.")
