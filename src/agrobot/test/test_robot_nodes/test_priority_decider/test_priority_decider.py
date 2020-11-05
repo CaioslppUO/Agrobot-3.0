@@ -1,29 +1,28 @@
 #!/usr/bin/env python3
 
 import rospy,pathlib,os,time
-from typing import Final
 from std_msgs.msg import String
 
 ## Definição do nó.
 rospy.init_node("test_priority_decider",anonymous=True)
 
 # Constantes utilizadas para pintar o texto.
-blue: Final = '\033[94m'
-green: Final = '\033[92m'
-red: Final = '\033[91m'
-yellow: Final = '\033[93m'
-end: Final = '\033[0m'
+blue: str = '\033[94m'
+green: str = '\033[92m'
+red: str = '\033[91m'
+yellow: str = '\033[93m'
+end: str = '\033[0m'
 
 ## Recebe um texto e o retorna com uma cor específica.
 def set_color(color: str,text: str) -> str:
     return color + text + end
 
 # Caminhos para as pastas.
-current_directory: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
+current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
 # Variáveis de controle.
-topics_to_test: Final = ['web_server','control_lidar']
-number_of_topics_to_test: Final = len(topics_to_test)
+topics_to_test: list = ['web_server','control_lidar']
+number_of_topics_to_test: int = len(topics_to_test)
 successfully_communicated_topics: list = []
 priority_test_topics: list = []
 

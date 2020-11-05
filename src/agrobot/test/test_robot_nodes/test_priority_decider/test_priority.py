@@ -3,7 +3,6 @@
 # O teste de prioridade é realizado somente com o web_server e o control_lidar.
 
 import os,rosparam,rospy
-from typing import Final
 from std_msgs.msg import String
 
 ## Definição do nó.

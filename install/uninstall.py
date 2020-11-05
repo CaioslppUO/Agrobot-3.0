@@ -4,7 +4,6 @@
 # OBS: A pasta catkin_ws é mantida, juntamente com os sources no .bashrc e .zshrc.
 
 import os,pathlib,pwd
-from shutil import rmtree
 from utils.general import do_log
 
 # Caminhos para as pastas.

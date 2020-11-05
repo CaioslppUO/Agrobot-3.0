@@ -6,7 +6,6 @@ from threading import Thread
 import os
 import time
 
-
 data_output = {
     'limit': 0,
     'module': False,

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 import os
-from typing import Final
 
 # Variáveis de controle.
-topics_to_test: Final = ['web_server','control_lidar']
+topics_to_test: list = ['web_server','control_lidar']
 
 ## Testa se a publicação de comandos está funcionando.
 def test_talk() -> None:

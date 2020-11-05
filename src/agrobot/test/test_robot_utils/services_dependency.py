@@ -17,9 +17,9 @@ def do_log_warning(msg: str, file: str)->None:
     pass
 
 ## Injeção de dependências.
-def send_command(speed: int, steer: int, limit: int, power_signal: int) -> None:
+def get_parameter(parameter_name: str):
     pass
 
 ## Injeção de dependências.
-def send_signal(signal: int) -> None:
+def check_complete_control_command(command) -> None:
     pass

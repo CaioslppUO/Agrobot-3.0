@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 
 import rospy,os,pathlib
-from typing import Final
 from geometry_msgs.msg import Twist
 
 # Caminhos para as pastas.
-current_directory: Final = str(pathlib.Path(__file__).parent.absolute()) + "/"
+current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
 ## Definição do nó.
 rospy.init_node("test_listen",anonymous=True)
 
 # Variáveis de controle.
-topics_to_test: Final = ['web_server','control_lidar']
+topics_to_test: list = ['web_server','control_lidar']
 
 ## Limpa o arquivo temporário.
 def clean_tmp_file() -> None:
