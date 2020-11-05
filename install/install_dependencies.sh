@@ -10,7 +10,20 @@ if [[ $USER == *"labiot"* ]]; then
 else
     yes | python3 -m pip install --user virtualenv
 fi
+
+echo $ROS_DISTRO > ros_distro.txt
+rosd=$(head -n 1 "ros_distro.txt")
+
 mkdir -p /home/$USER/.envs/agrobot_env/ && python3 -m venv /home/$USER/.envs/agrobot_env/
 source /home/$USER/.envs/agrobot_env/bin/activate && pip install -r requirements.env
-echo /home/$USER/.envs/agrobot_env/bin/activate >> /home/$USER/.bashrc
+echo 'source /home/$USER/.envs/agrobot_env/bin/activate && source /opt/ros/'${rosd}'/setup.bash' >> /home/$USER/.bashrc
+echo 'source /home/$USER/.envs/agrobot_env/bin/activate && source /opt/ros/'${rosd}'/setup.zsh' >> /home/$USER/.zshrc
 source /home/$USER/.bashrc
+
+wichsh="`ps -o pid,args| awk '$1=='"$$"'{print $2}'`"
+
+if [[ $wichsh == *"bash"* ]]; then
+    bash
+elif [[ $wichsh == *"zsh"* ]]; then
+    zsh
+fi
