@@ -4,13 +4,20 @@ dependConfirmationPath="/home/$USER/.agrobot_dependencies_is_installed.txt"
 
 alreadyInstalled=$(cat $dependConfirmationPath)
 
+linuxVersion=$(lsb_release -d)
+
 if [[ $alreadyInstalled != *"true"* ]]; then
     curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-    sudo apt install -y nodejs
+    if [[ $linuxVersion != *"Manjaro Linux"* ]]; then
+    	sudo apt install -y nodejs
+    	sudo apt install -y python-pip
+	sudo apt install -y build-essential libssl-dev libffi-dev python-dev
+    else
+        sudo pacman -S nodejs npm
+	sudo pacman -S python-pip
+	sudo pacman -S build-essential libssl-dev libffi-dev python-dev
     yes | sudo npm install -g yarn
-    sudo apt install -y python-pip
     pip install --upgrade pip
-    sudo apt install -y build-essential libssl-dev libffi-dev python-dev
     if [[ $USER == *"labiot"* ]]; then
         sudo apt install -y python3-venv
     else
@@ -19,7 +26,7 @@ if [[ $alreadyInstalled != *"true"* ]]; then
 
     echo $ROS_DISTRO > ros_distro.txt
     rosd=$(head -n 1 "ros_distro.txt")
-
+    rm "ros_distro.txt"
     mkdir -p /home/$USER/.envs/agrobot_env/ && python3 -m venv /home/$USER/.envs/agrobot_env/
     source /home/$USER/.envs/agrobot_env/bin/activate && pip install -r requirements.env
     if [[ $USER == *"labiot"* ]]; then
