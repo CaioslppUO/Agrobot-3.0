@@ -13,9 +13,10 @@ if [[ $alreadyInstalled != *"true"* ]]; then
     	sudo apt install -y python-pip
 	sudo apt install -y build-essential libssl-dev libffi-dev python-dev
     else
-        sudo pacman -S nodejs npm
-	sudo pacman -S python-pip
-	sudo pacman -S build-essential libssl-dev libffi-dev python-dev
+        yes | sudo pacman -S nodejs npm
+	yes | sudo pacman -S python-pip
+	yes | sudo pacman -S build-essential libssl-dev libffi-dev python-dev
+    fi
     yes | sudo npm install -g yarn
     pip install --upgrade pip
     if [[ $USER == *"labiot"* ]]; then
