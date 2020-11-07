@@ -41,7 +41,7 @@ def publish_msg(msg: complete_command) -> None:
 def get_ipv4() -> str:
     ip: str = ""
     try:
-        os.system("ifconfig | grep '192.' > " + current_directory + "ipv4.tmp")
+        os.system("ifconfig | grep 'inet *.*.*.*' > " + current_directory + "ipv4.tmp")
         with open(current_directory+"ipv4.tmp","r") as file:
             line = file.readlines()
             file.close()
