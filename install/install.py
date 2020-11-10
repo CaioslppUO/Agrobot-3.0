@@ -188,6 +188,7 @@ def install_service_script() -> str:
             os.system("sudo rm " + script_location+"start_robot.sh")
         script: str = ""    
         script += "#!/bin/bash\n"
+        script += "source " + home + ".envs/agrobot_env/bin/activate && "
         script += "source /opt/ros/melodic/setup.bash && "
         script += "source " + catkin_ws_directory+"devel/setup.bash && "
         script += "roslaunch agrobot run.launch\n"
