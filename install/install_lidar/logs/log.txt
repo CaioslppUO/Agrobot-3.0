@@ -1,0 +1,61 @@
+(15:14:10) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:14:10) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:14:10) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:14:16) <install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bash.
+(15:14:16) <install.py> [INFO] .zshrc already has source to catkin_ws/devel/setup.zsh.
+(15:14:20) <install.py> [INFO] The service was installed but not started and enabled.
+(15:14:23) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(15:19:03) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:19:03) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:19:03) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:19:08) <install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bash.
+(15:19:08) <install.py> [INFO] .zshrc already has source to catkin_ws/devel/setup.zsh.
+(15:19:20) <install.py> [INFO] The service was installed but not started and enabled.
+(15:19:23) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(15:20:56) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:20:56) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:20:58) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:21:02) <install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bash.
+(15:21:02) <install.py> [INFO] .zshrc already has source to catkin_ws/devel/setup.zsh.
+(15:21:05) <install.py> [INFO] The service was installed but not started and enabled.
+(15:21:08) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(15:23:05) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:23:05) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:23:07) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:23:10) <install.py> [INFO] .bashrc already has source to catkin_ws/devel/setup.bash.
+(15:23:10) <install.py> [INFO] .zshrc already has source to catkin_ws/devel/setup.zsh.
+(15:23:14) <install.py> [INFO] The service was installed but not started and enabled.
+(15:23:17) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(15:25:36) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:25:36) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:25:39) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:25:42) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(15:35:44) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:35:44) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:35:44) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:35:48) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(15:38:40) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:38:40) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:38:42) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:39:16) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+

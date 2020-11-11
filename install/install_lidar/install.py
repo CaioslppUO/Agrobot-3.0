@@ -1,30 +1,22 @@
 #!/usr/bin/env python3
 
-# Script que remove instalações antigas do código do agrobot e instala a versão atual.
+# Script que remove instalações antigas do código do lidar e instala a versão atual.
 
 import os,pathlib,json,pwd,time
 from shutil import which,rmtree
 from utils.general import do_log
 
 # Caminhos para as pastas.
-user: str = pwd.getpwuid(os.getuid())[0]
+user: str = str(pwd.getpwuid(os.getuid())[0])
 home: str = "/home/" + user + "/"
 current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
-project_directory: str = current_directory +  "../src/agrobot/"
+project_directory: str = current_directory +  "../../src/lidar/"
 catkin_ws_directory: str = home + "catkin_ws/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 previous_version_was_uninstalled: bool = False
 installed_successfully: bool = False
 
-## Tenta fazer a instalação das dependências do node
-def install_server() -> bool:
-    try:
-        os.system("cd "+catkin_ws_directory+"src/agrobot/server && yarn install")
-        return True
-    except Exception as e:
-        do_log("<install.py> [ERROR] Cold not install yarn server. " + str(e))
-        return False
 
 ## Tenta remover o código antigo, caso já tenha sido instalado.
 def uninstall_previous_versions() -> bool:
@@ -62,14 +54,15 @@ def create_catkin_folder() -> None:
     except Exception as e:
         do_log("<install.py> [INFO] Tried to create catkin_ws/src but it already exists. "+str(e))
 
-## Copia o código fonte do agrobot para a pasta dos projetos ROS.
+## Copia o código fonte do lidar para a pasta dos projetos ROS.
 def copy_src_to_catkin_ws() -> bool:
     try:
         if(os.path.exists(catkin_ws_directory+"src")):
-            os.system("cp -r " + project_directory + " " + catkin_ws_directory+"src/agrobot/")
+            os.system("cp -r " + project_directory + " " + catkin_ws_directory+"src/lidar/")
+            os.system("cp -r " + project_directory + "../rplidar_ros " + catkin_ws_directory+"src/rplidar_ros/")
         return True
     except Exception as e:
-        do_log("<install.py> [ERROR] Could not copy agrobot folder to catkin_ws/src/agrobot/. " +str(e))
+        do_log("<install.py> [ERROR] Could not copy lidar folder to catkin_ws/src/lidar/. " +str(e))
         return False
 
 ## Compila o novo código fonte copiado.
@@ -139,7 +132,7 @@ def source_zshrc() -> None:
 def get_current_version() -> str:
     version: str = "NULL"
     try:
-        with open(current_directory+"../README.md","r") as file:
+        with open(current_directory+"../../README.md","r") as file:
             for line in file.readlines():
                 line = line.rstrip('\n')
                 line = line.split(":")
@@ -153,14 +146,14 @@ def get_current_version() -> str:
         do_log("<install.py> [ERROR] Could not read README.md while trying to get current version. "+str(e))
     return version
 
-## Atualiza o json dentro da pasta agrobot/src com a versão atual do código.
+## Atualiza o json dentro da pasta lidar/src com a versão atual do código.
 def update_code_version_inside_src() -> bool:
     json_object = None
     try:
-        with open(catkin_ws_directory+"src/agrobot/info.json","r") as file:
+        with open(catkin_ws_directory+"src/lidar/info.json","r") as file:
             json_object = json.load(file) 
             file.close()
-        with open(catkin_ws_directory+"src/agrobot/info.json","w") as file:
+        with open(catkin_ws_directory+"src/lidar/info.json","w") as file:
             json_object['version'] = get_current_version()
             json.dump(json_object,file)
             file.close()
@@ -172,11 +165,11 @@ def update_code_version_inside_src() -> bool:
 ## Instala todos os módulos no python path.
 def install_robot_utils() -> None:
     try:
-        os.system("cd " + catkin_ws_directory + "src/agrobot/src && python3 install_utils.py sdist bdist_wheel")
-        os.system("cd " + catkin_ws_directory + "src/agrobot/src/dist/ && python3 -m pip install robot_utils-0.0.1-py3-none-any.whl")
-        os.system("cd " + catkin_ws_directory + "src/agrobot/src/ && mv dist .dist && mv build .build && mv robot_utils.egg-info .robot_utils.egg-info")
+        os.system("cd " + catkin_ws_directory + "src/lidar/src && python3 install_utils.py sdist bdist_wheel")
+        os.system("cd " + catkin_ws_directory + "src/lidar/src/dist/ && python3 -m pip install lidar_utils-0.0.1-py3-none-any.whl")
+        os.system("cd " + catkin_ws_directory + "src/lidar/src/ && mv dist .dist && mv build .build && mv lidar_utils.egg-info .lidar_utils.egg-info")
     except Exception as e:
-        do_log("<install.py> [ERROR] Could not install robot_utils "+str(e))
+        do_log("<install.py> [ERROR] Could not install lidar_utils "+str(e))
 
 ## Instala o script de inicialização do serviço.
 def install_service_script() -> str:
@@ -184,19 +177,22 @@ def install_service_script() -> str:
     try:
         if(not os.path.exists(script_location)):
             os.mkdir(script_location)
-        if(os.path.exists(script_location+"start_robot.sh")):
-            os.system("sudo rm " + script_location+"start_robot.sh")
+        if(os.path.exists(script_location+"start_lidar.sh")):
+            os.system("sudo rm " + script_location+"start_lidar.sh")
         script: str = ""    
         script += "#!/bin/bash\n"
         script += "source " + home + ".envs/agrobot_env/bin/activate && "
         script += "source /opt/ros/melodic/setup.bash && "
         script += "source " + catkin_ws_directory+"devel/setup.bash && "
-        script += "roslaunch agrobot run.launch\n"
+        script += "export ROS_MASTER_URI=http://192.168.1.2:11311 && "
+        script += "export ROS_IP=192.168.1.121 && "
+        script += "roslaunch rplidar_ros rplidar.launch && "
+        script += "roslaunch lidar run.launch\n"
         try:
-            with open(script_location+"start_robot.sh","w") as file:
+            with open(script_location+"start_lidar.sh","w") as file:
                 file.write(script)
                 file.close()
-                os.chmod(script_location+"start_robot.sh",0o777)
+                os.chmod(script_location+"start_lidar.sh",0o777)
         except Exception as e:
             do_log("<install.py> [ERROR] Could not create service script on /usr/bin. "+str(e))
     except Exception as e:
@@ -209,20 +205,20 @@ def install_service() -> None:
         service_location: str = "/etc/systemd/system/"
         service: str = ""
         service += "[Unit]\n"
-        service += "Description=Serviço que inicializa o agrobot.\n\n"
+        service += "Description=Serviço que inicializa o lidar.\n\n"
         service += "[Service]\n"
         service += "Type=simple\n"
-        service += "ExecStart=/bin/bash " + install_service_script() + "start_robot.sh\n\n"
+        service += "ExecStart=/bin/bash " + install_service_script() + "start_lidar.sh\n\n"
         service += "[Install]\n"
         service += "WantedBy=multi-user.target\n"
         try:
-            with open(current_directory+"start_robot.service","w") as file:
+            with open(current_directory+"start_lidar.service","w") as file:
                 file.write(service)
                 file.close()
-                os.chmod(current_directory+"start_robot.service",0o644)
-                os.system("sudo mv " + current_directory+"start_robot.service " + service_location)
+                os.chmod(current_directory+"start_lidar.service",0o644)
+                os.system("sudo mv " + current_directory+"start_lidar.service " + service_location)
                 if(user == "labiot"):
-                    os.system("sudo systemctl enable start_robot.service")
+                    os.system("sudo systemctl enable start_lidar.service")
                     do_log("<install.py> [INFO] The service was installed, started and enabled.")
                 else:
                     do_log("<install.py> [INFO] The service was installed but not started and enabled.")
@@ -249,7 +245,6 @@ def install() -> None:
 ## Executa as rotinas de configuração pós instalação.
 def post_installation_configurations() -> None:
     if(installed_successfully):
-        install_server()
         source_bashrc()
         source_zshrc()
         install_robot_utils()
@@ -275,7 +270,7 @@ if __name__ == "__main__":
         clear_previous_install()
         install()
         post_installation_configurations()
-        test_installation()
+        # test_installation()
         do_log("<<<================================<<<FINISHED INSTALLATION>>>================================>>>\n")
     except Exception as e:
         do_log("<install.py> [ERROR] Could not run install.py. "+str(e))
