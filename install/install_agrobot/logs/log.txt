@@ -589,3 +589,15 @@
 (16:02:26) <test_install> [WARNING] Could not setup the robot service.
 (16:02:26) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
 
+(17:10:35) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(17:10:35) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(17:10:35) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(17:10:42) <install.py> [INFO] .bashrc has already been sourced to catkin_ws/devel/setup.bash.
+(17:10:42) <install.py> [INFO] .zshrc has already been sourced to catkin_ws/devel/setup.zsh.
+(17:10:42) <install.py> [INFO] The service was installed but not started or enabled.
+(17:11:00) <test_install> [WARNING] Could not setup the robot service.
+(17:11:00) <test_install> [WARNING] Could not setup the robot service.
+(17:11:01) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+

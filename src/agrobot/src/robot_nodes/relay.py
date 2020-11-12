@@ -24,7 +24,7 @@ except Exception as e:
 rospy.init_node("relay")
 
 ## Envia o sinal para o relé.
-def power_control_callback(data: power_control) -> None:
+def power_control_callback(data: power_control) -> str:
     pinout: int = int(services.get_parameter("module_pinout"))        
     try:
         if(gpio_imported):

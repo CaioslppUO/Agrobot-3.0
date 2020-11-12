@@ -7,5 +7,5 @@
     <node pkg="agrobot" type="control_robot.py" name="control_robot" output="screen"/>
     <node pkg="agrobot" type="control_mini_robot.py" name="control_mini_robot" output="screen"/>
     <node pkg="agrobot" type="command_center.py" name="command_center" output="screen"/>
-    <node pkg="agrobot" type="web_server.py" name="web_server" output="screen"/>
+    <node pkg="agrobot" type="get_robot_commands.py" name="get_robot_commands" output="screen"/>
 </launch>
