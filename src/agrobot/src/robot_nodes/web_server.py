@@ -3,6 +3,7 @@
 import rospy,os,pathlib,json,requests
 from robot_utils import services
 from agrobot.msg import complete_command
+from shutil import which
 
 # Variáveis de diretórios.
 current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
@@ -40,18 +41,21 @@ def publish_msg(msg: complete_command) -> None:
 ## Retorna o ipv4 do computador.
 def get_ipv4() -> str:
     ip: str = ""
-    try:
-        os.system("ifconfig | grep 'inet *.*.*.*' > " + current_directory + "ipv4.tmp")
-        with open(current_directory+"ipv4.tmp","r") as file:
-            line = file.readlines()
-            file.close()
-            line = line[0]
-            line = line.split("inet ")[1].split(" ")
-            ip = line[0]
-        if(os.path.exists(current_directory+"ipv4.tmp")):
-            os.system("rm " + current_directory+"ipv4.tmp")
-    except Exception as e:
-        services.do_log_error("Could not get ipv4. " + str(e),"web_server.py")
+    if(which("ifconfig") is not None):
+        try:
+            os.system("ifconfig | grep 'inet *.*.*.*' > " + current_directory + "ipv4.tmp")
+            with open(current_directory+"ipv4.tmp","r") as file:
+                line = file.readlines()
+                file.close()
+                line = line[0]
+                line = line.split("inet ")[1].split(" ")
+                ip = line[0]
+            if(os.path.exists(current_directory+"ipv4.tmp")):
+                os.system("rm " + current_directory+"ipv4.tmp")
+        except Exception as e:
+            services.do_log_error("Could not get ipv4. " + str(e),"web_server.py")
+    else:
+        services.do_log_error("Could not find ifconfig tool. Please install the package net-tools.","web_server.py")
     return str(ip)
 
 ## Classe que gerencia o servidor http.
@@ -66,7 +70,10 @@ def Web_server(ip: str):
 if __name__ == '__main__':
     try:
         ip: str = str("http://" + get_ipv4() +":3000/control")
-        while not rospy.is_shutdown():
-            Web_server(ip)
+        if(ip != ""):
+            while not rospy.is_shutdown():
+                Web_server(ip)
+        else:
+            services.do_log_error("Could not get ipv4.","web_server.py")
     except rospy.ROSInterruptException:
         services.do_log_warning("The roscore was interrupted.","web_server.py")

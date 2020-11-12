@@ -558,3 +558,34 @@
 (09:53:48) <test_install> [WARNING] Could not setup the robot service.
 (09:53:48) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
 
+(15:58:51) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:58:51) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:58:57) <test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/
+(15:58:57) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(16:00:46) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(16:00:46) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(16:00:49) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(16:00:57) <install.py> [INFO] The service was installed but not started or enabled.
+(16:01:00) <test_install.py> [ERROR] Could not check if robot_utils is installed. No module named 'robot_utils'
+(16:01:00) <test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.
+(16:01:00) <test_install.py> [ERROR] Robot_utils was not installed properly. Check the output for more information.
+(16:01:00) <test_install> [WARNING] Could not setup the robot service.
+(16:01:00) <test_install> [WARNING] Could not setup the robot service.
+(16:01:00) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(16:02:01) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(16:02:01) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(16:02:01) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(16:02:07) <install.py> [INFO] .bashrc has already been sourced to catkin_ws/devel/setup.bash.
+(16:02:07) <install.py> [INFO] .zshrc has already been sourced to catkin_ws/devel/setup.zsh.
+(16:02:08) <install.py> [INFO] The service was installed but not started or enabled.
+(16:02:26) <test_install> [WARNING] Could not setup the robot service.
+(16:02:26) <test_install> [WARNING] Could not setup the robot service.
+(16:02:26) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+

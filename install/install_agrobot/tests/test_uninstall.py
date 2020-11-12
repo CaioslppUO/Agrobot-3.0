@@ -4,7 +4,7 @@ import os,pathlib,pwd
 from datetime import datetime
 
 # Caminhos para as pastas.
-user: str = pwd.getpwuid(os.getuid())[0]
+user: str = str(pwd.getpwuid(os.getuid())[0])
 home: str = "/home/" + user + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
@@ -24,45 +24,47 @@ def set_color(color: str,text: str) -> str:
     return color + text + end
 
 # Variáveis para o resultado dos testes.
-agrobot_folder_not_exists = set_color(red,"NO")
-robot_utils_removed = set_color(red,"NO")
+agrobot_folder_were_removed = set_color(red,"NO")
+robot_utils_were_removed = set_color(red,"NO")
 
 ## Escreve mensagens de log no arquivo de logs.
 def do_log(msg: str) -> None:
-    if(not os.path.exists(current_dir+"../logs/")):
-        os.mkdir(current_dir+"../logs/")
+    logs_directory: str = current_dir+"../logs/"
+    logs_file: str = current_dir+"../logs/log.txt"
+    if(not os.path.exists(logs_directory)):
+        os.mkdir(logs_directory)
     try:
-        with open(current_dir+"../logs/log.txt","a") as file:
+        with open(logs_file,"a") as file:
             current_time = datetime.now().strftime("%H:%M:%S")
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
     except Exception as e:
-        print("[ERROR] Could not log msg properly. "+str(e))
+        print("[ERROR] Could not log msg properly. " + str(e))
 
 ## Testa se a pasta agrobot existe.
 def test_agrobot_folder_exists() -> bool:
-    global agrobot_folder_not_exists
+    global agrobot_folder_were_removed
     try:
         if(not os.path.exists(catkin_ws_dir)):
-            agrobot_folder_not_exists = set_color(green,"OK")
+            agrobot_folder_were_removed = set_color(green,"OK")
         return True
     except:
         return False
 
 ## Testa se os links simbólicos criados para o código fonte no python path foram removidos.
 def test_uninstall_robot_utils() -> bool:
-    global robot_utils_removed
+    global robot_utils_were_removed
     try:
         try:
             import robot_utils
-            robot_utils_removed = set_color(red,"OK")
+            robot_utils_were_removed = set_color(red,"OK")
             return False
         except:
-            robot_utils_removed = set_color(green,"OK")
+            robot_utils_were_removed = set_color(green,"OK")
             return True
     except Exception as e:
-        robot_utils_removed = set_color(red,"NO")
-        do_log("<test_uninstall.py> [ERROR] Could not check if robot_utils is uninstalled. "+str(e))
+        robot_utils_were_removed = set_color(red,"NO")
+        do_log("<test_uninstall.py> [ERROR] Could not check if robot_utils is uninstalled. " + str(e))
         return False
 
 ## Auxiliar para o cálculo do sucesso da desinstalação.
@@ -77,8 +79,8 @@ def calc_uninstallation_percent() -> float:
     count = 0
     total = 2
     # Precisa passar no teste (Entra para o total).
-    count += calc_uninstallation_aux(agrobot_folder_not_exists,"<test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/")
-    count += calc_uninstallation_aux(robot_utils_removed,"<test_uninstall.py> [ERROR] Could not remove symlinks.")
+    count += calc_uninstallation_aux(agrobot_folder_were_removed,"<test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/")
+    count += calc_uninstallation_aux(robot_utils_were_removed,"<test_uninstall.py> [ERROR] Could not remove symlinks.")
     if(count == 0):
         return 0.0
     return (count*100) / total
@@ -90,11 +92,12 @@ def run_uninstall_tests():
 
 ## Imprime na tela o resultado dos testes.
 def tests_results() -> None:
+    logs_file: str = current_dir + "../logs/log.txt"
     uninstallattion_result = calc_uninstallation_percent()
     if(uninstallattion_result == 100.0):
         print(set_color(green,"Successfully Uninstalled."))
     else:
-        print(set_color(red,"Could not Uninstall properly. Check log files under " + current_dir + "../logs/log.txt for more details."))
+        print(set_color(red,"Could not Uninstall properly. Check log files under " + logs_file + " for more details."))
 
 ## Executa as rotinas de teste.
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ from datetime import datetime
 from shutil import which
 
 # Caminhos para as pastas.
-user: str = pwd.getpwuid(os.getuid())[0]
+user: str = str(pwd.getpwuid(os.getuid())[0])
 home: str = "/home/" + user + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
@@ -29,21 +29,23 @@ def set_color(color: str,text: str) -> str:
 
 # Variáveis para o resultado dos testes.
 catkin_folder_exists = set_color(red,"NO")
-files_copied = set_color(red,"NO")
-compilation_done = set_color(red,"NO")
-source_bashrc = set_color(red,"NO")
-source_zshrc = set_color(red,"NO")
+files_were_copied = set_color(red,"NO")
+compilation_was_done = set_color(red,"NO")
+sourced_bashrc = set_color(red,"NO")
+sourced_zshrc = set_color(red,"NO")
 ran_properly = set_color(red,"NO")
-robot_utils_installed = set_color(red,"NO")
-service_script = set_color(red,"NO")
-service = set_color(red,"NO")
+robot_utils_were_installed = set_color(red,"NO")
+service_script_were_installed = set_color(red,"NO")
+service_were_installed = set_color(red,"NO")
 
 ## Escreve mensagens de log no arquivo de logs.
 def do_log(msg: str) -> None:
-    if(not os.path.exists(current_dir+"../logs/")):
-        os.mkdir(current_dir+"../logs/")
+    logs_directory: str = current_dir+"../logs/"
+    logs_file: str = current_dir+"../logs/log.txt"
+    if(not os.path.exists(logs_directory)):
+        os.mkdir(logs_directory)
     try:
-        with open(current_dir+"../logs/log.txt","a") as file:
+        with open(logs_file,"a") as file:
             current_time = datetime.now().strftime("%H:%M:%S")
             file.write("(" + current_time + ") " + msg+"\n")
             file.close()
@@ -57,92 +59,103 @@ def test_catkin_folder_exists() -> bool:
         if(os.path.exists(catkin_ws_dir)):
             catkin_folder_exists = set_color(green,"OK")
             return True
+        return False
     except:
         return False
 
 ## Testa se os arquivos do agrobot foram copiados.
 def test_files_where_copied() -> bool:
-    global files_copied
+    global files_were_copied
+    agrobot_directory: str = catkin_ws_dir+"src/agrobot/"
     try:
-        if(os.path.exists(catkin_ws_dir+"src/agrobot/")):
-            files_copied = set_color(green,"OK")
+        if(os.path.exists(agrobot_directory)):
+            files_were_copied = set_color(green,"OK")
             return True
+        return False
     except:
         return False
 
 ## Testa se o código foi compilado com sucesso.
 def test_compilation() -> bool:
-    global compilation_done
+    global compilation_was_done
+    devel_directory: str = catkin_ws_dir+"devel"
+    build_directory: str = catkin_ws_dir+"build"
+    cmakelists_file: str = catkin_ws_dir+"src/CMakeLists.txt"
     aux1,aux2,aux3 = False,False,False
     try:
-        if(os.path.exists(catkin_ws_dir+"devel")):
+        if(os.path.exists(devel_directory)):
             aux1 = True
-        if(os.path.exists(catkin_ws_dir+"build")):
+        if(os.path.exists(build_directory)):
             aux2 = True
-        if(os.path.exists(catkin_ws_dir+"src/CMakeLists.txt")):
+        if(os.path.exists(cmakelists_file)):
             aux3 = True
     except:
         pass
 
     if(aux1 == True and aux2 == True and aux3 == True):
-        compilation_done = set_color(green,"OK")
+        compilation_was_done = set_color(green,"OK")
         return True
     return False
 
 ## Testa se a função source foi utilizada para o bashrc.
-def test_source_bashrc() -> bool:
-    global source_bashrc
-    bashrc_path = home + ".bashrc"
+def test_sourced_bashrc() -> bool:
+    global sourced_bashrc
+    bashrc_file: str = home + ".bashrc"
+    setup_file: str = catkin_ws_dir + "devel/setup.bash"
     try:
-        with open(bashrc_path,"r") as file:
+        with open(bashrc_file,"r") as file:
             for line in file.readlines():
                 line = line.rstrip('\n')
-                if(line == "source " + catkin_ws_dir + "devel/setup.bash"):
-                    source_bashrc = set_color(green,"OK")
+                if(line == "source " + setup_file):
+                    sourced_bashrc = set_color(green,"OK")
             file.close()
         return True
     except:
         return False
 
 ## Testa se a função source foi utilizada para o zshrc.
-def test_source_zshrc() -> bool:
-    global source_zshrc
+def test_sourced_zshrc() -> bool:
+    global sourced_zshrc
+    zshrc_file: str = home + ".zshrc"
+    setup_file: str =catkin_ws_dir + "devel/setup.zsh"
     if(which("zsh") is not None):
-        zshrc_path = home + ".zshrc"
         try:
-            with open(zshrc_path,"r") as file:
+            with open(zshrc_file,"r") as file:
                 for line in file.readlines():
                     line = line.rstrip('\n')
-                    if(line == "source " + catkin_ws_dir + "devel/setup.zsh"):
-                        source_zshrc = set_color(green,"OK")
+                    if(line == "source " + setup_file):
+                        sourced_zshrc = set_color(green,"OK")
                 file.close()
             return True
         except:
             return False
     else:
-        source_zshrc = set_color(green,"OK")
+        sourced_zshrc = set_color(green,"OK")
         do_log("<test_install.py> [WARNING] Zsh was not found while testing but no errors will be produced.")
         return True
 
 ## Verifica se o código foi compilado corretamente e está rodando.
 def test_run() -> bool:
     global ran_properly
+    run_file: str = current_dir+"run.tmp"
+    logs_file: str = catkin_ws_dir+"src/agrobot/log/log.txt"
+
     ## Deleta o script temporário.
     def delete_tmp_file():
-       if(os.path.exists(current_dir+"run.tmp")):
-            os.system("rm " + current_dir+"run.tmp")
+       if(os.path.exists(run_file)):
+            os.system("rm " + run_file)
 
     ## Cria um .sh temporário para ser executado no bash.
     def create_tmp_file(content: str):
         sources_path = "source /opt/ros/$ROS_DISTRO/setup.bash && source " + catkin_ws_dir+"devel/setup.bash && source ~/.bashrc && "
-        with open(current_dir+"run.tmp","w") as file:
+        with open(run_file,"w") as file:
             file.write(sources_path + content)
-            os.system("chmod +x " + current_dir+"run.tmp")
+            os.system("chmod +x " + run_file)
             file.close()
 
     ## Executa o script .sh temporário.
     def run_tmp_file():
-        os.system("bash -e "+current_dir+"run.tmp")
+        os.system("bash -e " + run_file)
 
     ## Espera até todos os serviços utilizados estejam disponível.
     def wait_for_services_availability() -> bool:
@@ -172,7 +185,7 @@ def test_run() -> bool:
         os.system("roscore& ")
         while(rospy.is_shutdown()):
             pass
-        time.sleep(8)
+        time.sleep(8) # Tempo utilizado no raspberry pois demora mais para subir o roscore.
         create_tmp_file("rosrun agrobot log.py& ")
         run_tmp_file()
         time.sleep(1)
@@ -189,7 +202,7 @@ def test_run() -> bool:
     
     # Verificando se rodou.
     try:
-        with open(catkin_ws_dir+"src/agrobot/log/log.txt","r") as file:
+        with open(logs_file,"r") as file:
             for line in file.readlines():
                 line = line.rstrip('\n')
                 line = line.split("]")
@@ -207,31 +220,33 @@ def test_run() -> bool:
 
 ## Testa se os links simbólicos para o código no python path foram criados corretamente.
 def test_robot_utils_is_installed() -> bool:
-    global robot_utils_installed
+    global robot_utils_were_installed
     try:
-        import robot_utils
-        robot_utils_installed = set_color(green,"OK")
+        import robot_utils # Se conseguir importar a biblioteca foi instalada com sucesso.
+        robot_utils_were_installed = set_color(green,"OK")
         return True
     except Exception as e:
-        robot_utils_installed = set_color(red,"NO")
-        do_log("<test_install.py> [ERROR] Could not check if robot_utils is installed. "+str(e))
+        robot_utils_were_installed = set_color(red,"NO")
+        do_log("<test_install.py> [ERROR] Could not check if robot_utils is installed. " + str(e))
         return False
 
 ## Testa se o script do serviço foi instalado corretamente.
-def test_service_script() -> None:
-    global service_script
+def test_service_script_were_installed() -> None:
+    global service_script_were_installed
+    script_file: str = home+"bin/start_robot.sh"
     try:
-        if(os.path.exists(home+"bin/start_robot.sh")):
-            service_script = set_color(green,"OK")
+        if(os.path.exists(script_file)):
+            service_script_were_installed = set_color(green,"OK")
     except Exception as e:
-        do_log("<test_install.py> [ERROR] Could not find service script on " + home+"bin/start_robot.sh. "+str(e))
+        do_log("<test_install.py> [ERROR] Could not find service script on " + script_file + ". " +str(e))
 
 ## Testa se o serviço foi instalado corretamente.
 def test_service() -> None:
-    global service
+    global service_were_installed
+    service_file: str = "/etc/systemd/system/start_robot.service"
     try:
-        if(os.path.exists("/etc/systemd/system/start_robot.service")):
-            service = set_color(green,"OK")
+        if(os.path.exists(service_file)):
+            service_were_installed = set_color(green,"OK")
     except Exception as e:
         do_log("<test_install> [ERROR] Could not find service on /etc/systemd/system/start_robot.service. "+str(e))
 
@@ -248,15 +263,15 @@ def calc_installation_percent() -> bool:
     total = 7
     # Precisa passar no teste (Entra para o total).
     count += calc_installation_aux(catkin_folder_exists,"<test_install.py> [ERROR] Could not find catkin_ws folder.")
-    count += calc_installation_aux(files_copied,"<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
-    count += calc_installation_aux(compilation_done,"<test_install.py> [ERROR] Could not compile the src files.")
-    count += calc_installation_aux(source_bashrc,"<test_install.py> [ERROR] Could not source .bashrc.")
-    count += calc_installation_aux(source_zshrc,"<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
+    count += calc_installation_aux(files_were_copied,"<test_install.py> [ERROR] Could not copy files to catkin_ws/src/agrobot/")
+    count += calc_installation_aux(compilation_was_done,"<test_install.py> [ERROR] Could not compile the src files.")
+    count += calc_installation_aux(sourced_bashrc,"<test_install.py> [ERROR] Could not source .bashrc.")
+    count += calc_installation_aux(sourced_zshrc,"<test_install.py> [WARNING] Could not source .zshrc. It may be caused by missing zsh installation.")
     count += calc_installation_aux(ran_properly,"<test_install.py> [ERROR] Code was not installed or compiled properly. Check the compilation output for more information.")
-    count += calc_installation_aux(robot_utils_installed,"<test_install.py> [ERROR] Robot_utils was not installed properly. Check the output for more information.")
+    count += calc_installation_aux(robot_utils_were_installed,"<test_install.py> [ERROR] Robot_utils was not installed properly. Check the output for more information.")
     # Não precisa passar no teste.
-    calc_installation_aux(service_script,"<test_install> [WARNING] Could not setup the robot service.")
-    calc_installation_aux(service,"<test_install> [WARNING] Could not setup the robot service.")
+    calc_installation_aux(service_script_were_installed,"<test_install> [WARNING] Could not setup the robot service.")
+    calc_installation_aux(service_were_installed,"<test_install> [WARNING] Could not setup the robot service.")
     return count == total
 
 ## Roda os testes relacionados à instalação.
@@ -268,17 +283,18 @@ def run_installation_tests():
 def run_post_installation_tests():
     global post_installation_tests
     if(installation_tests):
-        post_installation_tests =  test_source_bashrc() and test_source_zshrc() and test_robot_utils_is_installed() and test_run()
+        post_installation_tests =  test_sourced_bashrc() and test_sourced_zshrc() and test_robot_utils_is_installed() and test_run()
     else:
         do_log("<test_install.py> [ERROR] Could not run post_installation_tests(). Installation tests where not executed.")
 
 ## Imprime na tela o resultado dos testes.
 def tests_results() -> None:
+    logs_file: str = current_dir + "../logs/log.txt"
     installattion_result = calc_installation_percent()
     if(installattion_result == True):
         print(set_color(green,"Successfully Installation."))
     else:
-        print(set_color(red,"Could not Install properly. Check log files under " + current_dir + "../logs/log.txt for more details."))
+        print(set_color(red,"Could not Install properly. Check log files under " + logs_file + " for more details."))
 
 ## Executa as rotinas de teste.
 if __name__ == "__main__":
