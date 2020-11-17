@@ -70,7 +70,7 @@ def compile_src() -> bool:
     try:
         if(user == "labiot"):
             if(os.path.exists(catkin_ws_directory)):
-                os.system("cd " + catkin_ws_directory + " && catkin_make ")
+                os.system("cd " + catkin_ws_directory + " && catkin_make -j1 ")
         else:
             if(os.path.exists(catkin_ws_directory)):
                 os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m")
