@@ -1,7 +1,7 @@
 #1/usr/bin/env python3
 
 import rosservice,os,rosparam
-from agrobot.msg import complete_command
+from lidar.msg import parameter
 
 ## Serviços disponíveis para serem utilizados.
 # Utilizado para esperar até que todos estejam disponível.

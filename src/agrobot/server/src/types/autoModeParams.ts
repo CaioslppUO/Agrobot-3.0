@@ -7,6 +7,7 @@ interface AutoModeParams {
   detectDistance: number;
   moveTime: number;
   stopTime: number;
+  module: boolean;
 }
 
 export const AutoModeDefaultParams = {
@@ -18,6 +19,7 @@ export const AutoModeDefaultParams = {
   detectDistance: 1.5,
   moveTime: 0,
   stopTime: 0,
+  module: true
 };
 
 export default AutoModeParams;
