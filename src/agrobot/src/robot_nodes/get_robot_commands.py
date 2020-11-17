@@ -11,10 +11,14 @@ current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 ## Nó get_robot_commands.
 rospy.init_node('get_robot_commands', anonymous=True)
 
+## Controle de envio.
+last_complete_command = None
+
 def convert_bool_to_int(data: bool) -> int:
     if(data):
         return 1
     return 0
+
 ## Separa e configura o tipo de cada comando recebido.
 def setup_command(command) -> complete_command:
     cpt_command = complete_command()
@@ -32,9 +36,12 @@ def setup_command(command) -> complete_command:
 
 ## Publica a mensagem no tópico /get_robot_commands.
 def publish_msg(msg: complete_command) -> None:
+    global last_complete_command
     try:
-        pub = rospy.Publisher("/get_robot_commands", complete_command, queue_size=10)
-        pub.publish(msg)
+        if(last_complete_command != msg):
+            pub = rospy.Publisher("/get_robot_commands", complete_command, queue_size=10)
+            pub.publish(msg)
+            last_complete_command = msg
     except Exception as e:
         services.do_log_error("Could not publish msg to /get_robot_commands. " + str(e),"get_robot_commands.py")
 

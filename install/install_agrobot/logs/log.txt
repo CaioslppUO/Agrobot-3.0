@@ -637,3 +637,33 @@
 (09:30:45) <test_install> [WARNING] Could not setup the robot service.
 (09:30:46) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
 
+(15:41:31) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:41:31) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:41:38) <test_uninstall.py> [ERROR] Could not exclude catkin_ws/src/agrobot/
+(15:41:38) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:41:41) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(15:41:41) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(15:41:46) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(15:42:08) <install.py> [INFO] .bashrc has already been sourced to catkin_ws/devel/setup.bash.
+(15:42:08) <install.py> [INFO] .zshrc has already been sourced to catkin_ws/devel/setup.zsh.
+(15:42:10) <install.py> [INFO] The service was installed but not started or enabled.
+(15:42:29) <test_install> [WARNING] Could not setup the robot service.
+(15:42:29) <test_install> [WARNING] Could not setup the robot service.
+(15:42:29) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(16:14:36) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(16:14:36) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(16:14:39) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(16:14:51) <install.py> [INFO] .bashrc has already been sourced to catkin_ws/devel/setup.bash.
+(16:14:51) <install.py> [INFO] .zshrc has already been sourced to catkin_ws/devel/setup.zsh.
+(16:14:54) <install.py> [INFO] The service was installed but not started or enabled.
+(16:15:13) <test_install> [WARNING] Could not setup the robot service.
+(16:15:13) <test_install> [WARNING] Could not setup the robot service.
+(16:15:13) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
