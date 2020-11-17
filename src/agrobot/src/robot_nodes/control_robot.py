@@ -65,12 +65,12 @@ def write_to_uart(command: str) -> None:
         services.do_log_error("Could not send command through UART. " + str(e),"control_robot.py")
 
 ## Envia o comando de controle para o robô.
-def control_robot_callback(data: complete_command) -> None:
+def control_robot_callback(data: complete_command) -> str:
     speed: int = int(data.move.linear.x)
     steer: int = int(data.move.linear.y)
     limit: int = int(data.limit.speed_limit)
     power_signal: int = int(data.relay.signal_relay_power)
-    command: int = str(speed)+';'+str(steer)+';'+str(limit)+';'+str(power_signal)+";"
+    command: str = str(speed)+';'+str(steer)+';'+str(limit)+';'+str(power_signal)+";"
     write_to_uart(command)
     return command
 
