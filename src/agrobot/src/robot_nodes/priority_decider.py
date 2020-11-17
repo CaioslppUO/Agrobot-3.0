@@ -70,7 +70,7 @@ def listen(topic,priority) -> None:
 ## Adiciona os listenners e continua a escutar em loop.
 def add_listeners_and_listen():
     global current_command
-    topics_to_listen: dict = {'web_server':APP_PRIORITY, 'control_lidar':LIDAR_PRIORITY}
+    topics_to_listen: dict = {'get_robot_commands':APP_PRIORITY, 'control_lidar':LIDAR_PRIORITY}
     for key in topics_to_listen:
         listen(key,topics_to_listen[key])
     rospy.spin()
