@@ -34,4 +34,4 @@
 <<<<<<< HEAD
 =======
 >>>>>>> dc3e8dd1ca1c8b3ad7c3c3255a5b701914cbd3d5
-# Versão: 12.5
+# Versão: 12.7
