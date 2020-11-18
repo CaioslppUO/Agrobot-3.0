@@ -667,3 +667,33 @@
 (16:15:13) <test_install> [WARNING] Could not setup the robot service.
 (16:15:13) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
 
+(14:52:01) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(14:52:01) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(14:52:10) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(14:52:17) <install.py> [INFO] .bashrc has already been sourced to catkin_ws/devel/setup.bash.
+(14:52:17) <install.py> [INFO] .zshrc has already been sourced to catkin_ws/devel/setup.zsh.
+(14:52:19) <install.py> [INFO] The service was installed but not started or enabled.
+(14:52:40) <test_install> [WARNING] Could not setup the robot service.
+(14:52:40) <test_install> [WARNING] Could not setup the robot service.
+(14:52:40) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(14:57:16) >>>-------------------------------->>>START INSTALLATION<<<--------------------------------<<<
+
+(14:57:16) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(14:57:17) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(14:57:23) <install.py> [INFO] .bashrc has already been sourced to catkin_ws/devel/setup.bash.
+(14:57:23) <install.py> [INFO] .zshrc has already been sourced to catkin_ws/devel/setup.zsh.
+(14:57:24) <install.py> [INFO] The service was installed but not started or enabled.
+(14:57:42) <test_install> [WARNING] Could not setup the robot service.
+(14:57:42) <test_install> [WARNING] Could not setup the robot service.
+(14:57:42) <<<================================<<<FINISHED INSTALLATION>>>================================>>>
+
+(14:57:47) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(14:57:47) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>
+(14:58:48) >>>-------------------------------->>>START UNINSTALLATION<<<--------------------------------<<<
+
+(14:58:49) <<<================================<<<FINISHED UNINSTALLATION>>>================================>>>

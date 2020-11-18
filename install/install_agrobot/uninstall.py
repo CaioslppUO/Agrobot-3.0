@@ -15,14 +15,19 @@ catkin_ws_directory: str = home + "catkin_ws/"
 # Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 uninstalled_successfully: bool = False
 
-## Remove a pasta catkin_ws.
-def remove_catkin_ws_directory() -> bool:
+## Desinstala o projeto agrobot.
+def uninstall_agrobot() -> bool:
+    agrobot_directory: str = catkin_ws_directory + "src/agrobot/"
     try:
-        if(exists(catkin_ws_directory)):
-            os.system("sudo rm -r " + catkin_ws_directory)
+        if(exists(agrobot_directory)):
+            os.system("sudo rm -r " + agrobot_directory)
+        if(user == "labiot"):
+            os.system("cd " + catkin_ws_directory + " && catkin_make ")
+        else:
+            os.system("cd " + catkin_ws_directory + " && catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m")
         return True
     except Exception as e:
-        do_log("<uninstall.py> [WARNING] Could not remove catkin_ws. " + str(e))
+        do_log("<uninstall.py> [WARNING] Could not uninstall agrobot. " + str(e))
         return False
 
 ## Remove o source do .bashrc para a pasta catkin_ws.
@@ -87,7 +92,7 @@ def uninstall_robot_utils() -> bool:
 ## Executa as rotinas de desinstalação.
 def uninstall():
     global uninstalled_successfully
-    uninstalled_successfully = uninstall_robot_utils() and remove_catkin_ws_directory()
+    uninstalled_successfully = uninstall_robot_utils() and uninstall_agrobot()
 
 ## Testa se a instalação ocorreu conforme o esperado e imprime o resultado na tela.
 def test_uninstallattion() -> None:

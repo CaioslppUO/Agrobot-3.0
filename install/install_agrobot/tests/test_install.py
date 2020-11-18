@@ -11,6 +11,7 @@ user: str = str(pwd.getpwuid(os.getuid())[0])
 home: str = "/home/" + user + "/"
 catkin_ws_dir: str = home + "catkin_ws/"
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
+tmp_directory: str = "/tmp/"
 
 # Variáveis de controle de bug. Utilizadas para saber se as funções rodaram corretamente ou não. Impedem a execução de funções com dependência.
 installation_tests: bool = False
@@ -137,16 +138,13 @@ def test_sourced_zshrc() -> bool:
 ## Verifica se o código foi compilado corretamente e está rodando.
 def test_run() -> bool:
     global ran_properly
-    run_file: str = current_dir+"run.tmp"
+    run_file: str = tmp_directory+"run.tmp"
     logs_file: str = catkin_ws_dir+"src/agrobot/log/log.txt"
-
-    ## Deleta o script temporário.
-    def delete_tmp_file():
-       if(os.path.exists(run_file)):
-            os.system("rm " + run_file)
 
     ## Cria um .sh temporário para ser executado no bash.
     def create_tmp_file(content: str):
+        if(os.path.exists(run_file)):
+            os.system("rm " + run_file)
         sources_path = "source /opt/ros/$ROS_DISTRO/setup.bash && source " + catkin_ws_dir+"devel/setup.bash && source ~/.bashrc && "
         with open(run_file,"w") as file:
             file.write(sources_path + content)
@@ -181,7 +179,6 @@ def test_run() -> bool:
 
     # Rodando o código.
     try:
-        delete_tmp_file()
         os.system("roscore& ")
         while(rospy.is_shutdown()):
             pass
@@ -190,12 +187,10 @@ def test_run() -> bool:
         run_tmp_file()
         time.sleep(1)
         if(wait_for_services_availability()):
-            delete_tmp_file()
             create_tmp_file("rosservice call /log_info 'Installation test (run) worked properly.' 'test_install.py'")
             run_tmp_file()
             time.sleep(2)
         os.system("sudo pkill ros")
-        delete_tmp_file()
         time.sleep(3)
     except:
         pass
