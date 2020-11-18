@@ -31,4 +31,7 @@
 
     * Receive Command -> Command Priority Decider -> Command Standardize -> Command Assembler -> Send Command.
 
+<<<<<<< HEAD
+=======
+>>>>>>> dc3e8dd1ca1c8b3ad7c3c3255a5b701914cbd3d5
 # Versão: 12.5

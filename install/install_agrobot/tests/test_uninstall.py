@@ -44,8 +44,9 @@ def do_log(msg: str) -> None:
 ## Testa se a pasta agrobot existe.
 def test_agrobot_folder_exists() -> bool:
     global agrobot_folder_were_removed
+    agrobot_directory: str = catkin_ws_dir + "src/agrobot/"
     try:
-        if(not os.path.exists(catkin_ws_dir)):
+        if(not os.path.exists(agrobot_directory)):
             agrobot_folder_were_removed = set_color(green,"OK")
         return True
     except:
