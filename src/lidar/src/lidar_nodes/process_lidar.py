@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy, rosparam
-from robot_utils import services
+from lidar_utils import services
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import String
 
@@ -61,7 +61,10 @@ def get_distance_from_object(vet:list ,detect_collision_distance:float) -> str:
 
 if __name__ == "__main__":
     try:
-        rospy.Subscriber('scan', LaserScan, callback_lidar_scan)
-        rospy.spin()
+        if(services.wait_for_topic_availabity("scan")):
+            rospy.Subscriber('scan', LaserScan, callback_lidar_scan)
+            rospy.spin()
+        else:
+            services.do_log_warning("Error reading topic scan.","process_lidar.py")
     except Exception as e:
         services.do_log_error("Error reading from topic scan, topico process_lidar is over.","process_lidar.py")
