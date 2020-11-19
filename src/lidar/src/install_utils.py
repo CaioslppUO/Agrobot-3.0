@@ -5,7 +5,7 @@ setuptools.setup(
     version="0.0.1",
     author="Lucas Garavaglia",
     author_email="lucasgrafimar@gmail.com",
-    description="Library used by Agrobot.",
+    description="Library used by Agrobot Lidar.",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

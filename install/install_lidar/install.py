@@ -59,7 +59,7 @@ def copy_src_to_catkin_ws() -> bool:
     try:
         if(os.path.exists(catkin_ws_directory+"src")):
             os.system("cp -r " + project_directory + " " + catkin_ws_directory+"src/lidar/")
-            os.system("cp -r " + project_directory + "../rplidar_ros " + catkin_ws_directory+"src/rplidar_ros/")
+            #os.system("cp -r " + project_directory + "../rplidar_ros " + catkin_ws_directory+"src/rplidar_ros/")
         return True
     except Exception as e:
         do_log("<install.py> [ERROR] Could not copy lidar folder to catkin_ws/src/lidar/. " +str(e))
@@ -270,7 +270,7 @@ if __name__ == "__main__":
         clear_previous_install()
         install()
         post_installation_configurations()
-        # test_installation()
+        test_installation()
         do_log("<<<================================<<<FINISHED INSTALLATION>>>================================>>>\n")
     except Exception as e:
         do_log("<install.py> [ERROR] Could not run install.py. "+str(e))

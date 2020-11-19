@@ -1,7 +1,7 @@
 #1/usr/bin/env python3
 
-import rosservice,os,rosparam
-from lidar.msg import parameter
+import rosservice,os,rosparam,rostopic
+from lidar.msg import complete_command
 
 ## Serviços disponíveis para serem utilizados.
 # Utilizado para esperar até que todos estejam disponível.
@@ -31,6 +31,25 @@ def wait_for_services_availability() -> bool:
             return False
     return True
 
+## Espera até todos os serviços utilizados estejam disponível.
+def wait_for_topic_availability(topic_name) -> bool:
+    limit_reached: bool = False
+    index: int = 0
+    index = 0
+    waiting = None
+    while(waiting == None):
+        try:
+            waiting = rostopic.get_topic_type(topic_name)
+        except:
+            pass
+        index = index + 1
+        if(index > services_attempt_limit):
+            limit_reached = True
+            break
+    if(limit_reached == True):
+        return False
+    return True
+
 ## Faz log de erro.
 def do_log_error(msg: str, file: str):
     os.system("rosservice call /log_error '" + msg + "' '" + file + "'")
@@ -58,7 +77,7 @@ def get_parameter(parameter_name: str):
     return -1
 
 ## Faz a verificação e corrige os valores do comando de controle do robô, caso necessário.
-def check_complete_control_command(command: complete_command) -> None:
+def check_complete_control_command(command: complete_command) -> complete_command:
     if(command.move.linear.x < -100 or command.move.linear.x > 100):
         command.move.linear.x = 0
         do_log_error("Speed value is under -100 or above 100. Sending 0 instead.","services.py")
@@ -73,4 +92,5 @@ def check_complete_control_command(command: complete_command) -> None:
         do_log_error("Module relay value is not 1 or 0. Sending 0 instead.","services.py")
     if(command.relay.signal_relay_power != 0 and command.relay.signal_relay_power != 1):
         command.relay.signal_relay_power = 0
-        do_log_error("Power relay value is not 1 or 0. Sending 0 instead.","services.py")
+        do_log_error("Power relay value is not 1 or 0. Sending 0 instead.", "services.py")
+    return command

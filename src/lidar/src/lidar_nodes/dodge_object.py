@@ -2,7 +2,7 @@
 
 import time,rospy,rosparam
 from std_msgs.msg import String
-from robot_utils import services
+from lidar_utils import services
 from lidar.msg import parameters,complete_command
 
 rospy.init_node('control_lidar', anonymous=True)
@@ -115,14 +115,20 @@ class Control_lidar():
     def callback_lidar(self, msg):
         self.read_rosparam()
         info = str(msg.data)
-        rospy.Subscriber('walk', String, self.callback_walk) # Atualiza o valor da variável 'walk'.
+        if(services.wait_for_topic_availabity("walk")):
+            rospy.Subscriber('walk', String, self.callback_walk)  # Atualiza o valor da variável 'walk'.
+        else:
+            services.do_log_warning("Error reading topic walk.","dodge_object.py")
         self.left_sensor,self.center_sensor,self.right_sensor = info.split('$')
         self.move() # Chama o método que controla o robô.
 
 if __name__ == "__main__":
     try:
-        control_lidar = Control_lidar()
-        rospy.Subscriber('lidar_values', String, control_lidar.callback_lidar)
-        rospy.spin()
+        if(services.wait_for_topic_availabity("lidar_values")):
+            control_lidar = Control_lidar()
+            rospy.Subscriber('lidar_values', String, control_lidar.callback_lidar)
+            rospy.spin()
+        else:
+            services.do_log_warning("Error reading topic lidar_values.","dodge_object.py")
     except Exception as e:
         services.do_log_error("Error when giving object dodge.\n"+str(e),"dodge_object.py")

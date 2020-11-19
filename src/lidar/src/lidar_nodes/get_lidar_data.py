@@ -1,5 +1,5 @@
 import rosparam,rospy,json,requests,pathlib,time
-from robot_utils import services
+from lidar_utils import services
 from lidar.msg import parameters
 
 def convert_bool_to_int(data: bool) -> int:
@@ -8,7 +8,7 @@ def convert_bool_to_int(data: bool) -> int:
     return 0
 
 ## Separa e configura o tipo de cada comando recebido.
-def setup_command(command) -> parameters:
+def setup_command(command: dict) -> parameters:
     parameters_lidar = parameters()
     try:
         parameters_lidar.stopTime = int(command["stopTime"])
@@ -23,10 +23,9 @@ def setup_command(command) -> parameters:
         parameters_lidar.complete_command.relay.signal_relay_power = 1
     except Exception as e:
         services.do_log_error("Could not load json. " + str(e), "get_robot_commands.py")
-    services.check_complete_control_command(parameters_lidar.complete_command)
+    parameters_lidar.complete_command = services.check_complete_control_command(parameters_lidar.complete_command)
     return parameters_lidar
 
-## Publica a mensagem no tópico /get_robot_commands.
 def publish_msg(msg: parameters) -> None:
     try:
         rosparam.set_param("stopTime",str(msg.stopTime))

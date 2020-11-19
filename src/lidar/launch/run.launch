@@ -1,3 +1,6 @@
 <launch>
-    <node pkg="lidar" type="start_server.py" name="start_server" output="screen"/>
+    <node pkg="lidar" type="get_lidar_data.py" name="get_lidar_data" output="screen"/>
+    <node pkg="lidar" type="process_lidar.py" name="process_lidar" output="screen"/>
+    <node pkg="lidar" type="movement_timing.py" name="movement_timing" output="screen"/>
+    <node pkg="lidar" type="dodge_object.py" name="dodge_object" output="screen"/>
 </launch>
