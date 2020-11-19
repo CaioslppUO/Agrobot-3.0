@@ -109,7 +109,7 @@ def calc_installation_aux(variable_to_check: str) -> int:
     return 0
 
 ## Calcula a procentagem que deu certo da desinstalação.
-def all_tests_ok() -> bool:
+def all_tests_ok():
     count = 0
     total = 2
     count += calc_installation_aux(version)
@@ -123,7 +123,7 @@ def all_tests_ok() -> bool:
             total = total + 2
             count += calc_installation_aux(hoverboard_boards)
             count += calc_installation_aux(module_pinout)
-    return count == total
+    return count == total, count
 
 ## Executa todos os testes.
 def run_test(model: str) -> None:
@@ -151,8 +151,11 @@ def tests_results(model: str) -> None:
         print("  Hoverboard Boards ----------- " + module_pinout)
     print("----------------------------------")
     print("  Result ---------------------- ",end="")
-    if(all_tests_ok()):
+    all_ok,count = all_tests_ok()
+    if(all_ok):
         print(set_color(green,"OK"))
+    elif(count == 2):
+        print(set_color(yellow,"~~"))
     else:
         print(set_color(red,"NO"))
     print("==================================")

@@ -186,12 +186,19 @@ def update_version() -> bool:
 def install_robot_utils() -> None:
     agrobot_src_folder: str = catkin_ws_directory + "src/agrobot/src"
     dist_folder: str = catkin_ws_directory + "src/agrobot/src/dist/"
+    agrobot_test_folder: str = catkin_ws_directory + "src/agrobot/test/"
+    test_dist_folder: str = catkin_ws_directory + "src/agrobot/test/dist/"
     try:
+        # robot-utils
         os.system("cd " + agrobot_src_folder + " && python3 install_utils.py sdist bdist_wheel") # Compila e gera as pastas para instalar o pacote pelo pip.
         os.system("cd " + dist_folder + " && python3 -m pip install robot_utils-0.0.1-py3-none-any.whl") # Instala o pacote utilizando o pip.
         os.system("cd " + agrobot_src_folder + " && mv dist .dist && mv build .build && mv robot_utils.egg-info .robot_utils.egg-info") # Renomeia as pastas para pastas invisíveis.
+        # test-robot-utils
+        os.system("cd " + agrobot_test_folder + " && python3 install_test_utils.py sdist bdist_wheel") 
+        os.system("cd " + test_dist_folder + " && python3 -m pip install test_robot_utils-0.0.1-py3-none-any.whl")
+        os.system("cd " + agrobot_test_folder + " && mv dist .dist && mv build .build && mv test_robot_utils.egg-info .test_robot_utils.egg-info")
     except Exception as e:
-        do_log("<install.py> [ERROR] Could not install robot_utils " + str(e))
+        do_log("<install.py> [ERROR] Could not install robot_utils and test_robot_utils. " + str(e))
 
 ## Instala o script de inicialização do serviço.
 def install_service_script() -> str:
