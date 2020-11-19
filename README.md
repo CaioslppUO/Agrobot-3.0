@@ -31,4 +31,4 @@
 
     * Receive Command -> Command Priority Decider -> Command Standardize -> Command Assembler -> Send Command.
 
-# Versão: 12.8
+# Versão: 12.9

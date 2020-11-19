@@ -186,7 +186,7 @@ def control_mini_robot_callback(data: complete_command) -> str:
 
 ## Escuta o chamado do serviço.
 def listen_control_mini_robot() -> None:
-    rospy.Subscriber("control_mini_robot",complete_command, control_mini_robot_callback)
+    rospy.Subscriber("/control_robot",complete_command, control_mini_robot_callback)
 
 ## Executa as rotinas do serviço.
 if __name__ == "__main__":

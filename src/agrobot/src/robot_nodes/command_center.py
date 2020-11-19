@@ -13,11 +13,6 @@ last_module_signal_sent: int = 0
 # Variáveis de controle de publicação.
 pub_relay: rospy.Publisher = rospy.Publisher("/relay", power_control, queue_size=10)
 pub_control_robot: rospy.Publisher = rospy.Publisher("/control_robot", complete_command, queue_size=10)
-pub_control_mini_robot: rospy.Publisher = rospy.Publisher("/control_mini_robot", complete_command, queue_size=10)
-
-## Envia o comando de movimento para o mini robô.
-def send_command_to_mini_robot(command: complete_command) -> None:
-    pub_control_mini_robot.publish(command)
 
 ## Envia o comando de movimento para o robô.
 def send_command_to_robot(command: complete_command) -> None:
@@ -32,15 +27,8 @@ def send_signal_to_module_relay(command: power_control) -> None:
     
 ## Trata o recebimento de um novo comando.
 def priority_decider_callback(command: complete_command) -> None:
-    robot_model = services.get_parameter("robot_model")
-    if(robot_model != -1):
-        send_signal_to_module_relay(command.relay)
-        if(robot_model == "mini_robot"):
-            send_command_to_mini_robot(command)
-        else:
-            send_command_to_robot(command)
-    else:
-        services.do_log_error("Could not get robot_model.","command_center.py")
+    send_signal_to_module_relay(command.relay)
+    send_command_to_robot(command)
 
 ## Escuta o tópico priority_decider e gerencia os comandos recebidos.
 def listen_priority_decider() -> None:
