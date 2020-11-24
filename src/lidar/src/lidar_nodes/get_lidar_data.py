@@ -1,4 +1,4 @@
-import rosparam,rospy,json,requests,pathlib,time
+import rosparam,rospy,json,requests,time
 from lidar_utils import services
 from lidar.msg import parameters
 

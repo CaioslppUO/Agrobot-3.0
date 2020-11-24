@@ -1,0 +1,9 @@
+[Unit]
+Description=Serviço que inicializa o lidar.
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /home/lucas/bin/start_lidar.sh
+
+[Install]
+WantedBy=multi-user.target
