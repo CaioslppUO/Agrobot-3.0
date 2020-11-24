@@ -67,7 +67,7 @@ def write_to_uart(command: str) -> None:
 ## Envia o comando de controle para o robô.
 def control_robot_callback(data: complete_command) -> str:
     speed: int = int(data.move.linear.x)
-    steer: int = int(data.move.linear.y)
+    steer: int = - int(data.move.angular.z) # O negativo desconverte do padrão.
     limit: int = int(data.limit.speed_limit)
     power_signal: int = int(data.relay.signal_relay_power)
     command: str = str(speed)+';'+str(steer)+';'+str(limit)+';'+str(power_signal)+";"

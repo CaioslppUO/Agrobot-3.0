@@ -24,7 +24,7 @@ def setup_command(command) -> complete_command:
     cpt_command = complete_command()
     try:
         cpt_command.move.linear.x = int(command["speed"])
-        cpt_command.move.linear.y = int(command["steer"])
+        cpt_command.move.angular.z = - int(command["steer"]) # O negativo é para ficar no padrão do simulador.
         cpt_command.limit.speed_limit = int(command["limit"])
         cpt_command.relay.signal_relay_power = convert_bool_to_int(bool(command["power"]))
         cpt_command.relay.signal_relay_module = convert_bool_to_int(bool(command["module"]))

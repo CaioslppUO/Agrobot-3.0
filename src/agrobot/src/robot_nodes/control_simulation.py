@@ -10,7 +10,7 @@ pub = rospy.Publisher("/cmd_vel",Twist,queue_size=10)
 def listen_callback(data: complete_command):
     msg = Twist()
     msg.linear.x = data.move.linear.x/100
-    msg.angular.z = -data.move.linear.y/100
+    msg.angular.z = data.move.angular.z/100
     pub.publish(msg)
 
 def listen():

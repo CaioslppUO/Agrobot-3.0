@@ -19,7 +19,7 @@ def create_log_folder() -> None:
         print("Error trying to create log_dir. " + str(e))
 
 ## Escreve no log que uma nova execução começou.
-def write_new_execution_in_log() -> None:
+def write_new_execution_in_log() -> str:
     try:
         with open(log_dir+"log.txt","a") as file:
             current_time = datetime.now().strftime("%H:%M:%S")

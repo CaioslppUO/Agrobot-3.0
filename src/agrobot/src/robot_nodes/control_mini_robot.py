@@ -160,7 +160,7 @@ def set_values(speed,steer,lim) -> None:
 ## Movimenta o robô com base nos valores recebidos pelo serviço.
 def control_mini_robot_callback(data: complete_command) -> str:
     speed: int = int(data.move.linear.x)
-    steer: int = int(data.move.linear.y)
+    steer: int = - int(data.move.angular.z) # O negativo desconverte do padrão.
     limit: int = int(data.limit.speed_limit)
     set_values(speed,steer,limit)
     if(robot_model_is_mini_robot):

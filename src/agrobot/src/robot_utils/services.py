@@ -62,8 +62,8 @@ def check_complete_control_command(command: complete_command) -> None:
     if(command.move.linear.x < -100 or command.move.linear.x > 100):
         command.move.linear.x = 0
         do_log_error("Speed value is under -100 or above 100. Sending 0 instead.","services.py")
-    if(command.move.linear.y < -100 or command.move.linear.y > 100):
-        command.move.linear.y = 0
+    if(-command.move.angular.z < -100 or -command.move.angular.z > 100): # O negativo desconverte do padrão.
+        command.move.angular.z = 0
         do_log_error("Steer value is under -100 or above 100. Sending 0 instead.","services.py")
     if(command.limit.speed_limit < 0 or command.limit.speed_limit > 100):
         command.limit.speed_limit = 0
