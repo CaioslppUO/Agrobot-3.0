@@ -1,6 +1,6 @@
 complete_command move
 int64 correctionsMovements
 int64 correctionFactor
-string detectDistance
+float64 detectDistance
 int64 moveTime
 int64 stopTime

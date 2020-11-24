@@ -1,7 +1,7 @@
 {
-  "name": "coronaKillerServer",
+  "name": "AgrobotServer",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "license": "MIT",
   "dependencies": {
     "@types/express": "^4.17.8",

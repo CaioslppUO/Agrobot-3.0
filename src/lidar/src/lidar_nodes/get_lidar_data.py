@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rosparam,rospy,json,requests,time
 from lidar_utils import services
 from lidar.msg import parameters
