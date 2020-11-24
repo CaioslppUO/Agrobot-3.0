@@ -6,7 +6,7 @@ from lidar_utils import services
 from lidar.msg import parameters,complete_command
 
 rospy.init_node('control_lidar', anonymous=True)
-const_pub_control_command = rospy.Publisher("control_lidar", String,queue_size=10)
+const_pub_control_command = rospy.Publisher("control_lidar", complete_command,queue_size=10)
 
 class Control_lidar():
     def __init__(self):

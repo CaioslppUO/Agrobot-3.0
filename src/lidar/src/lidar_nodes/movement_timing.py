@@ -4,8 +4,8 @@ import rospy,time,rosparam
 from std_msgs.msg import String
 from lidar_utils import services
 
-const_pub_control_command = rospy.Publisher("walk", String, queue_size=10)
 rospy.init_node('walk', anonymous=True)
+const_pub_control_command = rospy.Publisher("walk", String, queue_size=10)
 
 def read_rosparam():
     try:
