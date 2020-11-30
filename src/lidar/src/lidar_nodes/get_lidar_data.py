@@ -13,7 +13,7 @@ def publish_msg(command: dict) -> None:
         rosparam.set_param("moveTime",str(command["moveTime"]))
         rosparam.set_param("detectDistance",str(command["detectDistance"]))
         rosparam.set_param("correctionFactor",str(command["correctionFactor"]))
-        rosparam.set_param("correctionMovements",str(command["correctionMovements"]))
+        rosparam.set_param("correctionsMovements",str(command["correctionsMovements"]))
         rosparam.set_param("speed",str(command["speed"]))
         rosparam.set_param("steer",str(command["steer"]))
         rosparam.set_param("limit",str(command["limit"]))

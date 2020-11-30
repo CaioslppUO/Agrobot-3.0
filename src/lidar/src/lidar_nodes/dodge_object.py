@@ -58,8 +58,8 @@ class Control_lidar():
     def check_move_permission(self):
         if (self.parameters.correctionsMovements == 0 and
             self.parameters.correctionDistance == 0 and
-            self.move.move.x == 0 and
-            self.move.move.y == 0 and
+            self.move.move.linear.x == 0 and
+            self.move.move.linear.y == 0 and
             self.move.limit.speed_limit == 0):
             return False
         return True
@@ -77,25 +77,25 @@ class Control_lidar():
     ## Método callback para as mensagens recebidas pelo app, no modo de controle automático.
     # Recebe e separa as variáveis passadas pelo app.
     def read_rosparam(self):
-        self.parameters.detectDistance = rosparam.get_param("detectDistance")
-        self.parameters.correctionFactor = rosparam.get_param("correctionFactor")
-        self.parameters.correctionMovements = rosparam.get_param("correctionMovements")
-        self.parameters.move.relay.signal_relay_module = rosparam.get_param("relay_module")
-        self.parameters.move.move.x = rosparam.get_param("speed")
-        self.parameters.move.move.y = rosparam.get_param("steer")
-        self.parameters.move.limit.speed_limit = rosparam.get_param("limit")
+        self.parameters.detectDistance = float(rosparam.get_param("detectDistance"))
+        self.parameters.correctionFactor = int(rosparam.get_param("correctionFactor"))
+        self.parameters.correctionsMovements = int(rosparam.get_param("correctionsMovements"))
+        self.parameters.move.relay.signal_relay_module = int(rosparam.get_param("relay_module"))
+        self.parameters.move.move.linear.x = int(rosparam.get_param("speed"))
+        self.parameters.move.move.linear.y = int(rosparam.get_param("steer"))
+        self.parameters.move.limit.speed_limit = int(rosparam.get_param("limit"))
         
 
     ## Método que verifica se existe algum objeto 'próximo' ao sensor central do robô. Caso exista para o robô e desliga a lâmpada UV.
     def check_foward(self):
         if(self.center_sensor == 'free'):
-            self.complete_command.move.x = self.parameters.move.move.x
-            self.complete_command.move.y = self.parameters.move.move.y
+            self.complete_command.move.linear.x = self.parameters.move.move.linear.x
+            self.complete_command.move.linear.y = self.parameters.move.move.linear.y
             self.complete_command.relay.signal_relay_module = self.parameters.move.relay.signal_relay_module
             self.check_tick()
         else:
-            self.complete_command.move.x = 0
-            self.complete_command.move.y = 0
+            self.complete_command.move.linear.x = 0
+            self.complete_command.move.linear.y = 0
             self.complete_command.relay.signal_relay_module = 0
             
 
@@ -115,7 +115,7 @@ class Control_lidar():
     def callback_lidar(self, msg):
         self.read_rosparam()
         info = str(msg.data)
-        if(services.wait_for_topic_availabity("walk")):
+        if(services.wait_for_topic_availability("walk")):
             rospy.Subscriber('walk', String, self.callback_walk)  # Atualiza o valor da variável 'walk'.
         else:
             services.do_log_warning("Error reading topic walk.","dodge_object.py")
@@ -124,7 +124,7 @@ class Control_lidar():
 
 if __name__ == "__main__":
     try:
-        if(services.wait_for_topic_availabity("lidar_values")):
+        if(services.wait_for_topic_availability("lidar_values")):
             control_lidar = Control_lidar()
             rospy.Subscriber('lidar_values', String, control_lidar.callback_lidar)
             rospy.spin()

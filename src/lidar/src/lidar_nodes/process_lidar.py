@@ -61,10 +61,10 @@ def get_distance_from_object(vet:list ,detect_collision_distance:float) -> str:
 
 if __name__ == "__main__":
     try:
-        if(services.wait_for_topic_availabity("scan")):
-            rospy.Subscriber('scan', LaserScan, callback_lidar_scan)
+        if(services.wait_for_topic_availability("/scan")):
+            rospy.Subscriber('/scan', LaserScan, callback_lidar_scan)
             rospy.spin()
         else:
-            services.do_log_warning("Error reading topic scan.","process_lidar.py")
+            services.do_log_warning("Error reading topic scan."+ str(e),"process_lidar.py")
     except Exception as e:
-        services.do_log_error("Error reading from topic scan, topico process_lidar is over.","process_lidar.py")
+        services.do_log_error("Error reading from topic scan, topico process_lidar is over."+ str(e),"process_lidar.py")
