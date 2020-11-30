@@ -9,17 +9,17 @@ def convert_bool_to_int(data: bool) -> int:
 
 def publish_msg(command: dict) -> None:
     try:
-        rosparam.set_param("stopTime",str(command["stopTime"]))
-        rosparam.set_param("moveTime",str(command["moveTime"]))
-        rosparam.set_param("detectDistance",str(command["detectDistance"]))
-        rosparam.set_param("correctionFactor",str(command["correctionFactor"]))
-        rosparam.set_param("correctionsMovements",str(command["correctionsMovements"]))
+        rosparam.set_param("stop_time",str(command["stop_time"]))
+        rosparam.set_param("move_time",str(command["move_time"]))
+        rosparam.set_param("detect_distance",str(command["detect_distance"]))
+        rosparam.set_param("correction_factor",str(command["correction_factor"]))
+        rosparam.set_param("corrections_movements",str(command["corrections_movements"]))
         rosparam.set_param("speed",str(command["speed"]))
         rosparam.set_param("steer",str(command["steer"]))
         rosparam.set_param("limit",str(command["limit"]))
+        rosparam.set_param("auto_mode",str(convert_bool_to_int(command["auto_mode"])))
         rosparam.set_param("relay_module",str(convert_bool_to_int(command["module"])))
         rosparam.set_param("relay_power","0")
-        rosparam.set_param("autoMode",str(convert_bool_to_int(command["autoMode"])))
     except Exception as e:
         services.do_log_error("Could not setting msg to rosparam. " + str(e),"get_lidar_commands.py")
 

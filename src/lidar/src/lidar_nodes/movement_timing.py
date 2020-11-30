@@ -9,7 +9,7 @@ const_pub_control_command = rospy.Publisher("walk", String, queue_size=10)
 
 def read_rosparam():
     try:
-        return int(rosparam.get_param("moveTime")),int(rosparam.get_param("stopTime"))
+        return int(rosparam.get_param("move_time")),int(rosparam.get_param("stop_time"))
     except:
         services.do_log_warning("Cold not read from rosparam.","movement_timing.py")
         return -1,-1

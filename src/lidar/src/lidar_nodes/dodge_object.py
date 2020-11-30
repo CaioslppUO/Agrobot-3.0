@@ -31,21 +31,21 @@ class Control_lidar():
     ## Método seta o movimento necessário para corrigir o robô(se for necessário).
     def define_correction_movement(self):
         if(self.left_sensor == "busy"):
-            self.tick = self.parameters.correctionsMovements
+            self.tick = self.parameters.corrections_movements
             self.correction_dir = "right"
         elif(self.right_sensor == "busy"):
-            self.tick = self.parameters.correctionsMovements
+            self.tick = self.parameters.corrections_movements
             self.correction_dir = "left"
 
     ## Método que avalia os valores lidos pelos sensores e decide se precisa corrigir ou não o movimento, alterando o valor da direção.
     # Também altera a variável 'tick', indicando que um movimento de correção foi efetuado.
     def set_steer(self):
         if(self.tick == 1):
-            self.tick = self.parameters.correctionsMovements
+            self.tick = self.parameters.corrections_movements
         elif (self.correction_dir == "right"):
-            self.complete_command.move.move.y = self.parameters.move.move.move.y - self.parameters.correctionFactor
+            self.complete_command.move.move.y = self.parameters.move.move.move.y - self.parameters.correction_factor
         else:
-            self.complete_command.move.move.y = self.parameters.move.move.move.y + self.parameters.correctionFactor
+            self.complete_command.move.move.y = self.parameters.move.move.move.y + self.parameters.correction_factor
         self.tick = self.tick - 1
 
     ## Método que verifica o valor do tick e decide se é ou não necessário realizar a leitura dos sensores e alterar o valor da direção.
@@ -74,14 +74,14 @@ class Control_lidar():
     ## Método callback para as mensagens recebidas pelo app, no modo de controle automático.
     # Recebe e separa as variáveis passadas pelo app.
     def read_rosparam(self):
-        self.parameters.detectDistance = float(rosparam.get_param("detectDistance"))
-        self.parameters.correctionFactor = int(rosparam.get_param("correctionFactor"))
-        self.parameters.correctionsMovements = int(rosparam.get_param("correctionsMovements"))
+        self.parameters.detect_distance = float(rosparam.get_param("detect_distance"))
+        self.parameters.correction_factor = int(rosparam.get_param("correction_factor"))
+        self.parameters.corrections_movements = int(rosparam.get_param("corrections_movements"))
         self.parameters.move.relay.signal_relay_module = int(rosparam.get_param("relay_module"))
         self.parameters.move.move.linear.x = int(rosparam.get_param("speed"))
         self.parameters.move.move.linear.y = int(rosparam.get_param("steer"))
         self.parameters.move.limit.speed_limit = int(rosparam.get_param("limit"))
-        self.auto_mode = int(rosparam.get_param("autoMode"))
+        self.auto_mode = int(rosparam.get_param("auto_mode"))
         
 
     ## Método que verifica se existe algum objeto 'próximo' ao sensor central do robô. Caso exista para o robô e desliga a lâmpada UV.

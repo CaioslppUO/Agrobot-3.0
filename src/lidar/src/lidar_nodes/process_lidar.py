@@ -36,10 +36,10 @@ def select_points(vet:list,range:int,central_point:int):#->tuple:list
 ## Callback para o param_server. Lê e atualiza a distância de detecção de colisão.
 def read_rosparam() -> float:
     try:
-        detect_collision_distance = float(rosparam.get_param("detectDistance"))
+        detect_collision_distance = float(rosparam.get_param("detect_distance"))
     except:
         detect_collision_distance = 1.5
-        services.do_log_warning("error reading the rosparam detectColision","process_lidar.py")
+        services.do_log_warning("error reading the rosparam detect_colision","process_lidar.py")
     return detect_collision_distance
 
 

@@ -1,6 +1,6 @@
 complete_command move
-int64 correctionsMovements
-int64 correctionFactor
-float64 detectDistance
-int64 moveTime
-int64 stopTime
+int64 corrections_movements
+int64 correction_factor
+float64 detect_distance
+int64 move_time
+int64 stop_time
