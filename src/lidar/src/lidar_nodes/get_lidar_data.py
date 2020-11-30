@@ -19,6 +19,7 @@ def publish_msg(command: dict) -> None:
         rosparam.set_param("limit",str(command["limit"]))
         rosparam.set_param("relay_module",str(convert_bool_to_int(command["module"])))
         rosparam.set_param("relay_power","0")
+        rosparam.set_param("autoMode",str(convert_bool_to_int(command["autoMode"])))
     except Exception as e:
         services.do_log_error("Could not setting msg to rosparam. " + str(e),"get_lidar_commands.py")
 

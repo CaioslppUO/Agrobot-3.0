@@ -18,6 +18,7 @@ class Control_lidar():
 
         self.parameters = parameters()
         self.complete_command = complete_command()
+        self.auto_mode = 0
         
         self.correction_dir = ""
         ## Variável que contém a informação se existe algum 'objeto' próximo ao sensor da esquerda.
@@ -56,13 +57,9 @@ class Control_lidar():
 
     ## Método que checa se o modo automático está ativo ou não, liberando ou bloqueando a movimentação automática.
     def check_move_permission(self):
-        if (self.parameters.correctionsMovements == 0 and
-            self.parameters.correctionDistance == 0 and
-            self.move.move.linear.x == 0 and
-            self.move.move.linear.y == 0 and
-            self.move.limit.speed_limit == 0):
-            return False
-        return True
+        if (self.auto_mode == 1):
+            return True
+        return False
         
 
     ## Método callback para a classe que controla o tempo de movimento e parada do robô.
@@ -84,6 +81,7 @@ class Control_lidar():
         self.parameters.move.move.linear.x = int(rosparam.get_param("speed"))
         self.parameters.move.move.linear.y = int(rosparam.get_param("steer"))
         self.parameters.move.limit.speed_limit = int(rosparam.get_param("limit"))
+        self.auto_mode = int(rosparam.get_param("autoMode"))
         
 
     ## Método que verifica se existe algum objeto 'próximo' ao sensor central do robô. Caso exista para o robô e desliga a lâmpada UV.
