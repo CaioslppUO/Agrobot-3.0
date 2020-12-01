@@ -181,20 +181,55 @@ def install_service_script() -> str:
             os.system("sudo rm " + script_location+"start_lidar.sh")
         script: str = ""    
         script += "#!/bin/bash\n"
-        script += "source " + home + ".envs/agrobot_env/bin/activate && "
-        script += "source /opt/ros/melodic/setup.bash && "
-        script += "source "+catkin_ws_directory+"devel/setup.bash && "
-        script += "source " + catkin_ws_directory+"devel/setup.bash && "
-        script += "export ROS_MASTER_URI=http://192.168.1.2:11311 && "
-        script += "export ROS_IP=192.168.1.121 && "
-        script += "roslaunch rplidar_ros rplidar.launch\n"
-        try:
+        script += "./rplidar.sh && ./lidar.sh \n "
+         try:
             with open(script_location+"start_lidar.sh","w") as file:
                 file.write(script)
                 file.close()
                 os.chmod(script_location+"start_lidar.sh",0o777)
         except Exception as e:
             do_log("<install.py> [ERROR] Could not create service script on /usr/bin. "+str(e))
+
+        if(not os.path.exists(script_location)):
+            os.mkdir(script_location)
+        if(os.path.exists(script_location+"rplidar.sh")):
+            os.system("sudo rm " + script_location+"rplidar.sh")
+        script: str = ""    
+        script += "#!/bin/bash\n"
+        script += "source " + home + ".envs/agrobot_env/bin/activate && "
+        script += "source /opt/ros/melodic/setup.bash && "
+        script += "source " + catkin_ws_directory+"devel/setup.bash && "
+        script += "export ROS_MASTER_URI=http://192.168.1.2:11311 && "
+        script += "export ROS_IP=192.168.1.121 && "
+        script += "roslaunch rplidar_ros rplidar.launch\n"
+         try:
+            with open(script_location+"rplidar.sh","w") as file:
+                file.write(script)
+                file.close()
+                os.chmod(script_location+"start_lidar.sh",0o777)
+        except Exception as e:
+            do_log("<install.py> [ERROR] Could not create service script on /usr/bin. "+str(e))
+        
+        if(not os.path.exists(script_location)):
+            os.mkdir(script_location)
+        if(os.path.exists(script_location+"lidar.sh")):
+            os.system("sudo rm " + script_location+"lidar.sh")
+        script: str = ""    
+        script += "#!/bin/bash\n"
+        script += "source " + home + ".envs/agrobot_env/bin/activate && "
+        script += "source /opt/ros/melodic/setup.bash && "
+        script += "source "+catkin_ws_directory+"devel/setup.bash && "
+        script += "export ROS_MASTER_URI=http://192.168.1.2:11311 && "
+        script += "export ROS_IP=192.168.1.121 && "
+        script += "roslaunch lidar run.launch\n"
+        try:
+            with open(script_location+"lidar.sh","w") as file:
+                file.write(script)
+                file.close()
+                os.chmod(script_location+"start_lidar.sh",0o777)
+        except Exception as e:
+            do_log("<install.py> [ERROR] Could not create service script on /usr/bin. "+str(e))
+
     except Exception as e:
         do_log("<install.py> [ERROR] Could not create " + script_location + " folder. "+str(e))
     return script_location
