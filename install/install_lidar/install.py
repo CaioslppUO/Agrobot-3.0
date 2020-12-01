@@ -181,7 +181,7 @@ def install_service_script() -> str:
             os.system("sudo rm " + script_location+"start_lidar.sh")
         script: str = ""    
         script += "#!/bin/bash\n"
-        script += "./rplidar.sh & \n ./lidar.sh \n"
+        script += script_location + "./rplidar.sh & \n " + script_location + "./lidar.sh \n"
         try:
             with open(script_location+"start_lidar.sh","w") as file:
                 file.write(script)
