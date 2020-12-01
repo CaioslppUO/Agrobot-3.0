@@ -181,7 +181,7 @@ def install_service_script() -> str:
             os.system("sudo rm " + script_location+"start_lidar.sh")
         script: str = ""    
         script += "#!/bin/bash\n"
-        script += "./rplidar.sh && ./lidar.sh \n "
+        script += "./rplidar.sh & \n ./lidar.sh \n"
         try:
             with open(script_location+"start_lidar.sh","w") as file:
                 file.write(script)
@@ -206,7 +206,7 @@ def install_service_script() -> str:
             with open(script_location+"rplidar.sh","w") as file:
                 file.write(script)
                 file.close()
-                os.chmod(script_location+"start_lidar.sh",0o777)
+                os.chmod(script_location+"rplidar.sh",0o777)
         except Exception as e:
             do_log("<install.py> [ERROR] Could not create service script on /usr/bin. "+str(e))
         
@@ -226,7 +226,7 @@ def install_service_script() -> str:
             with open(script_location+"lidar.sh","w") as file:
                 file.write(script)
                 file.close()
-                os.chmod(script_location+"start_lidar.sh",0o777)
+                os.chmod(script_location+"lidar.sh",0o777)
         except Exception as e:
             do_log("<install.py> [ERROR] Could not create service script on /usr/bin. "+str(e))
 
