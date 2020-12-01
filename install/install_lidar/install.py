@@ -182,7 +182,7 @@ def install_service_script() -> str:
         script: str = ""    
         script += "#!/bin/bash\n"
         script += "./rplidar.sh && ./lidar.sh \n "
-         try:
+        try:
             with open(script_location+"start_lidar.sh","w") as file:
                 file.write(script)
                 file.close()
@@ -202,7 +202,7 @@ def install_service_script() -> str:
         script += "export ROS_MASTER_URI=http://192.168.1.2:11311 && "
         script += "export ROS_IP=192.168.1.121 && "
         script += "roslaunch rplidar_ros rplidar.launch\n"
-         try:
+        try:
             with open(script_location+"rplidar.sh","w") as file:
                 file.write(script)
                 file.close()
