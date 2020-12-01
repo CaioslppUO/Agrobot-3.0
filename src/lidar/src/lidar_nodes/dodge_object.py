@@ -43,9 +43,9 @@ class Control_lidar():
         if(self.tick == 1):
             self.tick = self.parameters.corrections_movements
         elif (self.correction_dir == "right"):
-            self.complete_command.move.move.y = self.parameters.move.move.move.y - self.parameters.correction_factor
+            self.complete_command.move.move.angular.z = self.parameters.move.move.angular.z - self.parameters.correction_factor
         else:
-            self.complete_command.move.move.y = self.parameters.move.move.move.y + self.parameters.correction_factor
+            self.complete_command.move.move.angular.z = self.parameters.move.move.angular.z + self.parameters.correction_factor
         self.tick = self.tick - 1
 
     ## Método que verifica o valor do tick e decide se é ou não necessário realizar a leitura dos sensores e alterar o valor da direção.
@@ -79,7 +79,7 @@ class Control_lidar():
         self.parameters.corrections_movements = int(rosparam.get_param("corrections_movements"))
         self.parameters.move.relay.signal_relay_module = int(rosparam.get_param("relay_module"))
         self.parameters.move.move.linear.x = int(rosparam.get_param("speed"))
-        self.parameters.move.move.linear.y = int(rosparam.get_param("steer"))
+        self.parameters.move.move.angular.z = - int(rosparam.get_param("steer"))
         self.parameters.move.limit.speed_limit = int(rosparam.get_param("limit"))
         self.auto_mode = int(rosparam.get_param("auto_mode"))
         
@@ -88,12 +88,12 @@ class Control_lidar():
     def check_foward(self):
         if(self.center_sensor == 'free'):
             self.complete_command.move.linear.x = self.parameters.move.move.linear.x
-            self.complete_command.move.linear.y = self.parameters.move.move.linear.y
+            self.complete_command.move.angular.z = self.parameters.move.move.angular.z
             self.complete_command.relay.signal_relay_module = self.parameters.move.relay.signal_relay_module
             self.check_tick()
         else:
             self.complete_command.move.linear.x = 0
-            self.complete_command.move.linear.y = 0
+            self.complete_command.move.angular.z = 0
             self.complete_command.relay.signal_relay_module = 0
             
 
