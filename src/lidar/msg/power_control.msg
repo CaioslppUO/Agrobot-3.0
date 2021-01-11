@@ -1,2 +1,0 @@
-int64 signal_relay_module
-int64 signal_relay_power

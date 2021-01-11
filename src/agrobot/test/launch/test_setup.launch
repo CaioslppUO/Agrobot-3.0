@@ -1,5 +1,0 @@
-<launch>
-    <node pkg="agrobot" type="test.py" name="test" output="screen"/>
-    <node pkg="agrobot" type="setup.py" name="setup" output="screen"/>
-    <node pkg="agrobot" type="test_setup.py" name="test_setup" output="screen"/>
-</launch>

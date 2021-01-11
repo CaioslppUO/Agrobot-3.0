@@ -1,8 +1,0 @@
-<launch>
-    <node pkg="agrobot" type="test.py" name="test" output="screen"/>
-    <node pkg="agrobot" type="priority_decider.py" name="priority_decider" output="screen"/>
-    <node pkg="agrobot" type="test_listen.py" name="test_listen" output="screen"/>
-    <node pkg="agrobot" type="test_talk.py" name="test_talk" output="screen"/>
-    <node pkg="agrobot" type="test_priority.py" name="test_priority" output="screen"/>
-    <node pkg="agrobot" type="test_priority_decider.py" name="test_priority_decider" output="screen"/>
-</launch>
