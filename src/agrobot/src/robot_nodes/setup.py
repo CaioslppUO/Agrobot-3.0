@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+##  Carrega para o Rosparam as variáveis e constantes que serão uitlizadas pela aplicação.
+
 import rosparam,pathlib,json,robot_utils.testing as testing
 
+# Injeção de dependência.
 if(testing.is_test_running()):
     from test_robot_utils import services_dependency as services
 else:
@@ -22,7 +25,7 @@ gpio_left_wheel_2: int = -1
 gpio_right_wheel_1: int = -1
 gpio_right_wheel_2: int = -1
 
-## Lê e guarda a versão atual do programa do arquivo info.json na pasta raiz do agrobot.
+## Guarda a versão atual do programa no arquivo info.json na pasta raiz do agrobot.
 def get_version():
     global version
     json_object = None
@@ -40,7 +43,7 @@ def get_version():
     except Exception as e:
         services.do_log_error("Could not read info.json. "+str(e),current_file)
 
-## Lê e guarda qual modelo de robô será carregado.
+## Guarda qual modelo de robô será carregado.
 def get_selected_robot_model() -> str:
     global robot_model
     try:
@@ -104,7 +107,7 @@ def load_robot() -> None:
     except Exception as e:
         services.do_log_error("Could not load robot_model (" + str(rosparam.get_param("robot_model")) + "). " + str(e),current_file)
 
-## Lê e carrega o modelo de robô selecionado.
+## Carrega o modelo de robô selecionado.
 def load_robot_model():
     robot_model = get_selected_robot_model()
     if(robot_model == "corona_killer" or robot_model == "agrobot"):
@@ -112,7 +115,6 @@ def load_robot_model():
     elif(robot_model == "mini_robot"):
         load_mini_robot()
 
-## Executa as rotinas de setup.
 if __name__ == "__main__":
     if(services.wait_for_services_availability()):
         get_version()

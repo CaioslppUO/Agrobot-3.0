@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+## Faz o log de toda a aplicação.
+
 import rospy,os,pathlib
 from agrobot.srv import log_error,log_info,log_warning
 from datetime import datetime
@@ -28,7 +30,6 @@ def write_new_execution_in_log() -> str:
         return "Successfully logged the message."
     except Exception as e:
         return "Error Trying to log the message. " + str(e)
-
 
 ## Escreve no arquivo de logs.
 def write_log(log_type,msg) -> None:
@@ -59,7 +60,6 @@ def log_server() -> None:
     rospy.Service("log_info", log_info, handle_log_info)
     rospy.Service("log_warning", log_warning, handle_log_warning)
 
-## Executa as rotinas de log.
 if __name__ == "__main__":
     create_log_folder()
     write_new_execution_in_log()

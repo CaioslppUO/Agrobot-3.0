@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 
+## Adiciona, commita e envia atualizações para o github.
+# Automaticamente atualiza o versionamento do código.
+
 import os,pathlib
 
+# Guarda o diretorio atual.
 current_dir: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
+# Guarda o valor da versão antes do ponto.
 version_l = 0
+# Guarda o valor da versão depois do ponto.
 version_r = 0
 
+## Carrega para as variáveis version_l e version_r a versao atual do projeto.
 def get_current_version() -> None:
     global version_l,version_r
     try:
@@ -26,6 +33,7 @@ def get_current_version() -> None:
     except:
         print("Error trying to read README.md")
 
+## Atualiza o arquivo README.md com a nova versão do código.
 def set_next_version() -> None:
     text_to_copy = ""
     try:
@@ -45,9 +53,11 @@ def set_next_version() -> None:
     except:
         print("Error trying to write README.md")
 
+## Realiza o git pull.
 def git_pull():
     os.system("cd " + current_dir + " && git pull")
 
+## Realiza o git add, commit e push.
 def git_add_commit_push():
     os.system("cd " + current_dir + " && git add .")
     os.system("cd " + current_dir + " && git commit")

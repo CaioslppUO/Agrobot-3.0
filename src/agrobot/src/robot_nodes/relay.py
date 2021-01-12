@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
+## Controla a comunicação com os relés que controlam módulos extras, através do GPIO.
+
 import robot_utils.testing as testing,rospy,time
 from agrobot.msg import power_control
 
+# Injeção de dependência.
 if(testing.is_test_running()):
     from test_robot_utils import services_dependency as services
 else:
@@ -23,7 +26,7 @@ except Exception as e:
 # Nó do relé.
 rospy.init_node("relay")
 
-## Envia o sinal para o relé.
+## Envia o sinal para o relé que liga ou desliga o módulo extra..
 def power_control_callback(data: power_control) -> str:
     pinout: int = int(services.get_parameter("module_pinout"))        
     try:
@@ -59,11 +62,10 @@ def power_control_callback(data: power_control) -> str:
         return "Could not send the signal to the module."
 
 
-## Escuta o chamado dos serviços.
+## Escuta comandos recebidos que devem ser enviados para o relé.
 def listen_relay() -> None:
     rospy.Subscriber("relay", power_control, power_control_callback)
 
-## Executa as rotinas do serviço.
 if __name__ == "__main__":
     listen_relay()
     rospy.spin()

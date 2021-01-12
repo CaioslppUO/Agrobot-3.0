@@ -1,5 +1,7 @@
 #1/usr/bin/env python3
 
+## Interface para acesso à serviços.
+
 import rosservice,os,rosparam
 from agrobot.msg import complete_command
 
@@ -7,11 +9,11 @@ from agrobot.msg import complete_command
 # Utilizado para esperar até que todos estejam disponível.
 available_services: list = ['/log_error','/log_info','/log_warning']
 
-## Variável de controle de tentativa.
+# Variável de controle de tentativa.
 services_attempt_limit: int = 10000
 parameters_attempt_limit: int = 2500
 
-## Espera até todos os serviços utilizados estejam disponível.
+## Espera até que todos os serviços utilizados estejam disponível.
 def wait_for_services_availability() -> bool:
     limit_reached: bool = False
     index: int = 0

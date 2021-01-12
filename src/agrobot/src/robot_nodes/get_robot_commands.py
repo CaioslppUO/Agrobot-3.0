@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+## Pega os dados de controle do robô e os envia para o servidor ROS.
+
 import rospy,os,pathlib,json,requests
 from robot_utils import services
 from agrobot.msg import complete_command
@@ -8,12 +10,13 @@ from shutil import which
 # Variáveis de diretórios.
 current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
-## Nó get_robot_commands.
+# Nó get_robot_commands.
 rospy.init_node('get_robot_commands', anonymous=True)
 
-## Controle de envio.
+# Controle de envio de comandos.
 last_complete_command = None
 
+## Converte um boolean para inteiro.
 def convert_bool_to_int(data: bool) -> int:
     if(data):
         return 1
@@ -34,7 +37,7 @@ def setup_command(command) -> complete_command:
     services.check_complete_control_command(cpt_command)
     return cpt_command
 
-## Publica a mensagem no tópico /get_robot_commands.
+## Publica a mensagem no tópico get_robot_commands.
 def publish_msg(msg: complete_command) -> None:
     global last_complete_command
     try:
@@ -45,7 +48,7 @@ def publish_msg(msg: complete_command) -> None:
     except Exception as e:
         services.do_log_error("Could not publish msg to /get_robot_commands. " + str(e),"get_robot_commands.py")
 
-## Retorna o ipv4 do computador.
+## Retorna o ipv4 do computador que está rodando o código.
 def get_ipv4() -> str:
     ip: str = ""
     if(which("ifconfig") is not None):
@@ -65,7 +68,7 @@ def get_ipv4() -> str:
         services.do_log_error("Could not find ifconfig tool. Please install the package net-tools.","get_robot_commands.py")
     return str(ip)
 
-## Classe que gerencia o servidor http.
+## Gerencia o recebimento e puclicação dos comandos.
 def Get_robot_commands(ip: str):
     try:
         data = json.loads(requests.get(ip).content.decode('utf-8'))
@@ -73,7 +76,6 @@ def Get_robot_commands(ip: str):
     except Exception as e:
         services.do_log_error("Could not run get_robot_commands.py. " + str(e),"get_robot_commands.py")
 
-## Execução das rotinas do get_robot_commands.
 if __name__ == '__main__':
     try:
         ip: str = str("http://" + get_ipv4() +":3000/control")

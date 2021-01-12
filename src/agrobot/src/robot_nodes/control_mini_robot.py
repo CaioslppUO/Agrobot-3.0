@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
+## Controla a comunicação com a ponte H através do GPIO para controlar o robô de testes.
+
 import rospy
 from agrobot.msg import complete_command
 from robot_utils import testing
 
+# Injeção de dependência.
 if(testing.is_test_running()):
     from test_robot_utils import services_dependency as services
 else:

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+## Serviço para verificar se o projeto está ou não rodando em modo de teste.
+
 import rosparam
 
 ## Verifica se o módulo de testes está ou não rodando.

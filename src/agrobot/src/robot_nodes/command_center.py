@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+## Recebe os comandos que serão enviados para o robô e os destina para os módulos corretos.
+
 import rospy
 from agrobot.msg import complete_command,power_control
 from robot_utils import services

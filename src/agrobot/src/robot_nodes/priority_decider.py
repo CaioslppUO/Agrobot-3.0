@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 
+## Define qual dos comandos recebidos poderá executar.
+
 import rospy,rosparam
 from agrobot.msg import complete_command
 from robot_utils import testing
 
+# Injeção de dependência.
 if(testing.is_test_running()):
     from test_robot_utils import services_dependency as services
 else:
     from robot_utils import services
 
-## Definição do nó.
+##Definição do nó.
 rospy.init_node("priority_decider",anonymous=True)
 
 # Definição das prioridades e constantes.
@@ -20,12 +23,12 @@ GUARANTEED_COMMANDS: int = 50
 # Definição dos tópicos de publicação.
 pub_priority_decider = rospy.Publisher("priority_decider", complete_command, queue_size=10)
 
-## Variável de controle de prioridade e quantidade de comandos.
+# Variável de controle de prioridade e quantidade de comandos.
 current_priority: int = 0
 remaining_commands: int = 0
 current_command: complete_command = None
 
-## Coloca as constantes de prioridade no rosparam.
+## Insere as constantes de prioridade no rosparam.
 def publish_priorities_in_rosparam() -> None:
     try:
         rosparam.set_param("APP_PRIORITY",str(APP_PRIORITY))
@@ -34,7 +37,7 @@ def publish_priorities_in_rosparam() -> None:
     except Exception as e:
         services.do_log_error("Could not publish priority variables to rosparam. " + str(e),"priority_decider.py")
 
-## Publica o comando escolhido com base na prioridade.
+## Publica o comando selecionado para execução com base na prioridade.
 def publish_selected_command(command: complete_command) -> None:
     global current_command
     try:
@@ -59,7 +62,7 @@ def callback(command: complete_command, priority: int) -> None:
     else:
         remaining_commands = remaining_commands - 1
 
-## Se inscreve em um tópico e chama a função de callback.
+## Inscreve-se em um tópico e chama a função de callback.
 def listen(topic,priority) -> None:
     try:
         rospy.Subscriber(topic,complete_command,callback,priority)
@@ -75,7 +78,6 @@ def add_listeners_and_listen():
         listen(key,topics_to_listen[key])
     rospy.spin()
 
-## Executa as rotinas de decisão ed prioridade.
 if __name__ == "__main__":
     try:
         if(services.wait_for_services_availability()):

@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
+## Controle manual do robô por meio de terminal linux.
+
 import socketio
 from pynput.keyboard import Listener
 from threading import Thread
 import os
 import time
 
+## Dados enviados para o servidor de controle do robô.
 data_output = {
     'limit': 0,
     'module': False,
@@ -20,6 +23,7 @@ ip = input("Digite o ip do server.\nExemplo: 192.168.1.1\n")
 client.connect("http://"+ip+":3000")
 sleep: float = 0.3
 
+## Trata a tecla apertada.
 def on_press(key):
     print(type(key))
     if(key.char == 'w'):
@@ -54,6 +58,7 @@ thread_server = Thread(target=Listener(on_press=on_press).start)
 thread_server.daemon = True
 thread_server.start()
 
+## Loop que executa as rotinas do controlador.
 while True:
     try:
         print("Para controlar use:")
