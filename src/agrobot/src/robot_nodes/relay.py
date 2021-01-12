@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Controla a comunicação com os relés que controlam módulos extras, através do GPIO.
+"""
+@package relay
+Controla a comunicação com os relés que controlam módulos extras, através do GPIO.
+"""
 
 import robot_utils.testing as testing,rospy,time
 from agrobot.msg import power_control

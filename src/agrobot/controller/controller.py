@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Controle manual do robô por meio de terminal linux.
+"""
+@package controller
+Controle manual do robô por meio de terminal linux.
+"""
 
 import socketio
 from pynput.keyboard import Listener

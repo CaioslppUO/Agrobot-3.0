@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Define qual dos comandos recebidos poderá executar.
+"""
+@package priority_decider
+Define qual dos comandos recebidos poderá executar.
+"""
 
 import rospy,rosparam
 from agrobot.msg import complete_command

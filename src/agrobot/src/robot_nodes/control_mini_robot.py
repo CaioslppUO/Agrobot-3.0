@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Controla a comunicação com a ponte H através do GPIO para controlar o robô de testes.
+"""
+@package control_mini_robot
+Controla a comunicação com a ponte H através do GPIO para controlar o robô de testes.
+"""
 
 import rospy
 from agrobot.msg import complete_command

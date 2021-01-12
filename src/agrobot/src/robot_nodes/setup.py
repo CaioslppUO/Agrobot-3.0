@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-##  Carrega para o Rosparam as variáveis e constantes que serão uitlizadas pela aplicação.
+"""
+@package setup
+Carrega para o Rosparam as variáveis e constantes que serão uitlizadas pela aplicação.
+"""
 
 import rosparam,pathlib,json,robot_utils.testing as testing
 

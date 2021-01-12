@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Controla a comunicação com o topico de controle do robô utilizado pela simulação.
+"""
+@package control_simulation
+Controla a comunicação com o topico de controle do robô utilizado pela simulação.
+"""
 import rospy
 from geometry_msgs.msg import Twist
 from agrobot.msg import complete_command

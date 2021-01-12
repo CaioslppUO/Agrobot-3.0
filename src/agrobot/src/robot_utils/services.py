@@ -1,6 +1,9 @@
 #1/usr/bin/env python3
 
-## Interface para acesso à serviços.
+"""
+@package services
+Interface para acesso à serviços.
+"""
 
 import rosservice,os,rosparam
 from agrobot.msg import complete_command

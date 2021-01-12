@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Pega os dados de controle do robô e os envia para o servidor ROS.
+"""
+@package get_robot_commands
+Pega os dados de controle do robô e os envia para o servidor ROS.
+"""
 
 import rospy,os,pathlib,json,requests
 from robot_utils import services

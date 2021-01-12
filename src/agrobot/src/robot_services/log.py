@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Faz o log de toda a aplicação.
+"""
+@package log
+Faz o log de toda a aplicação.
+"""
 
 import rospy,os,pathlib
 from agrobot.srv import log_error,log_info,log_warning

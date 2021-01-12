@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-## Controla a comunicação com o arduino atraves do USB para controlar o robô.
+"""
+@package control_robot
+Controla a comunicação com o arduino atraves do USB para controlar o robô.
+"""
 
 import time,serial,rospy
 from agrobot.msg import complete_command
