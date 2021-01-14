@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 
+"""
+@package test_listen.
+Testes para o listener do tópico priority decider.
+"""
+
 import rospy,os,pathlib
 from geometry_msgs.msg import Twist
 
 # Caminhos para as pastas.
 current_directory: str = str(pathlib.Path(__file__).parent.absolute()) + "/"
 
-## Definição do nó.
+# Definição do nó.
 rospy.init_node("test_listen",anonymous=True)
 
 # Variáveis de controle.
 topics_to_test: list = ['web_server','control_lidar']
 
-## Limpa o arquivo temporário.
+## Limpa o arquivo temporário utilizado no teste.
 def clean_tmp_file() -> None:
     try:
         with open(current_directory+"priority.tmp","w") as file:
@@ -21,7 +26,7 @@ def clean_tmp_file() -> None:
     except:
         pass
 
-## Adiciona conteúdo ao arquivo temporário.
+## Adiciona conteúdo ao arquivo temporário utilizado no teste.
 def add_to_tmp_file(content: str) -> None:
     try:
         if(os.path.exists(current_directory+"priority.tmp")):
@@ -45,7 +50,6 @@ def add_listeners() -> None:
         rospy.Subscriber("/"+topic,Twist,test_callback,topic)
     rospy.spin()
 
-## Executa as rotinas de teste.
 if __name__ == "__main__":
     clean_tmp_file()
     add_listeners()

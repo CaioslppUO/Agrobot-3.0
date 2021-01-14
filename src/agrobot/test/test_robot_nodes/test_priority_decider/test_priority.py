@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 
+"""
+@package test_priority.
+Testes para o controle de prioridade do script priority_decider.
+"""
+
 # O teste de prioridade é realizado somente com o web_server e o control_lidar.
 
 import os,rosparam,rospy
 from std_msgs.msg import String
 
-## Definição do nó.
+# Definição do nó.
 rospy.init_node("test_priority.py",anonymous=True)
 
 ## Retorna um parâmetro do tipo inteiro do rosparam, ou -1 caso não exista.
@@ -15,7 +20,7 @@ def get_param(param_name: str) -> int:
     except:
         return -1
 
-## Envia um comando para o web_server.
+## Envia um comando de teste para o tópico web_server.
 def send_to_web_server() -> None:
     try:
         os.system("rostopic pub -1 /web_server geometry_msgs/Twist -- '[-1.0, -1.0, -1.0]' '[-1.0, -1.0, -1.0]'")
@@ -51,6 +56,5 @@ def listen_test_talk() -> None:
     rospy.Subscriber("/test_talk",String,test_talk_callback)
     rospy.spin()
 
-## Executa as rotinas do teste.
 if __name__ == "__main__":
     listen_test_talk()

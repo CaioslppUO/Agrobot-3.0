@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+@package services_dependency
+Funções auxiliares utilizadas para injeção de dependência nos testes automatizados.
+"""
+
 ## Injeção de dependências.
 def wait_for_services_availability() -> bool:
     return True

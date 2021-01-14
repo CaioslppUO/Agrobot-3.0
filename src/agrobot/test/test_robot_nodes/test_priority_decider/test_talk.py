@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+@package test_talk
+Testes para o publisher do script pririty_decider.
+"""
+
 import os
 
 # Variáveis de controle.
@@ -14,6 +19,5 @@ def test_talk() -> None:
     except Exception as e:
         print("Could not run <test_talk.py>. " + str(e))
 
-## Executa as rotinas de teste.
 if __name__ == "__main__":
     test_talk()

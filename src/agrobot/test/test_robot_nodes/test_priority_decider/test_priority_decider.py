@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+@package test_priority_decider.
+Testes para o script priority_decider.
+"""
+
 import rospy,pathlib,os,time
 from std_msgs.msg import String
 
-## Definição do nó.
+# Definição do nó.
 rospy.init_node("test_priority_decider",anonymous=True)
 
 # Constantes utilizadas para pintar o texto.
@@ -26,7 +31,7 @@ number_of_topics_to_test: int = len(topics_to_test)
 successfully_communicated_topics: list = []
 priority_test_topics: list = []
 
-# Variáveis para o resultado dos testes.
+# Variáveis para os resultados dos testes.
 is_listenning = set_color(red,"NO")
 is_publishing = set_color(red,"NO")
 priority_worked = set_color(red,"NO")
@@ -45,7 +50,7 @@ def calc_installation_aux(variable_to_check: str) -> int:
         return 1
     return 0
 
-## Calcula a procentagem que deu certo da desinstalação.
+## Calcula a procentagem de sucesso da instalação.
 def all_tests_ok() -> bool:
     count = 0
     total = 3
@@ -80,7 +85,7 @@ def verify_priority_test() -> None:
     if(len(priority_test_topics) == 2):
         priority_worked = set_color(green,"OK")
 
-## Verifica se a comunicação ocorreu de forma esperada.
+## Verifica se a comunicação entre os tópicos ocorreu da forma esperada.
 def verify_communication_tests() -> None:
     global is_listenning,is_publishing
     for topic in topics_to_test:
@@ -100,7 +105,7 @@ def post_test_executions() -> None:
     delete_tmp_file()
     tests_results()
 
-## Executa as rotinas de teste.
+## Executa as rotinas de teste do priority_decider.
 def run_tests() -> None:
     verify_communication_tests()
     verify_priority_test()
@@ -129,6 +134,5 @@ def listen_to_talker() -> None:
     rospy.Subscriber("/test_priority_decider",String,talk_callback)
     rospy.spin()
 
-## Executa as rotinas de teste.
 if __name__ == "__main__":
     listen_to_talker()
