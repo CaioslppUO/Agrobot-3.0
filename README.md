@@ -13,6 +13,9 @@
 ### - src
   - Código fonte do raspberry.
 
+### - doc
+  - Documentação gerada com auxílio do Doxygen.
+
 ---
 
 # Explicação do funcionamento
@@ -31,4 +34,24 @@
 
     * Receive Command -> Command Priority Decider -> Command Standardize -> Command Assembler -> Send Command.
 
-# Versão: 14.5
+## Instalação
+
+  - Siga os seguintes passos para instalar o código:
+
+    1) Baixe o repositório e altere para a branch ros-unstable.
+    2) Entre no diretório install.
+    3) Execute o script install_depedencies.sh.
+    4) Abra um novo terminal.
+    5) Execute o script install.py.
+    6) Abra um novo terminal e rode o projeto.
+
+## Execução
+
+  - Após a instalação do projeto, siga os seguintes passos:
+
+    1) Abra um terminal.
+    2) Execute o comando: roslaunch agrobot <execution_mode>
+    
+    OBS: substituir o <execution_mode> pelo modo de execução desejado.
+
+# Versão: 14.6
