@@ -40,7 +40,7 @@ if [[ $alreadyInstalled != *"true"* ]]; then
     rm "ros_distro.txt"
     mkdir -p /home/$USER/.envs/agrobot_env/ && python3 -m venv /home/$USER/.envs/agrobot_env/
     source /home/$USER/.envs/agrobot_env/bin/activate && pip install --upgrade pip
-    source /home/$USER/.envs/agrobot_env/bin/activate && pip install -r requirements
+    source /home/$USER/.envs/agrobot_env/bin/activate && cat requirements | while read PACKAGE; do pip install "$PACKAGE"; done
     if [[ $USER == *"labiot"* ]]; then
         pip install RPi.GPIO
     fi
