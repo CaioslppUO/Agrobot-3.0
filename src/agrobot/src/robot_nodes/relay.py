@@ -24,7 +24,6 @@ try:
     gpio_imported = True
 except Exception as e:
     services.do_log_warning("Could not import RPi.GPIO. This will be ignored and no real signal will be send to the relay. " + str(e),"relay.py")
-    pass
 
 # Nó do relé.
 rospy.init_node("relay")
