@@ -16,7 +16,7 @@ else:
     from robot_utils import services
 
 try:
-    from RPi.GPIO import GPIO
+    import RPi.GPIO as GPIO
     gpio_imported: bool = True
 except Exception as e:
     gpio_imported: bool = False
@@ -89,6 +89,6 @@ if __name__ == '__main__':
             if(gpio_imported):
                 clk,dt = read_encoder()
                 process_encoder_reading(clk,dt)
-                pub_encoder(str(count))
+                publish_encoder(str(count))
     except Exception as e:
         services.do_log_error('Could not run encoder.py. ' + str(e),'encoder.py')
