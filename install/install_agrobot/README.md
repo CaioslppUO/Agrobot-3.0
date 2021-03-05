@@ -6,7 +6,7 @@
     
 2) Execute o script install_dependencies.sh. Caso ele já tenha sido executado, uma mensagem de erro irá aparecer na tela, apenas ignore.
 
-    > ./install_dependencies.shk        
+    > ./install_dependencies.sh        
 
 3) Execute o script install.py.
 
