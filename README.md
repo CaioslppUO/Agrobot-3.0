@@ -54,4 +54,4 @@
     
     OBS: substituir o <execution_mode> pelo modo de execução desejado.
 
-# Versão: 15.0
+# Versão: 15.1
