@@ -66,18 +66,34 @@ def create_catkin_folder() -> None:
     try:
         os.system("mkdir -p " + catkin_ws_directory + "src")
     except Exception as e:
-        do_log("<install.py> [INFO] Tried to create catkin_ws but it already exists. " + str(e))
+        do_log("<install.py> [INFO] Tried to create catkin_ws but it already \
+            exists. " + str(e))
 
-## Copia o código fonte do agrobot para a pasta dos projetos ROS.
 def copy_agrobot_to_catkin_ws() -> bool:
+    """Copia o código fonte do agrobot para a pasta dos projetos ROS.
+    Confere e corrige a permissão de execução dos scripts.
+    """
     src: str = agrobot_directory
     dst: str = catkin_ws_directory+"src/"
+    permissions_script: str = 'correct_permissions.py'
+
+    # Correção da permissão p/ execução.
+    try:
+        if(exists(current_directory+'tests/'+permissions_script)):
+            os.system('cd {0} && ./{1}'.format(current_directory+'tests/',
+                permissions_script))
+    except Exception as e:
+        do_log('<install.py> [ERROR] Could not correct permission for python \
+            scripts. {0}.'.format(e))
+
+    # Cópia dos arquivos.
     try:
         if(exists(dst)):
             os.system("cp -r " + src + " " + dst)
         return True
     except Exception as e:
-        do_log("<install.py> [ERROR] Could not copy agrobot folder to catkin_ws/src/agrobot/. " + str(e))
+        do_log("<install.py> [ERROR] Could not copy agrobot folder to \
+            catkin_ws/src/agrobot/. " + str(e))
         return False
 
 ## Compila a pasta catkin_ws.
