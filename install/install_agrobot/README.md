@@ -14,4 +14,4 @@
 
 4) Caso queira rodar o processo, execute:
 
-    > sudo systemclt start start_robot.service
+    > sudo systemctl start start_robot.service
