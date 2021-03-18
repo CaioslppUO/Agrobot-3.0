@@ -71,7 +71,7 @@ def get_ipv4() -> str:
         services.do_log_error("Could not find ifconfig tool. Please install the package net-tools.","get_robot_commands.py")
     return str(ip)
 
-## Gerencia o recebimento e puclicação dos comandos.
+## Gerencia o recebimento e publicação dos comandos.
 def Get_robot_commands(ip: str):
     try:
         data = json.loads(requests.get(ip).content.decode('utf-8'))

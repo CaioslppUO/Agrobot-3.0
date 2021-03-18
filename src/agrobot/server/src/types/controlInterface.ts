@@ -1,19 +1,19 @@
 interface Control {
+  speed: number;
+  steer: number;
   limit: number;
   module: boolean;
   autoMode: boolean;
   power: boolean;
-  steer: number;
-  speed: number;
 }
 
 export const controlDefaultParams: Control = {
+  speed: 0,
+  steer: 0,
   limit: 0,
   module: false,
   autoMode: false,
   power: false,
-  steer: 0,
-  speed: 0,
 };
 
 export default Control;
