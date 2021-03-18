@@ -41,6 +41,7 @@ def send_command(command: int) -> None:
     except Exception as e:
         services.do_log_error("Could not send command through PWM. " + str(e),"control_robot.py")
 
+## Converte o comando recebido valor de (-100,100) para um valor de (2,98)
 def convert_command_pwm(speed: int) -> int:
     if (speed >= 0):
         return int((speed / 100 * 48) + 50)
